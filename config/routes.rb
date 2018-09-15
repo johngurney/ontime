@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get 'test1' => 'user_setup#test1'
   get 'test2' => 'user_setup#test2'
 
-  #get 'new_user' => 'user_setup#new_user'
+  get 'new_user' => 'user_setup#new_user' , as:  :new_user
   #get 'myusers.:id' => 'user_setup#new_user_resend_email'
   #post 'myusers' => 'user_setup#new_user_details'
   #patch 'myusers.:id', :to => 'user_setup#new_user_confirm_details', :as => :myuser
