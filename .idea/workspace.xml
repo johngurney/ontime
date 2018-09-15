@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f62c71e-f1a2-4847-b67d-c5e0957923d7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/views/homepage/homepage.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/homepage/homepage.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/environments/production.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/environments/production.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -80,7 +79,7 @@
           <entry key="erb" value="230" />
           <entry key="jbuilder" value="4" />
           <entry key="lock" value="1" />
-          <entry key="rb" value="355" />
+          <entry key="rb" value="357" />
           <entry key="scss" value="23" />
           <entry key="yml" value="5" />
         </counts>
@@ -90,7 +89,7 @@
           <entry key="CSS" value="5" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="RHTML" value="230" />
-          <entry key="Ruby" value="361" />
+          <entry key="Ruby" value="363" />
           <entry key="SCSS" value="23" />
           <entry key="YAML" value="5" />
         </counts>
@@ -100,7 +99,7 @@
           <entry key="Gemfile" value="79" />
           <entry key="css" value="36" />
           <entry key="erb" value="14215" />
-          <entry key="rb" value="21811" />
+          <entry key="rb" value="21821" />
           <entry key="scss" value="545" />
           <entry key="yml" value="18" />
         </counts>
@@ -110,7 +109,7 @@
           <entry key="CSS" value="36" />
           <entry key="RHTML" value="14215" />
           <entry key="RegExp" value="1" />
-          <entry key="Ruby" value="21889" />
+          <entry key="Ruby" value="21899" />
           <entry key="SCSS" value="545" />
           <entry key="YAML" value="18" />
         </counts>
@@ -132,28 +131,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/db/schema.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="22" selection-start-line="22" selection-end-line="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/clients_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="533">
               <caret line="109" column="7" selection-start-line="109" selection-start-column="7" selection-end-line="109" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/controllers/user_setup_controller.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="417">
-              <caret line="155" selection-start-line="155" selection-end-line="155" />
             </state>
           </provider>
         </entry>
@@ -187,11 +168,29 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views/homepage/homepage.html.erb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="18" column="54" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
+            <state relative-caret-position="222">
+              <caret line="19" column="11" lean-forward="true" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/environments/development.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="357">
+              <caret line="48" lean-forward="true" selection-start-line="47" selection-end-line="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/config/environments/production.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="401">
+              <caret line="81" lean-forward="true" selection-start-line="81" selection-end-line="81" />
             </state>
           </provider>
         </entry>
@@ -232,8 +231,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sess</find>
-      <find>@pr</find>
       <find>comment</find>
       <find>comple</find>
       <find>find_client</find>
@@ -262,6 +259,8 @@
       <find>red</find>
       <find>cre</find>
       <find>new_user</find>
+      <find>config.ac</find>
+      <find>mailer</find>
     </findStrings>
     <replaceStrings>
       <replace>myuser</replace>
@@ -276,7 +275,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/db/migrate/20180910111906_add_field_to_tasks1.rb" />
         <option value="$PROJECT_DIR$/db/migrate/20180910142518_add_bes_dur_field_to_tasks.rb" />
         <option value="$PROJECT_DIR$/app/views/update_reminders/new.html.erb" />
         <option value="$PROJECT_DIR$/db/migrate/20180911083227_create_update_reminders.rb" />
@@ -327,6 +325,7 @@
         <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/config/routes.rb" />
         <option value="$PROJECT_DIR$/app/views/homepage/homepage.html.erb" />
+        <option value="$PROJECT_DIR$/config/environments/production.rb" />
       </list>
     </option>
   </component>
@@ -371,31 +370,13 @@
             <path>
               <item name="ontime1" type="b2602c69:ProjectViewProjectNode" />
               <item name="ontime1" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ontime1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ontime1" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ontime1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ontime1" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ontime1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ontime1" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="homepage" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ontime1" type="b2602c69:ProjectViewProjectNode" />
               <item name="ontime1" type="462c0819:PsiDirectoryNode" />
               <item name="config" type="462c0819:PsiDirectoryNode" />
+              <item name="environments" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ontime1" type="b2602c69:ProjectViewProjectNode" />
@@ -566,12 +547,12 @@
       <workItem from="1536901861988" duration="18672000" />
       <workItem from="1536924886791" duration="10625000" />
       <workItem from="1536952391220" duration="14086000" />
-      <workItem from="1537012598713" duration="12836000" />
+      <workItem from="1537012598713" duration="13601000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="422274000" />
+    <option name="totallyTimeSpent" value="423039000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -637,20 +618,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/views/jobs/show.html.erb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db/migrate/20180911114526_rename_col_in_upate_reminders.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="1" selection-start-line="2" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/reminder_schedules/edit.html.erb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
@@ -962,8 +929,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/homepage/homepage.html.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="18" column="54" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
+        <state relative-caret-position="222">
+          <caret line="19" column="11" lean-forward="true" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/environments/development.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="48" lean-forward="true" selection-start-line="47" selection-end-line="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/environments/production.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="81" lean-forward="true" selection-start-line="81" selection-end-line="81" />
         </state>
       </provider>
     </entry>
