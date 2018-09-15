@@ -65,13 +65,15 @@
         <span style="font-weight: bold">Your outstanding updates</span>
 
         <div class="select_box_list">
-          <span style="color: red;">
-            <% @myuser.update_reminders.where('window_end_date <= ?', Date.today).order('window_start_date').each do |reminder| %>
-              <%= link_to (reminder.task.name + " " + reminder.start_datestg + " " + reminder.end_datestg), update_new_for_task_path(reminder.task) %> <br>
-            <% end %>
-          </span>
-          <% @myuser.update_reminders.where('window_start_date <= ? and window_end_date >= ?', Date.today+10.days, Date.today).order('window_start_date').each do |reminder| %>
-            <%= link_to (reminder.task.name + " " + reminder.start_datestg + " " + reminder.end_datestg), update_new_for_task_path(reminder.task) %> <br>
+          <% if !@myuser.blank? %> %>
+            <span style="color: red;">
+              <% @myuser.update_reminders.where('window_end_date <= ?', Date.today).order('window_start_date').each do |reminder| %>
+                <%= link_to (reminder.task.name + " " + reminder.start_datestg + " " + reminder.end_datestg), update_new_for_task_path(reminder.task) %> <br>
+              <% end %>
+            </span>
+              <% @myuser.update_reminders.where('window_start_date <= ? and window_end_date >= ?', Date.today+10.days, Date.today).order('window_start_date').each do |reminder| %>
+                <%= link_to (reminder.task.name + " " + reminder.start_datestg + " " + reminder.end_datestg), update_new_for_task_path(reminder.task) %> <br>
+              <% end %>
           <% end %>
         </div>
       </div>
@@ -108,16 +110,18 @@
                 End date
               </td>
             </tr>
-            <% @tasks.each do |task| %>
-              <tr>
+            <% if !@tasks %>
+              <% @tasks.each do |task| %>
+                <tr>
 
-                <td><%=  link_to task.job.client.name, edit_client_path(task.job.client) %></td>
-                <td><%=  link_to task.job.name, edit_job_path(task.job) %></td>
-                <td><%=  link_to task.name, edit_task_path(task) %></td>
-                <td style="color: red"><%=  task.start_datestg %></td>
-                <td style="color: red"><%=  task.end_datestg %></td>
+                  <td><%=  link_to task.job.client.name, edit_client_path(task.job.client) %></td>
+                  <td><%=  link_to task.job.name, edit_job_path(task.job) %></td>
+                  <td><%=  link_to task.name, edit_task_path(task) %></td>
+                  <td style="color: red"><%=  task.start_datestg %></td>
+                  <td style="color: red"><%=  task.end_datestg %></td>
 
-              </tr>
+                </tr>
+              <% end %>
             <% end %>
           </table>
 
