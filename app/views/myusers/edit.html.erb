@@ -1,0 +1,28 @@
+<h2>Edit user information</h2>
+
+<%= form_for @myuser do |f| %>
+
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :first_name %><br />
+    <%= f.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :last_name %><br />
+    <%= f.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :user_status %><br />
+    <%= f.select :user_status, ["Admin", ["Case chief" ,{class: 'abc'}], "users"], {include_blank: 'Please choose' } , { class: 'abc1'} %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "OK" %>
+  </div>
+<% end %>

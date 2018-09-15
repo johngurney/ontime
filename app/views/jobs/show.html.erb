@@ -1,0 +1,72 @@
+<table>
+  <col width="60%">
+  <col width="40%">
+  <tr>
+    <td>
+      <h1>Client: <%=@client.name %></h1>
+      <br/>
+      <br/>
+      Job: <%=@job.name %>
+      <br/>
+      <br/>
+
+    </td>
+    <td>
+      <div class="select_box_wrapper" style="height: 80px">
+        The team
+        <br/>
+        <div class="select_box_list" style="height: 45px">
+          <% if @jobmyusers%>
+
+            <% @jobmyusers.each do |myuser| %>
+              <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+            <% end %>
+
+          <% end %>
+        </div>
+        <div style="align-items: right">
+          <%= button_to "Amend team" , job_amend_team_path(@job) , :method => :get %>
+        </div>
+      </div>
+      <div class="select_box_wrapper" style="height: 80px">
+        Timing
+        <br/>
+        Start date:
+        End date:
+        <%= form_tag job_daily_flag_path(@job), :id => 'daily_option' do %>
+          Daily<%= raw( radio_button_tag :daily_option, 1, @job.daily_flag,  onclick: "this.parentNode.submit();" ) %>
+          Hourly<%= raw( radio_button_tag :daily_option, 0, !@job.daily_flag,  onclick: "this.parentNode.submit();" ) %>
+        <% end %>
+
+      </div>
+
+
+    </td>
+  </tr>
+
+</table>
+
+<div class="select_box_wrapper" style="margin-top: 4px; background-color: yellow; ">
+  Tasks
+  <div class="select_box_list">
+    <% if @tasks %>
+      <table width="100%">
+        <col width="60%">
+        <col width="40%">
+
+        <% @tasks.each do |task| %>
+          <tr>
+            <td>
+              <%= link_to task.name , task_path(task) %>
+            </td>
+
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+  <%= button_to "Add task" , new_task_for_job_path(@job) , :method => :get %>
+
+</div>
+
+

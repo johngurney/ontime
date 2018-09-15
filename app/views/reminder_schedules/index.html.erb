@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Reminder Schedules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @reminder_schedules.each do |reminder_schedule| %>
+      <tr>
+        <td><%= reminder_schedule.name %></td>
+        <td><%= link_to 'Show', reminder_schedule %></td>
+        <td><%= link_to 'Edit', edit_reminder_schedule_path(reminder_schedule) %></td>
+        <td><%= link_to 'Destroy', reminder_schedule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Reminder Schedule', new_reminder_schedule_path %>

@@ -1,0 +1,109 @@
+
+<table width="100%">
+<col width="33%">
+  <col width="66%">
+  <tr>
+    <td >
+      <span class="page_heading">
+        Amend team<br/><br/>
+      </span>
+      <span class="heading1">
+        Client: <%= link_to @client.name, client_path(@client) %><br/><br/>
+        Job: <%= link_to @job.name , job_path(@job) %><br/><br/>
+      </span>
+
+      <%= form_tag job_remove_user_path(@job),  :id => 'remove_users' do %>
+      <div class="select_box_wrapper" style="height: 140px; background-color: lightpink">
+        <span class="heading2">The team</span>
+        <br/>
+        <div class="select_box_list" style="height: 100px">
+          <% if @jobmyusers%>
+
+            <% @jobmyusers.each do |myuser| %>
+              <span style="white-space: nowrap;">
+                <%=check_box_tag 'check'+myuser.id.to_s %>
+                <%= link_to myuser.first_name + " " + myuser.last_name + " " + myuser.id.to_s, myuser_path(myuser) %>
+              </span>
+            <% end %>
+
+          <% end %>
+        </div>
+        <div style="align-items: right">
+          <input type="submit" value="Remove fee-earners" form='remove_users' style="margin-top: 4px">
+        </div>
+      <% end %>
+      </div>
+
+    </td>
+    <td>
+
+      <%= form_tag job_add_user_path(@job),  :id => 'add_client_users' do %>
+        <div class="select_box_wrapper">
+          <% if @jobmyusers.count==0 %>
+            Fee-earners associated with this client
+          <% else %>
+            Other fee-earners associated with this client
+          <% end %>
+          <div class="select_box_list">
+            <% if @clientmyusers%>
+              <table width="100%">
+                <col width="45%">
+                <col width="15%">
+                <col width="20%">
+                <col width="20%">
+
+                <% @clientmyusers.each do |myuser| %>
+                  <% if @jobmyusers.where(:id => myuser.id).count == 0 %>
+                    <tr>
+                      <td>
+                        <%=check_box_tag 'check'+myuser.id.to_s %>
+                        <%= link_to myuser.first_name + " " + myuser.last_name + " " + myuser.id.to_s, myuser_path(myuser) %>
+                      </td>
+                      <td><%= myuser.team %></td>
+                      <td><%= myuser.office %></td>
+                      <td><%= myuser.position %></td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+            <% end %>
+          </div>
+          <input type="submit" value="Add fee-earner(s)" form='add_client_users' style="margin-top: 4px">
+        </div>
+      <% end %>
+
+      <%= form_tag job_add_user_path(@job),  :id => 'add_any_users' do %>
+        <div class="select_box_wrapper" style="margin-top: 4px">
+          Other fee-earners
+          <div class="select_box_list">
+            <% if @myusers%>
+              <table width="100%">
+                <col width="45%">
+                <col width="15%">
+                <col width="20%">
+                <col width="20%">
+
+                <% @myusers.each do |myuser| %>
+                  <% if @jobmyusers.where(:id => myuser.id).count == 0 && @clientmyusers.where(:id => myuser.id).count == 0 %>
+                    <tr>
+                      <td>
+                        <%=check_box_tag 'check'+myuser.id.to_s %>
+                        <%= link_to myuser.first_name + " " + myuser.last_name + " " + myuser.id.to_s, myuser_path(myuser) %>
+                      </td>
+                      <td><%= myuser.team %></td>
+                      <td><%= myuser.office %></td>
+                      <td><%= myuser.position %></td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
+            <% end %>
+          </div>
+          <input type="submit" value="Add fee-earner" form='add_any_users' style="margin-top: 4px">
+        </div>
+      <% end %>
+
+
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,32 @@
+<table>
+  <tr>
+    <td>
+      <span class="page_heading">
+        Update reminder<br/>
+      </span>
+      <span class="heading1" style="font-size: 18pt">
+        <br/>
+          Client: <%= link_to @client.name, client_path(@client) %><br/>
+          Job: <%= link_to @job.name , job_path(@job) %><br/>
+          Task: <%= link_to @task.name , job_path(@job) %><br/><br/>
+        </span>
+
+      <%= form_tag task_remove_user_path(@job),  :id => 'remove_users' do %>
+        <div class="select_box_wrapper" style="height: 140px; background-color: lightpink">
+          <%= select_tag "update_type", options_for_select(@tasks_to_link_to, @update_reminder.x) , {:style => "width:250px;"} %>
+          <%= select_tag "proption", options_for_select(@tasks_to_link_to, @task.task_id) , {:style => "width:250px;"} %>
+
+        </div>
+      <% end %>
+
+
+
+
+    </td>
+
+
+
+  </tr>
+</table>
+
+

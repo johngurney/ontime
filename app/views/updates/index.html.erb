@@ -1,0 +1,53 @@
+<table>
+  <col width="33%">
+  <col width="67%">
+  <tr>
+    <td>
+      <span class="page_heading">
+        Updates for<br/>
+      </span>
+      <span class="heading1" style="font-size: 18pt">
+        <br/>
+          Client: <%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
+          Job: <%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
+          Task: <%= link_to @task.name , edit_task_path(@task) %><br/>
+      </span>
+
+    </td>
+  </tr>
+</table>
+
+<table>
+  <col width="10%"/>
+  <col width="14%"/>
+  <col width="8%"/>
+  <col width="8%"/>
+  <col width="60%"/>
+  <tr>
+    <td>Date/time</td>
+    <td>Fee-earner</td>
+    <td>Progress</td>
+    <td>Time passed</td>
+    <td>Comments</td>
+
+  </tr>
+
+  <% @task.updates.order('created_at').each do |update| %>
+    <tr>
+      <td><%= update.created_at_date_stg %> </td>
+      <td><%= update.myuser.first_name %> <%= update.myuser.last_name %></td>
+      <td> <%= update.percentage_completed.to_i %>%</td>
+      <td>
+        <% if update.percentage_completed < update.percentage_time_passed %>
+          <scan style="color: red"><%= update.percentage_time_passed.to_i %>%</scan>
+        <% else %>
+          <%= update.percentage_time_passed.to_i%>%
+        <% end %>
+      </td>
+      <td> <%= update.comments %> </td>
+    </tr>
+  <% end %>
+
+
+</table>
+

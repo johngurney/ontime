@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  start_date: 2018-09-07 18:26:28
+  end_date: 2018-09-07 18:26:28
+  job_id: 1
+  task_id: 1
+  linked_flag: false
+  start_end_flag: false
+  offset: 1.5
+  duration: 1.5
+  completed_flag: false
+  percentage_completed: 1.5
+
+two:
+  name: MyString
+  start_date: 2018-09-07 18:26:28
+  end_date: 2018-09-07 18:26:28
+  job_id: 1
+  task_id: 1
+  linked_flag: false
+  start_end_flag: false
+  offset: 1.5
+  duration: 1.5
+  completed_flag: false
+  percentage_completed: 1.5

@@ -1,0 +1,39 @@
+<h1>Editing Reminder Schedule</h1>
+
+<%= form_for @reminder_schedule do |f| %>
+  Name <%= f.text_field :name , :style => "width: 200px;" %>  <%= f.submit "OK" %>
+<% end %>
+
+
+<div class="select_box_wrapper" style="height: 140px; background-color: lightblue; margin-top: 14px">
+  <table>
+    <tr>
+      <td>
+        <span class="heading2">Update schedule</span><br/>
+        <table>
+          <col width="2%">
+          <col width="40%">
+          <col width="58%">
+
+          <% @reminder_schedule.update_reminders.each do |update_reminder| %>
+
+            <tr>
+              <td></td>
+              <td>
+                <%= link_to update_reminder.reminder_text, edit_update_reminder_path(update_reminder) , :method => :get  %>
+              </td>
+              <td>
+                <%= link_to "Delete", delete_reminder_from_schedule_path(update_reminder) , :method => :post  %>
+              </td>
+
+            </tr>
+          <% end %>
+        </table>
+        <%= button_to "Add new reminder", update_reminder_new_for_schedule_path(@reminder_schedule), :method => "get" %>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<%= link_to 'Show', @reminder_schedule %> |
+<%= link_to 'Back', reminder_schedules_path %>

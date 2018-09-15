@@ -1,0 +1,8 @@
+<h1>New Task</h1>
+
+Client <%= @client.name %> <br/>
+Job: <%= @job.name %> <br/>
+
+<%= render 'form', task: @task %>
+
+<%= link_to 'Back', tasks_path %>

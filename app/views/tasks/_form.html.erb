@@ -1,0 +1,127 @@
+<table>
+  <col width="33%">
+  <col width="33%">
+  <col width="33%">
+  <tr>
+    <td>
+        <span class="page_heading">
+          Configure task<br/><br/>
+        </span>
+      <span class="heading1">
+          Client: <%= link_to @client.name, client_path(@client) %><br/>
+          Job: <%= link_to @job.name , job_path(@job) %><br/>
+          Task: <%= link_to @task.name , job_path(@job) %><br/><br/>
+        </span>
+
+      <%= form_tag task_remove_user_path(@job),  :id => 'remove_users' do %>
+        <div class="select_box_wrapper" style="height: 140px; background-color: lightpink">
+          <span class="heading2">Fee-earners for this task</span>
+          <br/>
+          <div class="select_box_list" style="height: 100px">
+            <% if @taskmyusers%>
+
+              <% @jobmyusers.each do |myuser| %>
+                <span style="white-space: nowrap;">
+                  <%=check_box_tag 'check'+myuser.id.to_s %>
+                  <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+                </span>
+              <% end %>
+
+            <% end %>
+          </div>
+          <div style="align-items: right">
+            <input type="submit" value="Remove fee-earners" form='remove_users' style="margin-top: 4px">
+          </div>
+        </div>
+      <% end %>
+
+      <%= form_tag task_add_user_path(@task),  :id => 'remove_users' do %>
+        <div class="select_box_wrapper" style="height: 140px; background-color: lightpink">
+          <span class="heading2">Other fee-earners for this job</span>
+          <br/>
+          <div class="select_box_list" style="height: 100px">
+            <% if @taskmyusers%>
+
+              <% @jobmyusers.each do |myuser| %>
+                <span style="white-space: nowrap;">
+                  <%=check_box_tag 'check'+myuser.id.to_s %>
+                  <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+                </span>
+              <% end %>
+
+            <% end %>
+          </div>
+          <div style="align-items: right">
+            <input type="submit" value="Add fee-earners" form='remove_users' style="margin-top: 4px">
+          </div>
+        </div>
+      <% end %>
+
+    </td>
+
+  </tr>
+</table>
+
+<%= form_with(model: task, local: true) do |form| %>
+  <% if task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+        <% task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.datetime_select :start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.datetime_select :end_date %>
+  </div>
+
+  <%= form.hidden_field :job_id %>
+  <%= form.hidden_field :task_id %>
+
+  <div class="field">
+    <%= form.label :linked_flag %>
+    <%= form.check_box :linked_flag %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_end_flag %>
+    <%= form.check_box :start_end_flag %>
+  </div>
+
+  <div class="field">
+    <%= form.label :offset %>
+    <%= form.text_field :offset %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration %>
+    <%= form.text_field :duration %>
+  </div>
+
+  <div class="field">
+    <%= form.label :completed_flag %>
+    <%= form.check_box :completed_flag %>
+  </div>
+
+  <div class="field">
+    <%= form.label :percentage_completed %>
+    <%= form.text_field :percentage_completed %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

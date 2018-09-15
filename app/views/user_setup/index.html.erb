@@ -1,0 +1,7 @@
+List users
+<br/>
+<% @myusers.each do |myuser| %>
+  <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+  <br>
+<% end %>
+

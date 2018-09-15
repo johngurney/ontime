@@ -1,0 +1,102 @@
+<span class="page_heading">
+  Configure task for template: <%= @template.name %>
+</span>
+<%= form_for @task do |f| %>
+  Name <%= f.text_field :name , :style => "margin-top: 10px; margin-bottom: 10px; width: 350px; height:30px" %>
+  <%= f.submit "OK" %>
+<% end %>
+<table>
+  <tr>
+    <td>
+      <div class="select_box_wrapper" style="height: 140px; background-color: yellow">
+        <span class="heading2">Timetabling</span>
+
+        <%= form_tag task_timing_path(@task), :id => 'timing_form' do %>
+
+            Link to:
+            <%= select_tag "linked_to_task", options_for_select(@tasks_to_link_to, @task.linked_to_task_id) , {:style => "width:250px;"} %>
+
+            Start<%= raw( radio_button_tag :start_end, 1, @task.link_to_start) %>
+            End<%= raw( radio_button_tag :start_end, 0, !@task.link_to_start ) %>
+
+            Offset
+            <span style="position: relative; top: 0; left: 0;" >
+            <% if @task.bespoke_offset_flag %>>
+                <%= text_field_tag "offset_days_text", @task.offset.to_i ,{:style => "width:74px;  text-align: right; position: absolute; top: -2px; left: -2px; background: lightblue;"}  %>
+            <% end %>
+              <%= select_tag "offset_days_select", options_for_select(@offset_options , offset_days_value(@task) ) , {:style => "width:80px;  text-align-last:right;", :onchange => raw("timing_form.submit()")}%>
+              days
+            </span>
+            <% if !@template.daily_flag %>
+              <%= select_tag "offset_hours", options_for_select(@offset_options_hours, offset_duration_hours_value(@task.offset)), {:style => "width:80px;  text-align-last:right;" }%>
+              hours
+            <% end %>
+
+
+          <br/>
+          <br/>
+
+          Specify duration
+          <span style="position: relative; top: 0; left: 0;" >
+              <% if @task.bespoke_duration_flag %>>
+              <%= text_field_tag "duration_days_text", @task.duration.to_i ,{:style => "width:44px;  text-align: right; position: absolute; top: -2px; left: -2px; background: lightblue;"}  %>
+              <% end %>
+            <%= select_tag "duration_days_select", options_for_select(@duration_options, duration_days_value(@task)) , {:style => "width:50px;  text-align-last:right;", :onchange => raw("timing_form.submit()")}%>
+            days
+            </span>
+
+            <% if !@template.daily_flag %>
+              <%= select_tag "duration_hours", options_for_select(@duration_options_hours, offset_duration_hours_value(@task.duration)), {:style => "width:80px;  text-align-last:right;" }%>
+              hours
+            <% end %>
+
+          <br/>
+          <div style="margin-top: 6px">
+            <%= submit_tag "OK" %>
+          </div>
+        <% end %>
+
+
+
+      </div>
+
+      <div class="select_box_wrapper" style="height: 140px; background-color: lightblue; margin-top: 14px">
+        <table>
+          <tr>
+            <td>
+              <span class="heading2">Update schedule</span><br/>
+              <div class="select_box_list" style="height: 100px">
+                <table>
+                  <col width="2%">
+                  <col width="40%">
+                  <col width="58%">
+                  <% @task.update_reminders.each do |update_reminder| %>
+                    <tr>
+                      <td></td>
+                      <td>
+                        <%= link_to update_reminder.reminder_text, edit_update_reminder_path(update_reminder) , :method => :get  %>
+                      </td>
+                      <td>
+                        <%= link_to "Delete", delete_reminder_from_task_path(update_reminder) , :method => :post  %>
+
+
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
+              </div>
+              <%= button_to "Add new reminder", update_reminder_new_for_task_path(@task), :method => "get" %>
+            </td>
+          </tr></table>
+      </div>
+
+
+    </td>
+
+
+
+  </tr>
+</table>
+
+<%= button_to "Back to template", edit_template_path(@template), :method => "get" , :style => "margin-top: 10px; margin-left: 20px; width: 150px; height:30px"%>
+

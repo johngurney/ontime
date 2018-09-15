@@ -1,0 +1,8 @@
+Jobs for <%= @client.name %>
+<br/>
+<% @jobs.each do |job| %>
+  <%= link_to job.name, job_path(job) %>
+  <br>
+<% end %>
+
+<%= link_to "New job", new_job_path(@client) %>

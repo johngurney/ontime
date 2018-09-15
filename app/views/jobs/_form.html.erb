@@ -1,0 +1,23 @@
+<%= form_for @job do |f|%>
+  <%= f.hidden_field :client %><br>
+
+  <%= f.label :name %><br>
+  <%= f.text_field :name %><br>
+  <br>
+
+  <%= f.label :comment %><br>
+  <%= f.text_field :comment %><br>
+  <br>
+
+  <%= f.label "Start" %><br>
+  <%= f.datetime_field :start %><br>
+  <br>
+
+  <%= f.label "End" %><br>
+  <%= f.datetime_field :end %><br>
+  <br>
+
+  <%= f.submit %><br>
+
+  <br>
+<% end %>

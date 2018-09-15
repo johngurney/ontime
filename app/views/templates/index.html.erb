@@ -1,0 +1,24 @@
+<span class="heading1" style="font-size: 18pt">
+Existing <templates></templates><br/><br/>
+</span>
+
+<table>
+  <col width="40%">
+  <col width="10%">
+  <col width="50%">
+  </thead>
+
+  <tbody>
+    <% @templates.each do |template| %>
+      <tr>
+        <td><%= link_to template.name , edit_template_path(template) %></td>
+        <td><%= link_to 'Delete', template, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= button_to 'New Template', new_template_path %>

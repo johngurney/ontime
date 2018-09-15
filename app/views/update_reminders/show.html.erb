@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @update_reminder.type %>
+</p>
+
+<p>
+  <strong>Proportion:</strong>
+  <%= @update_reminder.proportion %>
+</p>
+
+<p>
+  <strong>Start end:</strong>
+  <%= @update_reminder.start_end %>
+</p>
+
+<p>
+  <strong>Offset:</strong>
+  <%= @update_reminder.offset %>
+</p>
+
+<p>
+  <strong>Day time:</strong>
+  <%= @update_reminder.day_time %>
+</p>
+
+<%= link_to 'Edit', edit_update_reminder_path(@update_reminder) %> |
+<%= link_to 'Back', update_reminders_path %>

@@ -1,0 +1,102 @@
+Existing users
+<br/>
+<br/>
+
+<table align="left" style="background-color: lightblue; border-style: solid; border-width: 1px;" width="70%" height="50">
+
+  <col width="25%">
+  <col width="10%">
+  <col width="10%">
+  <col width="15%">
+  <col width="10%">
+  <col width="30%">
+
+  <tr >
+    <td align="left">
+      Name
+
+    </td>
+    <td align="left">
+      Team
+    </td>
+    <td align="left">
+      Office
+    </td>
+    <td align="left">
+      Position
+    </td>
+    <td align="left">
+      Experience
+    </td>
+    <td align="left">
+      Email
+      <br>
+      <br>
+    </td>
+  </tr>
+
+  <%= form_tag('/myusers/search') do %>
+    <tr>
+      <td align="left">
+        <%= text_field_tag :search  , @search_term %></div>
+      </td>
+
+      <td align="left">
+        <%= select_tag :team, options_for_select(@allmyusers.select(:team).distinct.order(:team).collect{|u| [u.team]}, @team_term ) %>
+      </td>
+
+      <td align="left">
+        <%= select_tag 'office', options_for_select(@allmyusers.select(:office).distinct.order(:office).collect{|u| [u.office]}, @office_term ) %>
+      </td>
+
+      <td align="left">
+        <%= select_tag 'position', options_for_select(@allmyusers.select(:position).distinct.order(:position).collect{|u| [u.position]}, @position_term ) %>
+      </td>
+
+      <td align="left">
+        <%= select_tag 'experience', options_for_select(@allmyusers.select(:experience).distinct.order(:experience).collect{|u| [u.experience]}, @experience_term ) %>
+      </td>
+
+      <td align="left">
+      <%= submit_tag 'Search' %></div>
+      </td>
+    </tr>
+  <% end %>
+
+  <%= form_tag('/myusers/') do %>
+    <% if @myusers%>
+      <% @myusers.each do |myuser| %>
+        <tr>
+        <td align="left">
+        <%=check_box_tag "test" %>
+          <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+        </td>
+        <td align="left">
+          <%= myuser.team %>
+        </td>
+        <td align="left">
+          <%= myuser.office%>
+        </td>
+        <td align="left">
+          <%= myuser.position %>
+        </td>
+        <td align="left">
+          <%= myuser.experience %>
+        </td>
+        <td align="left">
+          <%= myuser.email %>
+        </td>
+      </tr>
+      <% end %>
+    <% end %>
+    <%= submit_tag 'Search' %></div>
+  <% end %>
+
+</table>
+<br>
+<br>
+
+
+
+
+  <%= link_to 'Create new user', new_myuser_path %>

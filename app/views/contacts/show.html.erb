@@ -1,0 +1,19 @@
+<%= @contact.first_name %>   <%= @contact.last_name %>
+<br/>
+<br/>
+Telephone number: <%= @contact.telephone_number %>
+<br/>
+<br/>
+Email address: <%= mail_to @contact.email %>
+<br/>
+<br/>
+Position: <%= @contact.position %>
+<br/>
+<br/>
+Priority: <%= @contact.priority %>
+<br/>
+<br/>
+Comments: <%= @contact.comments %>
+<br/>
+<br/>
+<%= link_to 'Edit', edit_contact_path(@contact) %> | <%= link_to 'Client', client_path(@client) %> |

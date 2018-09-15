@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Myuser:</strong>
+  <%= @update.myuser_id %>
+</p>
+
+<p>
+  <strong>Task:</strong>
+  <%= @update.task_id %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @update.comments %>
+</p>
+
+<%= link_to 'Edit', edit_update_path(@update) %> |
+<%= link_to 'Back', updates_path %>

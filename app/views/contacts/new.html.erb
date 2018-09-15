@@ -1,0 +1,46 @@
+<h1>New Contact</h1>
+
+<%= form_for @contact do |f| %>
+<table style="width: 70%;">
+  <col width="50%"/>
+  <col width="50%"/>
+  <tr>
+    <td>
+      <%= f.label :first_name %><br />
+      <%= f.text_field :first_name %>
+    </td>
+    <td>
+      <%= f.label :last_name %><br />
+      <%= f.text_field :last_name %>
+    </td>
+  <tr>
+    <td>
+      <%= f.label :email %><br />
+      <%= f.email_field :email  %>
+    </td>
+    <td>
+      <%= f.label :position %><br />
+      <%= f.text_field :position %>
+    </td>
+  </tr>
+
+</table>
+  <div class="field">
+    <%= f.hidden_field :client_id %>
+  </div>
+
+  <div class="field">
+    <%= f.label :comments %><br />
+    <%= f.text_field :comments, style: 'width:60%; height: 100px' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :priority %><br />
+    <%= f.select :priority , 1..10, {include_blank: 'Please choose' }  %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "OK" %>
+  </div>
+
+<% end %>

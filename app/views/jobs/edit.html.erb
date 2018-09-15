@@ -1,0 +1,153 @@
+<table>
+  <col width="60%">
+  <col width="40%">
+  <tr>
+    <td>
+      <span class="heading1" style="font-size: 18pt">
+        Configure job<br/><br/>
+        Client: <%= link_to @client.name, client_path(@client) %><br/>
+        <%= form_for @job, :method => 'patch' do |f| %>
+          <table>
+            <col width="20%">
+            <col width="70%">
+            <tr>
+              <td>
+                    Name
+                </td>
+              <td>
+                <%= f.text_field :name , :style => "width: 300px;" %>          <%= f.submit "OK" %>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                    Comments
+
+              </td>
+              <td>
+              <%= f.text_field :comments , :style => "width: 300px; height: 100px;" %>  <br/>
+              </td>
+            </tr>
+          </table>
+        <% end %>
+      </span>
+
+    <br/>
+
+    </td>
+    <td>
+      <div class="select_box_wrapper" style="height: 80px">
+        The team
+        <br/>
+        <div class="select_box_list" style="height: 45px">
+          <% if @jobmyusers%>
+
+            <% @jobmyusers.each do |myuser| %>
+              <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+            <% end %>
+
+          <% end %>
+        </div>
+        <div style="align-items: right">
+          <%= button_to "Amend team" , job_amend_team_path(@job) , :method => :get %>
+        </div>
+      </div>
+      <div class="select_box_wrapper" style="height: 80px">
+        Timing
+        <br/>
+        <%= form_tag job_timing_path(@job), :id => 'timing_form' do %>
+          Daily<%= raw( radio_button_tag :daily_option, 1, @job.daily_flag,  onclick: "timing_form.submit();" ) %>
+          Hourly<%= raw( radio_button_tag :daily_option, 0, !@job.daily_flag,  onclick: "timing_form.submit();" ) %>
+          <br/>Start date:
+          <%= date_select :start, "" ,
+
+                          {
+                              :order => [:day, :month, :year],
+                              :default => @job.start,
+                              :start_year => 2017,
+                              :end_year => 2030
+                          },
+                          {:onchange => "timing_form.submit()"} %>
+          <%= link_to "<button>Today</button>".html_safe , job_today_path(@job) , :method => :get %> <br/>
+
+          <span style="color: red">Scheduled end date: <%= @job.end_datestg %> </span>
+      <% end %>
+
+      </div>
+
+
+    </td>
+  </tr>
+
+</table>
+
+<div class="select_box_wrapper" style="margin-top: 4px; background-color: yellow; ">
+  <table>
+    <col width="10%"/>
+    <col width="90%"/>
+    <tr>
+      <td style="font-weight: bold">
+        Tasks
+
+      </td>
+      <td>
+        <%= form_tag jobs_import_template_path(@job) do %>
+          Templates <%= select_tag "template", options_for_select(@templates, "") , {include_blank: 'Please choose' , :style => "width:250px;"} %>
+          <%= submit_tag "OK" %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+  <div class="select_box_list">
+    <% if @tasks %>
+      <table width="100%">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+
+        <% @tasks.each do |task| %>
+          <tr>
+            <td>
+              <%= link_to task.name , edit_task_path(task) %>
+
+            </td>
+
+            <td style="color: red">
+              Estimated start date: <%= task.start_datestg %>
+            </td>
+            <td style="color: red">
+              Estimated end date: <%= task.end_datestg %>
+            </td>
+
+            <td>
+              <%= link_to 'Delete', job_delete_task_path(task), data: { confirm: 'Are you sure you wish to delete ' + task.name + '?' } %></td>
+
+            </td>
+
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+  <table>
+    <col width="20%"/>
+    <col width="20%"/>
+    <col width="60%"/>
+    <tr>
+      <td>
+        <%= button_to "Add task" , new_task_for_job_path(@job) , :method => :get %>
+      </td>
+      <td>
+        <%= button_to "Delete all tasks" , jobs_delete_all_tasks_path(@job) , :method => :get %>
+      </td>
+      <td>
+
+      </td>
+    </tr>
+  </table>
+
+
+</div>
+
+

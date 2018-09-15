@@ -1,0 +1,41 @@
+<h1>New Update</h1>
+
+<table>
+  <col width="33%">
+  <col width="67%">
+  <tr>
+    <td>
+      <span class="page_heading">
+        Update<br/>
+      </span>
+      <span class="heading1" style="font-size: 18pt">
+        <br/>
+          Client: <%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
+          Job: <%= link_to @task.job.name , job_path(@task.job) %><br/>
+          Task: <%= link_to @task.name , task_path(@task) %><br/>
+      </span>
+
+    </td>
+    </tr>
+</table>
+
+<div class="select_box_wrapper" style="height: 140px; background-color: lightblue">
+  <table>
+    <tr>
+      <td style="alignment: top">
+        <span class="heading2">Progress</span>
+
+        <%= form_tag update_progress_path(@task),  :id => 'progress' do %>
+          <%= select_tag "progress", options_for_select(@progress, 0), {:style => "width: 50px;  margin-left: 10px;  text-align-last: right;" }%>% complete
+          Comments
+           <%= text_field_tag :comments , "", :style => "width: 300px; height: 100px;" %>  <br/>
+
+          <%= submit_tag "OK" %>
+        <% end %>
+
+      </td>
+
+    </tr>
+  </table>
+</div>
+

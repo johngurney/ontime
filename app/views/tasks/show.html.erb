@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @task.name %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @task.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @task.end_date %>
+</p>
+
+<p>
+  <strong>Job:</strong>
+  <%= @task.job_id %>
+</p>
+
+<p>
+  <strong>Task:</strong>
+  <%= @task.task_id %>
+</p>
+
+<p>
+  <strong>Linked flag:</strong>
+  <%= @task.linked_flag %>
+</p>
+
+<p>
+  <strong>Start end flag:</strong>
+  <%= @task.start_end_flag %>
+</p>
+
+<p>
+  <strong>Offset:</strong>
+  <%= @task.offset %>
+</p>
+
+<p>
+  <strong>Duration:</strong>
+  <%= @task.duration %>
+</p>
+
+<p>
+  <strong>Completed flag:</strong>
+  <%= @task.completed_flag %>
+</p>
+
+<p>
+  <strong>Percentage completed:</strong>
+  <%= @task.percentage_completed %>
+</p>
+
+<%= link_to 'Edit', edit_task_path(@task) %> |
+<%= link_to 'Back', tasks_path %>

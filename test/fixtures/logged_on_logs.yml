@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  token: MyString
+  user: 1
+  last_use: 
+
+two:
+  token: MyString
+  user: 1
+  last_use: 

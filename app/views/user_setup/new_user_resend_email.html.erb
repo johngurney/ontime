@@ -1,0 +1,10 @@
+Resend email
+
+<%= form_for @myuser, method: :get do |f| %>
+
+  <div class="actions">
+    <%= resend_email_message_helper %>
+    <%= f.submit "Re-send email" %>
+  </div>
+
+<% end %>

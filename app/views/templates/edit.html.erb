@@ -1,0 +1,58 @@
+
+<span class="heading1" style="font-size: 18pt">
+  Edit template<br/><br/>
+  <%= form_for @template do |f| %>
+    <table>
+      <col width="20%">
+      <col width="70%">
+      <tr>
+        <td>
+              Name
+          </td>
+        <td>
+          <%= f.text_field :name , :style => "width: 300px;" %>          <%= f.submit "OK" %>
+
+        </td>
+      </tr>
+      <tr>
+        <td>
+              Comments
+
+        </td>
+        <td>
+        <%= f.text_field :comments , :style => "width: 300px; height: 100px;" %>  <br/>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+</span>
+
+
+
+<div class="select_box_wrapper" style="margin-top: 4px; background-color: yellow; ">
+  <span style="font-weight: bold">Tasks</span>
+  <div class="select_box_list">
+    <% if @template.tasks.count!=0 %>
+      <table width="100%">
+        <col width="60%">
+        <col width="40%">
+
+        <% @template.tasks.each do |task| %>
+          <tr>
+            <td>
+              <%= link_to task.name , edit_task_path(task) %>
+            </td>
+            <td>
+              <%= link_to "Delete", delete_task_from_template_path(task) , :method => :post  %>
+
+            </td>
+
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+  <%= button_to "Add new task", task_new_for_template_path(@template), :method => "get" %>
+
+</div>
+<br/>  <%= link_to "Templates", templates_path %>
