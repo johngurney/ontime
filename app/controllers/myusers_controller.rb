@@ -169,7 +169,7 @@ class MyusersController < ApplicationController
         add_to_alert"Password too short"
       end
       if password!=password_confirmation
-        add_to_alert"Passwords not the same" + ": password=" + password.to_s + "; password confirm=" + password_confirm.to_s
+        add_to_alert"Passwords not the same" + ": password=" + password.to_s + "; password confirm=" + password_confirmation.to_s
       end
       false
 
