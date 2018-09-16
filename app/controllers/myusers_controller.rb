@@ -103,7 +103,7 @@ class MyusersController < ApplicationController
   end
 
   def new_user_confirmation
-    puts "got here"
+
     #This is the initial response to receiving the email with the confirmation
     @myuser = Myuser.where(:confirmation_token => params[:confirmation_token]).last
 
@@ -138,6 +138,7 @@ class MyusersController < ApplicationController
       end
     else
       password_confirm = params[:myuser][:password_confirm]
+      puts "password=" + password.to_s + "; password confirm=" + password_confirm.to_s
       if encode_password?(@myuser, password, password_confirm)
         session[:logged_in_user]= @myuser.id
         register_log_on
