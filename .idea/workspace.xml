@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f62c71e-f1a2-4847-b67d-c5e0957923d7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controllers/myusers_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/myusers_controller.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
@@ -100,7 +99,7 @@
           <entry key="Gemfile" value="79" />
           <entry key="css" value="36" />
           <entry key="erb" value="14215" />
-          <entry key="rb" value="21864" />
+          <entry key="rb" value="21869" />
           <entry key="scss" value="545" />
           <entry key="yml" value="18" />
         </counts>
@@ -110,7 +109,7 @@
           <entry key="CSS" value="36" />
           <entry key="RHTML" value="14215" />
           <entry key="RegExp" value="1" />
-          <entry key="Ruby" value="21942" />
+          <entry key="Ruby" value="21947" />
           <entry key="SCSS" value="545" />
           <entry key="YAML" value="18" />
         </counts>
@@ -134,8 +133,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/controllers/myusers_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="141" column="33" selection-start-line="141" selection-start-column="33" selection-end-line="141" selection-end-column="33" />
+            <state relative-caret-position="391">
+              <caret line="171" column="50" selection-start-line="171" selection-start-column="50" selection-end-line="171" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -546,12 +545,12 @@
       <workItem from="1536924886791" duration="10625000" />
       <workItem from="1536952391220" duration="14086000" />
       <workItem from="1537012598713" duration="14123000" />
-      <workItem from="1537077680974" duration="1018000" />
+      <workItem from="1537077680974" duration="1380000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="424579000" />
+    <option name="totallyTimeSpent" value="424941000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -921,8 +920,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/myusers_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="141" column="33" selection-start-line="141" selection-start-column="33" selection-end-line="141" selection-end-column="33" />
+        <state relative-caret-position="391">
+          <caret line="171" column="50" selection-start-line="171" selection-start-column="50" selection-end-line="171" selection-end-column="50" />
         </state>
       </provider>
     </entry>
