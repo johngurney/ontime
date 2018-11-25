@@ -89,6 +89,6 @@ test:
 
 production:
   <<: *default
-  database: ontime
-  username: postgres
-  password: password
+  database: d8nruvn83vr3tc
+  username: jlufybfzbrsegs
+  password: 7307808ce42f207043090bca3299df5c3148eeabac65d027830eca23c1898840
