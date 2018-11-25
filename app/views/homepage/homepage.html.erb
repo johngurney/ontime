@@ -3,7 +3,7 @@
 <table align="center" style="background-color: lightblue; border-style: solid; border-width: 5px;" width="25%" height="50">
   <tr>
     <td align="center">
-      <%= link_to('test 1', 'test1') %>
+      <%= link_to('test 1', 'test1' ) %>
     </td>
     <td align="center">
       <%= link_to('test 2', 'test2') %>
@@ -28,11 +28,12 @@
     <col width="25%">
     <tr>
       <td align="center">
+        <%= link_to('Add user', new_user_path) %><br/>
         <%= link_to('Users', myusers_path) %><br/>
         <%= link_to('Updates', updates_path) %>
       </td>
       <td align="center">
-        <%= link_to('Logout', 'logout', method: :delete) %>
+        <%= link_to('Logout', logout_path, method: :delete) %>
       </td>
       <td align="center">
         <%= link_to('Clients', clients_path) %>
@@ -47,7 +48,7 @@
   <table align="center" style="background-color: lightblue; border-style: solid; border-width: 5px;" width="25%" height="50">
     <tr>
       <td align="center">
-        <%= link_to('Login', 'login')  %>
+        <%= link_to("Login", login_path )  %>
       </td>
     </tr>
   </table>
@@ -65,7 +66,7 @@
         <span style="font-weight: bold">Your outstanding updates</span>
 
         <div class="select_box_list">
-          <% if !@myuser.blank? %> %>
+          <% if !@myuser.blank? %>
             <span style="color: red;">
               <% @myuser.update_reminders.where('window_end_date <= ?', Date.today).order('window_start_date').each do |reminder| %>
                 <%= link_to (reminder.task.name + " " + reminder.start_datestg + " " + reminder.end_datestg), update_new_for_task_path(reminder.task) %> <br>

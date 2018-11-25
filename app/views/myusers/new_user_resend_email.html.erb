@@ -1,0 +1,24 @@
+<table>
+  <col width="20%"/>
+  <col width="60%"/>
+  <col width="20%"/>
+  <tr>
+    <td></td>
+    <td>
+      <div class="heading1">Out of time</div >
+      <div class="user_text">
+        Your invitation was sent at <%= @myuser.confirmation_sent_at_string %>
+        and you are now out of time to confirm.  <br/><br/>Please click below to request for a new invitation to be sent.<br/><br/>
+        <%= form_for @myuser, method: :get do |f| %>
+
+            <%= f.submit("Request re-send email", :class =>"large_button", :style => "width: 350px") %>
+
+        <% end %>
+
+      </div>
+    </td>
+    <td></td>
+
+  </tr>
+
+</table>

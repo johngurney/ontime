@@ -10,14 +10,17 @@ class MyusersController < ApplicationController
     @position_term = ""
     @experience_term = ""
     @allmyusers = Myuser.all
-    @myusers=Myuser.all
+    @myusers=Myuser.where(:has_confirmed_flag => true)
   end
 
-  #"%#{params[:search]}%"
+  def new_user
+    @myuser=Myuser.new
+    render 'new_user'
+  end
 
   def search
 
-    @allmyusers = Myuser.all
+    @allmyusers = Myuser.where(:has_confirmed_flag => true)
     @myusers = Myuser.all
     @search_term = params[:search]
     if !@search_term.blank?
@@ -61,10 +64,18 @@ class MyusersController < ApplicationController
     @myuser=Myuser.new
   end
 
+  def test1
+    @myuser=Myuser.first
+    render 'confirmation_out_time'
+  end
+
+
+
   def create
 
     email=params[:myuser][:email]
-    if Myuser.where(:email => email).count > 0 && false
+
+    if Myuser.where(:email => email).count > 0 && false #temp code to allow more than one dan.tench@gmail.com email address
 
       if Myuser.where(:email => email).count > 1
         #Do some code here to remove the additional users (which shouldn't be there!)
@@ -76,29 +87,60 @@ class MyusersController < ApplicationController
         add_to_alert "That email is already registered"
         render 'index'
       else
+
         @resend_email_message="That email has already been registered but the user has not confirmed.  Resend confirmation email?"
-        render 'user_setup/new_user_resend_email'
+        render 'new_user_resend_email'
 
       end
 
     else
+
       @myuser= Myuser.new (myuser_params)
-      raw, enc = Devise.token_generator.generate(User, :confirmation_token )
-      @myuser.confirmation_token = enc
-      base_url = request.base_url.to_s #+ "new_user/" + user.confirmation_token
 
-      @myuser.confirmation_sent_at = DateTime.now
-      if Myuser.where(:user_status => "Admin").count == 0
-        @myuser.user_status="Admin"
-        add_to_alert  "Please note that this user was registered with admin user status since there are no other users with that status."
+      if @myuser.user_status == Rails.configuration.super_admin_name or @myuser.user_status == Rails.configuration.admin_name
+
+        render "password_check_for_making_new_admin"
+      else
+        create_myuser_and_send_email myuser
       end
-
-      @myuser.save
-      UserMailer.confirmation_email(@myuser, base_url).deliver_now
-
-      render 'email_has_been_sent'
-
     end
+
+  end
+
+  def confirm_for_new_admin_user
+    password=params[:password]
+    if test_password(Myuser.find(session[:logged_in_user]), password)
+
+#    params.require(:myuser).permit(:email, :first_name, :last_name, :user_status)
+
+      @myuser= Myuser.new (params.permit(:email, :first_name, :last_name, :user_status))
+      puts "+++" + @myuser.user_status.to_s
+      create_myuser_and_send_email
+    else
+      @alert_message="Incorrect password"
+      render "password_check_for_making_new_admin"
+    end
+  end
+
+  def create_myuser_and_send_email()
+
+    puts "***" + @myuser.user_status.to_s
+
+    raw, enc = Devise.token_generator.generate(User, :confirmation_token )
+    @myuser.confirmation_token = enc
+    base_url = request.base_url.to_s #+ "new_user/" + user.confirmation_token
+
+    @myuser.confirmation_sent_at = DateTime.now
+    if Myuser.where(:user_status => Rails.configuration.super_admin_name).count == 0
+      @myuser.user_status = Rails.configuration.super_admin_name
+      add_to_alert  "Please note that this user was registered with admin user status since there are no other users with that status."
+    end
+
+    @myuser.save
+    UserMailer.confirmation_email(@myuser, base_url).deliver_now
+
+    render 'email_has_been_sent'
+
 
   end
 
@@ -107,23 +149,68 @@ class MyusersController < ApplicationController
     #This is the initial response to receiving the email with the confirmation
     @myuser = Myuser.where(:confirmation_token => params[:confirmation_token]).last
 
-    puts "***" + @myuser.email
-    @minimum_password_length=@@minimum_password_length
+    if @myuser.has_confirmed_flag
 
-    current_time = Time.current #+ 2.days
-    com_sent =@myuser.confirmation_sent_at
+      render 'new_user_invitation_already_completed'
 
-    #diff=Date.new(2009, 10, 13) - Date.new(2009, 10, 11)
-    diff_in_days= (current_time - com_sent)/1.day
-
-    if diff_in_days >= 2
-      @resend_email_message="You are out of time to confirm.  Resend confirmation email?"
-      render 'user_setup/new_user_resend_email'
     else
-      render 'user_setup/new_user_confirmation'
+      @minimum_password_length=@@minimum_password_length
+
+      current_time = Time.current #+ 2.days
+      com_sent =@myuser.confirmation_sent_at
+
+      #diff=Date.new(2009, 10, 13) - Date.new(2009, 10, 11)
+      diff_in_days= (current_time - com_sent)/1.day
+
+      if diff_in_days >= 2
+        @resend_email_message="You are out of time to confirm.  Please asked for a new invitation to be sent."
+        render 'new_user_resend_email'
+      else
+        render 'new_user_confirmation'
+      end
     end
 
   end
+
+  def myuser_amend
+    find_myuser
+    @myuser.update(params.permit(:email, :first_name, :last_name, :user_status, :experience, :team, :position, :office, :work_tel, :mobile_tel, :home_tel, :other_tel1, :other_tel2 ))
+    @myuser.save
+
+    redirect_to myuser_path(@myuser)
+  end
+
+
+  def update_user
+    find_myuser
+    @myuser.update(myuser_all_params)
+    @myuser.save
+
+    redirect_to myuser_path(@myuser)
+  end
+
+  def user_invite_return
+
+    find_myuser
+
+    password = params[:password]
+    password_confirmation = params[:password_confirmation]
+    if encode_password?(@myuser, password, password_confirmation)
+
+      session[:logged_in_user]= @myuser.id
+      register_log_on(@myuser)
+      @myuser.update(params.permit(:first_name, :last_name))
+      @myuser.has_confirmed_flag=true
+      @myuser.save
+      redirect_to root_path
+    else
+      alert_message = "Passwords don't match or insufficiently long"
+      redirect_to myuser_path(@myuser)
+    end
+
+
+  end
+
 
   def update
     find_myuser
@@ -139,9 +226,10 @@ class MyusersController < ApplicationController
     else
       password_confirmation = params[:myuser][:password_confirmation]
       if encode_password?(@myuser, password, password_confirmation)
+
         session[:logged_in_user]= @myuser.id
-        register_log_on
-        @myuser.update(myuser_params)
+        register_log_on(@myuser)
+        @myuser.update(params.require(:myuser).permit(:first_name, :last_name))
         @myuser.save
         redirect_to root_path
       else
@@ -153,14 +241,16 @@ class MyusersController < ApplicationController
 
   #This is the response after the user has entered the further details
 
-
   def encode_password?(myuser, password, password_confirmation)
 
     if password.length>=@@minimum_password_length && password==password_confirmation
-      myuser =Myuser.find(params[:id])
-      myuser.update(params.require(:myuser).permit(:first_name, :last_name ))
+      myuser = Myuser.find(params[:id])
+      myuser.update(params.permit(:first_name, :last_name ))
       encrypted_password=User.new(password: password).encrypted_password
       myuser.encrypted_password=encrypted_password
+      myuser.save
+
+
       true
 
     else
@@ -175,24 +265,207 @@ class MyusersController < ApplicationController
     end
   end
 
-  def new_user_resend_email
-    myuser = Myuser.find(params[:id])
-    raw, enc = Devise.token_generator.generate(User, :confirmation_token )
-    myuser.confirmation_token = enc
-    base_url = request.base_url.to_s
-
-    myuser.confirmation_sent_at=DateTime.now
-
-    myuser.save
-    UserMailer.confirmation_email(myuser, base_url).deliver_now
-    render 'user_setup/new_user_ok'
-
-  end
+  # def new_user_resend_email
+  #   myuser = Myuser.find(params[:id])
+  #   raw, enc = Devise.token_generator.generate(User, :confirmation_token )
+  #   myuser.confirmation_token = enc
+  #   base_url = request.base_url.to_s
+  #
+  #   myuser.confirmation_sent_at=DateTime.now
+  #
+  #   myuser.save
+  #   UserMailer.confirmation_email(myuser, base_url).deliver_now
+  #   render 'new_user_ok'
+  #
+  # end
 
 
   def destroy
     @myuser.delete
     render 'index'
+  end
+
+  def login
+    @myuser=Myuser.new
+    render 'login'
+  end
+
+  def login_submit
+    email=params[:email]
+    if Myuser.where(:email => email).count==0
+      @alert="Not a valid email address"
+      login()
+    else
+      myuser=Myuser.where(:email => email).last
+      password=params[:password]
+
+      if test_password(myuser, password)
+        register_log_on (myuser)
+        redirect_to root_path
+      else
+        @alert="Incorrect password"
+        login()
+      end
+    end
+  end
+
+  def logout
+    session[:logged_in_user]= nil
+    cookies[:logged_in_token]= nil
+    redirect_to root_path
+  end
+
+  def upload_user_file
+    uploaded_io = params[:file]
+    text=uploaded_io.read
+    TempUser.delete_all
+
+    flag = false
+    first_name_column = -1
+    last_name_column = -1
+    experience_column = -1
+    team_column = -1
+    position_column = -1
+    office_column = -1
+    email_column = -1
+
+
+    text.each_line do |line|
+      values=line.split "\t"
+      if flag == false
+        first_name_column=find_in_array(values, "first name")
+        last_name_column=find_in_array(values, "last name")
+        experience_column=find_in_array(values, "experience")
+        team_column=find_in_array(values, "team")
+        position_column=find_in_array(values, "position")
+        office_column=find_in_array(values, "office")
+        email_column=find_in_array(values, "email")
+        flag=true
+      else
+        user=TempUser.new
+        if first_name_column >= 0
+          user.first_name = values[first_name_column]
+        end
+        if last_name_column >= 0
+          user.last_name  = values[last_name_column]
+        end
+        if experience_column >= 0
+          user.experience  = values[experience_column]
+        end
+        if team_column >= 0
+          user.team       = values[team_column]
+        end
+        if position_column >= 0
+          user.position   = values[position_column]
+        end
+        if office_column >= 0
+          user.office     = values[office_column].strip
+        end
+        if email_column >= 0 or true
+          user.email      = 'dan.tench@gmail.com'
+        end
+        user.save
+
+      end
+
+
+    end
+
+    redirect_to list_temp_users_path
+
+  end
+
+  def delete_selected_users
+    Myuser.all.each do |myuser|
+      s = params['check'+myuser.id.to_s]
+      if !s.blank?
+        myuser.delete
+      end
+    end
+    redirect_to myusers_path
+  end
+
+  def list_temp_users
+    @tempusers=TempUser.all
+  end
+
+  def find_in_array(arry , text)
+    a=arry.index{|v| v.downcase == text.downcase}
+    if a.blank?
+      -1
+    else
+      a
+    end
+
+
+  end
+
+  def edit_temp_user
+    @tempuser = TempUser.find(params[:id])
+  end
+
+  def update_temp_user
+    tempuser = TempUser.find(params[:id])
+    tempuser.update(params.require(:temp_user).permit(:email, :first_name, :last_name, :user_status))
+    tempuser.save
+    redirect_to list_temp_users_path
+  end
+
+  def test_password(myuser , password)
+
+    user=User.new
+    user.encrypted_password = myuser.encrypted_password
+    user.valid_password?(password)
+
+  end
+
+
+  def import_users
+
+    TempUser.all.each do |temp_user|
+      s = params['check'+temp_user.id.to_s]
+      if !s.blank?
+        print "***" + temp_user.last_name
+
+        myuser=Myuser.new
+        myuser.first_name = temp_user.first_name
+        myuser.last_name = temp_user.last_name
+        myuser.experience = temp_user.experience
+        myuser.team = temp_user.team
+        myuser.position = temp_user.position
+        myuser.office = temp_user.office
+        myuser.email = temp_user.email
+        myuser.save
+      end
+    end
+
+    TempUser.delete_all
+
+    redirect_to myusers_path
+  end
+
+  def invited_user_show
+    @myuser = Myuser.find(params[:id])
+    if !@myuser.has_confirmed_flag
+
+    else
+    end
+
+  end
+
+  def update_invited_user
+    find_myuser
+
+    @myuser.update(params.require(:myuser).permit(:first_name, :last_name, :user_status, :email))
+
+    if params["commit"] == "Resend invitation"
+      base_url = request.base_url.to_s
+      UserMailer.confirmation_email(@myuser, base_url).deliver_now
+      @myuser.confirmation_sent_at=DateTime.now
+
+    end
+    @myuser.save
+    redirect_to myusers_path
   end
 
   private
@@ -203,5 +476,9 @@ class MyusersController < ApplicationController
 
   def myuser_params
     params.require(:myuser).permit(:email, :first_name, :last_name, :user_status)
+  end
+
+  def myuser_all_params
+    params.require(:myuser).permit(:email, :first_name, :last_name, :user_status, :experience, :team, :position, :office, :work_tel, :mobile_tel, :home_tel, :other_tel1, :other_tel2 )
   end
 end

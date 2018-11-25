@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_15_082224) do
+ActiveRecord::Schema.define(version: 2018_11_12_220531) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "actions", force: :cascade do |t|
+    t.text "content"
+    t.datetime "do_date"
+    t.integer "message_id"
+    t.boolean "done"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "actions_myusers", id: false, force: :cascade do |t|
+    t.integer "action_id"
+    t.integer "myuser_id"
+  end
 
   create_table "clients", force: :cascade do |t|
     t.string "name"
@@ -48,11 +65,15 @@ ActiveRecord::Schema.define(version: 2018_09_15_082224) do
     t.integer "client_id"
     t.boolean "daily_flag"
     t.text "comments"
+    t.string "time_zone"
+    t.datetime "working_day_start"
+    t.datetime "working_day_end"
+    t.boolean "include_weekends"
   end
 
   create_table "jobs_myusers", id: false, force: :cascade do |t|
-    t.integer "job_id", null: false
-    t.integer "myuser_id", null: false
+    t.bigint "job_id", null: false
+    t.bigint "myuser_id", null: false
   end
 
   create_table "logged_on_logs", force: :cascade do |t|
@@ -61,6 +82,17 @@ ActiveRecord::Schema.define(version: 2018_09_15_082224) do
     t.datetime "last_use"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "encrypted_content"
+    t.string "forum_name"
+    t.integer "sender_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "number"
+    t.integer "myuser_id"
+    t.integer "colour"
   end
 
   create_table "myusers", force: :cascade do |t|
@@ -83,11 +115,20 @@ ActiveRecord::Schema.define(version: 2018_09_15_082224) do
     t.string "experience"
     t.string "team"
     t.string "position"
+    t.boolean "request_another_confirmation_email"
+    t.string "work_tel"
+    t.string "mobile_tel"
+    t.string "home_tel"
+    t.string "other_tel1"
+    t.string "other_tel2"
+    t.text "server_private_key"
+    t.text "client_public_key"
+    t.integer "messageroom_id"
   end
 
   create_table "myusers_tasks", id: false, force: :cascade do |t|
-    t.integer "myuser_id", null: false
-    t.integer "task_id", null: false
+    t.bigint "myuser_id", null: false
+    t.bigint "task_id", null: false
   end
 
   create_table "reminder_schedules", force: :cascade do |t|
@@ -123,6 +164,21 @@ ActiveRecord::Schema.define(version: 2018_09_15_082224) do
     t.integer "template_id"
     t.boolean "for_template_flag"
     t.boolean "date_error"
+    t.boolean "duration_in_days"
+    t.boolean "offset_in_days"
+  end
+
+  create_table "temp_users", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "position"
+    t.string "team"
+    t.string "office"
+    t.string "experience"
+    t.string "user_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "templates", force: :cascade do |t|
@@ -138,12 +194,12 @@ ActiveRecord::Schema.define(version: 2018_09_15_082224) do
     t.float "proportion"
     t.boolean "start_end"
     t.integer "offset_days"
-    t.integer "repeat_weekday"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "task_id"
     t.boolean "before_after"
     t.string "offset_hours"
+    t.boolean "repeat_weekday"
     t.string "repeat_time"
     t.boolean "allow_email_flag"
     t.boolean "update_window_percentage_flag"

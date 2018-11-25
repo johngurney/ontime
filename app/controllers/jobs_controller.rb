@@ -1,20 +1,26 @@
   class JobsController < ApplicationController
 
+    before_action :get_job, only: [:amend_team, :timing, :today, :now, :edit, :update, :import_template, :delete_all_tasks, :message_forum]
+
+
+
   def index_for_client
-    find_client
+    get_client
     client_id = @client.id
     @jobs = Job.where(:client => client_id)
     render 'index'
   end
 
   def new_job_for_client
+    puts "***** new_job_for_client ******"
     @job= Job.new
-    find_client
+    get_client
     @client=Client.find(params[:id])
     @job.client=@client
     @job.name="New job"
     @job.start=DateTime.now
     @job.daily_flag=true
+    @job.time_zone = Rails.configuration.default_time_zone
     @job.save
 
     setup_for_edit
@@ -24,6 +30,7 @@
 
 
   def create
+    puts "CREATE"
     @job= Job.new (job_params)
     client=Client.find(@job.client_id)
     if @job.save
@@ -34,12 +41,10 @@
   end
 
   def amend_team
-    find_job
     @client = @job.client
     @jobmyusers = @job.myusers
     @clientmyusers = @client.myusers
     @myusers = Myuser.all
-    puts "###"+@myusers.count.to_s
   end
 
   def add_users
@@ -69,22 +74,76 @@
   end
 
   def timing
-    find_job
-    @job.daily_flag = (params[:daily_option] == "1")
-    d = params[:start]
-    @job.start = Date.new(d["(1i)"].to_i,d["(2i)"].to_i,d["(3i)"].to_i)
-    @job.save
+
+    time_zone = params[:time_zone]
+
+    if !time_zone.blank?
+      @job.daily_flag = (params[:daily_option] == "1")
+
+      @job.time_zone=time_zone
+
+      d1 = params[:start]
+
+      if @job.daily_flag
+        time_start_string = d1["(1i)"] + "/" + d1["(2i)"] + "/" + d1["(3i)"]
+        @job.start = ActiveSupport::TimeZone[time_zone].parse(time_start_string)
+      else
+        d2 = params[:start_time]
+
+        if !d2.blank?
+          time_start_string = d1["(1i)"] + "/" + d1["(2i)"] + "/" + d1["(3i)"] + " " +  d2["(4i)"] + ":" + d2["(5i)"]
+          @job.start = ActiveSupport::TimeZone[time_zone].parse(time_start_string)
+        else
+          time_start_string = d1["(1i)"] + "/" + d1["(2i)"] + "/" + d1["(3i)"] + " " +  Rails.configuration.working_day_start_time
+          @job.start = ActiveSupport::TimeZone[time_zone].parse(time_start_string)
+        end
+
+        d=params[:working_day_start]
+        if !d.blank?
+          working_day_start_string = d["(4i)"] + ":" + d["(5i)"]
+          @job.working_day_start = ActiveSupport::TimeZone[time_zone].parse(working_day_start_string)
+        else
+          @job.working_day_start = ActiveSupport::TimeZone[time_zone].parse(Rails.configuration.working_day_start_time)
+        end
+
+        d=params[:working_day_end]
+        if !d.blank?
+          working_day_end_string = d["(4i)"] + ":" + d["(5i)"]
+          @job.working_day_end = ActiveSupport::TimeZone[time_zone].parse(working_day_end_string)
+        else
+          @job.working_day_end = ActiveSupport::TimeZone[time_zone].parse(Rails.configuration.working_day_end_time)
+        end
+      end
+
+      @job.include_weekends = (params[:inc_weekends]=="1")
+
+
+
+      @job.save
+
+    end
+
     redirect_to edit_job_path(@job)
 
   end
 
   def today
-    find_job
-    @job.start = Date.today()
-    puts "+++" + @job.start.to_s
+    if @job.daily_flag
+      @job.start = Date.today
+    else
+      @job.start = Date.today + @job.start.hour*3600 + @job.start.min*60
+    end
     @job.save
     redirect_to edit_job_path(@job)
+  end
 
+  def now
+    if !@job.daily_flag
+      @job.start = Time.now.in_time_zone(@job.time_zone)
+
+      @job.save
+    end
+    redirect_to edit_job_path(@job)
   end
 
   def setup_for_edit
@@ -96,11 +155,8 @@
   end
 
   def edit
-    puts "&&&"
-    find_job
-    @job.UpdateTimings
+    @job.update_timings
     @client=@job.client
-    puts "%%%" + @job.name + "; " + @client.name
     @tasks = @job.tasks
     @jobmyusers=@job.myusers
     @clientmyusers=@client.myusers
@@ -109,10 +165,10 @@
   end
 
   def delete_task
-    find_task
+    get_task
     @job=@task.job
     @task.delete
-    @job.UpdateTimings
+    @job.update_timings
     @client=@job.client
     @tasks = @job.tasks
     @jobmyusers=@job.myusers
@@ -123,7 +179,6 @@
   end
 
   def update
-    find_job
     @job.update(job_params)
 
     redirect_to edit_job_path (@job)
@@ -131,7 +186,6 @@
   end
 
   def import_template
-    find_job
     template=Template.find(params[:template])
 
     lookup={}
@@ -181,39 +235,65 @@
         new_linked_id=lookup[task.linked_to_task_id]
         if !new_linked_id.blank?
           task.linked_to_task_id = new_linked_id
-          puts "***" + old_id.to_s + "; " + new_id.to_s + "; " + new_linked_id.to_s
           task.save(validate: false)
         end
       end
     end
 
-    @job.UpdateTimings
+    @job.update_timings
 
     redirect_to edit_job_path (@job)
   end
 
 
   def delete_all_tasks
-    find_job
+
     @job.tasks.delete_all
 
 
-    @job.UpdateTimings
+    @job.update_timings
 
     redirect_to edit_job_path (@job)
   end
 
+  def message_forum
+    puts "****** JOB **********"
+    @message_forum_name = "job" + @job.id.to_s
+    @is_task = false
+    @myusers_for_message_forum = @job.myusers
+    render "tasks/message_forum", :layout => "message_forum"
+  end
+
+
+  def summons_email1
+
+    @job.myusers.each do |myuser|
+      if params["check" + myuser.id.to_s] == "1"
+        UserMailer.summons_email(params[:email_message],  myuser, @job, request.base_url.to_s).deliver_now
+      end
+    end
+
+    @is_task = false
+    render "summons_email_sent", :layout => "message_forum"
+
+
+  end
+
+  def summons_landing
+
+  end
+
   private
 
-  def find_job
+  def get_job
     @job = Job.find(params[:id])
   end
 
-  def find_task
+  def get_task
     @task= Task.find(params[:taskid])
   end
 
-  def find_client
+  def get_client
     @client = Client.find(params[:id])
   end
 

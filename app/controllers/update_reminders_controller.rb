@@ -128,7 +128,6 @@ class UpdateRemindersController < ApplicationController
       @update_reminder.repeat_weekday=params[:weekday].to_i
       @update_reminder.repeat_time=params[:repeat_time]
 
-      puts "}}}" + @update_reminder.repeat_time
     end
 
     @update_reminder.update_window_percentage_flag = params[:update_window]=="1"
@@ -148,7 +147,6 @@ class UpdateRemindersController < ApplicationController
 
   def update_and_return
     update_fields
-    puts "^^^^^^^^^^^^"
     redirect_to edit_task_path(@update_reminder.task)
   end
 
@@ -165,9 +163,7 @@ class UpdateRemindersController < ApplicationController
   end
 
   def set_schedule
-    puts "^^" + params[:scheduleid]
     @reminder_schedule= ReminderSchedule.find(params[:scheduleid])
-    puts "^^"+@reminder_schedule.id.to_s
   end
 
   # Use callbacks to share common setup or constraints between actions.

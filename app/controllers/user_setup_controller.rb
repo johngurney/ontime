@@ -39,12 +39,11 @@ class UserSetupController < ApplicationController
       raw, enc = Devise.token_generator.generate(User, :confirmation_token )
       myuser.confirmation_token = enc
       base_url = request.base_url.to_s #+ "new_user/" + user.confirmation_token
-      puts "++++ " + base_url
 
       myuser.confirmation_sent_at=DateTime.now
-      if Myuser.where(:user_status => "Admin").count == 0
-        myuser.user_status="Admin"
-        @alert = "Please note that this user was registered with admin user status since there are no other users with that status."
+      if Myuser.where(:user_status => Rails.configuration.super_admin_name).count == 0
+        myuser.user_status=Rails.configuration.super_admin_name
+        @alert = "Please note that this user was registered with " + Rails.configuration.super_admin_name + " status since there are no other users with that status."
       end
 
       myuser.save
@@ -61,8 +60,6 @@ class UserSetupController < ApplicationController
   end
 
   def login_response
-    #puts "email: "+ params[:myuser][:email]
-    #puts "password: "+ params[:myuser][:password]
     email=params[:myuser][:email]
     if Myuser.where(:email => email).count==0
       @alert="Not a valid email address"
@@ -102,55 +99,16 @@ class UserSetupController < ApplicationController
   end
 
   def test1
-    Task.all.each do |task|
-      if task.name.blank?
-        task.name=""
-      end
-      if task.offset.blank?
-        task.offset=0
-      end
-      if task.start_date.blank?
-        task.start_date=Date.today
-      end
-      if task.end_date.blank?
-
-      end
-      if task.linked_flag.blank?
-        task.linked_flag=true
-      end
-      if task.start_end_flag.blank?
-        task.start_end_flag=true
-      end
-      if task.duration.blank?
-        task.duration=7
-      end
-      if task.completed_flag.blank?
-        task.completed_flag=false
-      end
-      if task.percentage_completed.blank?
-        task.percentage_completed=0
-      end
-      if task.bespoke_offset_flag.blank?
-        task.bespoke_offset_flag=false
-      end
-      if task.bespoke_duration_flag.blank?
-        task.bespoke_duration_flag=false
-      end
-      if task.duration_enddate_flag.blank?
-        task.duration_enddate_flag=true
-      end
-      if task.for_template_flag.blank?
-        task.for_template_flag=false
-      end
-
-      task.save
+    puts "*********** Test 1 ***********"
+    Message.all.each do |message|
+      message.forum_name = "task1"
+      message.save
     end
-    goto_homepage
+    redirect_to root_path
   end
 
   def test2
     update=Update.first
-    update.percentage_time_passed=0
     update.save(validate:false)
     goto_homepage
   end
@@ -170,7 +128,6 @@ class UserSetupController < ApplicationController
 
       myuser.save
 
-      puts "***" + values[0] + '; ' + values[1] + '; ' + values[2] + '; ' + values[3] + '; ' + values[4] + '; ' + values[5]
     end
     goto_homepage
   end

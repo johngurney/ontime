@@ -12,7 +12,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
    def new
-     puts "Got Here"
      Devise.token_generator.digest(User, :confirmation_token, 'abc')
      render 'homepage/test'
 
@@ -31,13 +30,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
    end
 
   def email_confirm
-    puts "URL:" + request.url.to_s
-    puts "users id:" + params[:userid].to_s
     if @user
       current_time=DateTime.now
       confirmation_due_time = @user.confirmation_sent_at + Devise.allow_unconfirmed_access_for
-      puts "ID=" + @user.id.to_s
-      #puts "Current time: " + current_time.strftime("%d %b %T") + "Confirmation time: " + confirmation_due_time.strftime("%d %b %T")
       if current_time > confirmation_due_time
         @user.delete
         render 'confirmations/error_out_of_time'
@@ -48,10 +43,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def email_sign_in
-    puts "URL:" + request.url.to_s
-    puts "users id:" + params[:userid].to_s
     user= User.find(params[:userid])
-    puts "Updating users" + user.email
     user.update(update_params)
     user.save
     redirect_to root_path

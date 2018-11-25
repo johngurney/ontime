@@ -1,0 +1,88 @@
+
+<table>
+<%= form_for( @myuser, url:  update_invited_user_path(@myuser)) do |f| %>
+    <col width="20%"/>
+    <col width="35%"/>
+    <col width="45%"/>
+    <tr>
+      <td></td>
+      <td>
+        <div class="heading1">Invited user</div >
+          <div class="user_text">
+            <%= f.label :email, :class =>"user_text" %><br />
+          </div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email" , :class =>"user"  %><br/>
+      </td>
+      <td>
+        <div class="user" style="font-size: 14pt">
+          The invitation was sent at <%= @myuser.confirmation_sent_at_string %><br/>
+          <% if @myuser.request_another_confirmation_email %>
+          <span style="color: red">The user has requested another invitation be sent</span>
+          <% end %>
+        </div>
+
+
+      </td>
+
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <div class="user_text">
+          <%= f.label :first_name %><br />
+        </div>
+        <%= f.text_field :first_name, :class =>"user" %><br/>
+
+      </td>
+      <td>
+        <div class="user_text">
+          <%= f.label :last_name  %><br />
+        </div>
+        <%= f.text_field :last_name, :class =>"user" %><br/>
+
+      </td>
+    </tr>
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <div class="user_text">
+          <%= f.label :user_status  %><br />
+        </div>
+
+
+      </td>
+      <td>
+        <div class="user_text">
+        </div>
+
+
+      </td>
+    </tr>
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <%= f.select :user_status, options_for_select(logged_in_user_helper.add_new_user_options, @myuser.user_status) , {} , {class: 'user'} %><br/>
+
+      </td>
+      <td>
+
+        <%= f.submit "Save", :class =>"large_button", :style => "width: 150px; margin-right: 20px"  %>
+        <%= f.submit "Resend invitation", :class =>"large_button" %>
+
+      </td>
+
+    </tr>
+
+
+
+  </table>
+<% end %>

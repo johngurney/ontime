@@ -1,28 +1,157 @@
-<h2>Edit user information</h2>
+<%= form_tag myuser_amend_path(@myuser), method: :patch do %>
 
-<%= form_for @myuser do |f| %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+  <table>
+    <col width="20%"/>
+    <col width="40%"/>
+    <col width="40%"/>
+    <tr>
+      <td></td>
+      <td>
+        <div class="heading1">Edit user</div >
+      </td>
+      <td>
+      </td>
+    </tr>
 
-  <div class="field">
-    <%= f.label :first_name %><br />
-    <%= f.text_field :first_name %>
-  </div>
+      <td></td>
+      <td>
+        <div class="small_user_text">
+          First name
+        </div>
+        <%= text_field_tag :first_name, @myuser.first_name, :class =>"small_user" %><br/>
 
-  <div class="field">
-    <%= f.label :last_name %><br />
-    <%= f.text_field :last_name %>
-  </div>
+      </td>
+      <td>
+        <div class="small_user_text">
+          Last name
+        </div>
+        <%= text_field_tag :last_name, @myuser.last_name, :class =>"small_user" %><br/>
 
-  <div class="field">
-    <%= f.label :user_status %><br />
-    <%= f.select :user_status, ["Admin", ["Case chief" ,{class: 'abc'}], "users"], {include_blank: 'Please choose' } , { class: 'abc1'} %>
-  </div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <div class="small_user_text">
+          Position
+        </div>
+        <%= text_field_tag :position, @myuser.position, :class =>"small_user" %><br/>
 
-  <div class="actions">
-    <%= f.submit "OK" %>
-  </div>
+      </td>
+      <td>
+        <div class="small_user_text">
+          Experience
+        </div>
+        <%= text_field_tag :experience, @myuser.experience, :class =>"small_user" %><br/>
+
+      </td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>
+        <div class="small_user_text">
+          Team
+        </div>
+        <%= text_field_tag :team, @myuser.team, :class =>"small_user" %><br/>
+
+      </td>
+      <td>
+        <div class="small_user_text">
+          Office
+        </div>
+        <%= text_field_tag :office, @myuser.office, :class =>"small_user" %><br/>
+
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <div class="small_user_text">
+          User status
+        </div>
+        <%= select_tag :user_status, options_for_select(logged_in_user_helper.add_new_user_options, @myuser.user_status) , {class: 'small_user'} %><br/>
+        <div class="small_user_text">
+          Email
+        </div>
+          <%= email_field_tag :email, @myuser.email, autofocus: true, autocomplete: "email" , :class =>"small_user"  %><br/>
+      </td>
+
+      <td>
+        <div class="small_user_text">
+          Telephone
+        </div>
+        <div class="small_user"  style="height: 100px; width: 300px">
+          <div class="select_box_list" style="height: 95px;">
+          <table>
+            <col width="30%"/>
+            <col width="70%"/>
+            <tr>
+              <td>
+                Work
+              </td>
+              <td>
+                <%= text_field_tag :work_tel  , @myuser.work_tel %><br/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Mobile
+              </td>
+              <td>
+                <%= text_field_tag :mobile_tel , @myuser.mobile_tel  %><br/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Home
+              </td>
+              <td>
+                <%= text_field_tag :home_tel , @myuser.home_tel  %><br/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Other 1
+              </td>
+              <td>
+                <%= text_field_tag :other_tel1 , @myuser.other_tel1   %><br/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Other 2
+              </td>
+              <td>
+                <%= text_field_tag :other_tel2 , @myuser.other_tel2  %><br/>
+              </td>
+            </tr>
+
+          </table>
+        </div>
+      </div>
+
+      </td>
+
+    </tr>
+
+    <tr>
+      <td>
+
+      </td>
+      <td>
+      </td>
+      <td>
+        <%= submit_tag "OK", :class =>"large_button" %>
+
+      </td>
+
+    </tr>
+
+
+  </table>
 <% end %>

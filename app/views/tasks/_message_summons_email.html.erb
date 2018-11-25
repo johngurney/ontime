@@ -1,0 +1,19 @@
+Dear [FIRST_NAME]
+
+We are having an online forum discussion regarding:
+
+<% if !task.blank? %><%= task.name %>;
+
+for the client:
+
+<%= task.job.client.name %>.<% elsif !job.blank? %><%= job.name %>
+
+for the client: <%= job.client.name %>.<% end %>
+
+If you are available, could you please join us by clicking here.
+
+[LINK]
+
+Many thanks
+
+<%= sending_user.name %>

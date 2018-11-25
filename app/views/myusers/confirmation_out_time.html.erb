@@ -1,0 +1,24 @@
+<table>
+  <col width="20%"/>
+  <col width="60%"/>
+  <col width="20%"/>
+  <tr>
+    <td></td>
+    <td>
+    <div class="heading1">Unfortunately, your confirmation is out of time.
+      It was sent on: <%= time_stg_at(@myuser.confirmation_sent_at) %>.
+      You have <%= Rails.configuration.days_to_confirm_invite_email %>&nbspdays to respond.
+      This means you should have responded by
+      <%= time_stg_at(@myuser.confirmation_sent_at + Rails.configuration.days_to_confirm_invite_email.days) %>.<br/>
+      <br/>
+    Please press here to request that the request is resent.<br/><br/>
+    </div >
+    <%= button_to "Request", root_path ,{:method => "get", :style  =>"width: 140px; height:40px"} %>
+
+    </td>
+    <td>
+
+    </td>
+  <td></td>
+</tr>
+</table>

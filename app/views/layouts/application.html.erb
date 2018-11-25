@@ -9,6 +9,20 @@
 
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+  <script type="text/javascript">
+
+  function confSubmit(form, message) {
+  if (confirm(message)) {
+  form.submit();
+  }
+
+  else {
+  }
+  }
+  </script>
+
+
 </head>
 
 
@@ -28,6 +42,8 @@
 
     <td align="center" style="font-size: 40px"; >
       <%= link_to('Home', root_path) %>
+      <div align="center" style="font-size: 10pt; color: darkblue; font-weight: bold">Project management for legal services</div>
+
     </td>
 
     <td align="center" style="font-size: 50pt; font-weight: bold">On
@@ -36,7 +52,7 @@
 
     <td align="center" style="font-size: 10pt; font-weight: bold">
       <% if logged_in_user_helper then %>
-      Logged in as <%= logged_in_user_helper.email %><br/>
+      Logged in as <%= logged_in_user_helper.first_name %> <%= logged_in_user_helper.last_name %>(<%= logged_in_user_helper.email %>)<br/>
         <%= logged_in_user_helper.id%><br/>
       <% end %>
       Number of users:
@@ -48,8 +64,6 @@
 
 
 
-<div align="center" style="font-size: 20pt; color: darkblue; font-weight: bold">Project management for legal services</div>
-<br/>
 <%= yield %>
 </body>
 </html>

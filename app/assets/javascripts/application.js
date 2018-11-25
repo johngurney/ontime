@@ -13,4 +13,14 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
+//= require jquery
 //= require_tree .
+
+var past_messages_downloaded, myusers_for_message_forum
+var client_public_key, client_private_key, server_public_key, crypt, previous_messages , next_messages, allow_new_messages, message_packets, message_id
+var message_forum_name
+var job_email_availability, job_email_other, job_email_type
+
+function show_public_key()  {
+  alert ("Key1 = " + this.server_public_key);
+};

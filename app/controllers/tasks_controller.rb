@@ -1,14 +1,19 @@
 class TasksController < ApplicationController
 
-  before_action :set_task, only: [:show, :edit, :update, :reminders_completed]
+  before_action :get_task, only: [:show, :edit, :edit1, :update, :reminders_completed, :timing, :import_schedule, :message_forum, :summons_landing, :summons_email]
+  skip_before_action :verify_authenticity_token, only: [:action]
 
   def new_task_for_job
+
     setup_task
     set_job
-    puts "***" + @job.id.to_s
     @task.job = @job
-    @task.template = Template.first
-    @task.save
+    if Template.count > 0
+      @task.template = Template.first
+    end
+
+    @task.save(validate: false)
+
 
     @client=@job.client
     edit_set_up_for_selectors
@@ -21,7 +26,7 @@ class TasksController < ApplicationController
     @task.job = Job.first
     @task.template=@template
     @task.for_template_flag = true
-    @task.save
+    @task.save(validate: false)
     edit_set_up_for_selectors
     render 'edit_for_template'
   end
@@ -42,30 +47,19 @@ class TasksController < ApplicationController
     @task.start_date=Date.today
     @task.end_date=Date.today + @task.duration.to_i.days
 
-    puts "&&& " + @task.start_datestg + "; " + @task.end_datestg + "; " + @task.duration.to_s
-
   end
 
   # GET /tasks/1/edit
   def edit
 
-
     edit_set_up_for_selectors
+    if @duration_options.include? @task.duration
+      @task.bespoke_duration_flag = false
+    end
 
     if !@task.for_template_flag
-
-     @job=@task.job
-      @client=@job.client
-      @taskmyusers = @task.myusers
-      @jobmyusers=@job.myusers
-
-     @job.tasks.each  do |task|
-       if task.id != @task.id
-         @tasks_to_link_to << [task.name , task.id]
-       end
-     end
-
-     render 'edit'
+      edit_set_up_links
+      render 'edit'
 
     else
       @template=@task.template
@@ -79,25 +73,53 @@ class TasksController < ApplicationController
     end
   end
 
+  #Window.open
+  #https://www.w3schools.com/jsref/met_win_open.asp
+
+  def edit1
+    #This is used on timing so that there is not the bepokse flag check
+
+    edit_set_up_for_selectors
+    edit_set_up_links
+    render 'edit'
+
+  end
 
   def edit_set_up_for_selectors
-    @offset_options=[-28, -14, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 10, 14, 28, "Specify"]
-    @offset_options_hours=[]
-    @duration_options=[0, 1, 2, 3, 4, 5, 6, 7, 10, 14, 28, "Specify"]
-    @progress=[]
-    @duration_options_hours=[]
-    (-47..47).each do |a|
+    if @task.offset_in_days
+      @offset_options=[-28, -14, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 10, 14, 28, "Specify"]
+    else
+      @offset_options=[]
+      (-47..47).each do |a|
 
-      b=(a.to_f/48).round(3)
-
-      @offset_options_hours  << [offset_duration_hours_value(b), b ]
-      if a>= 0
-        @duration_options_hours << [offset_duration_hours_value(b), b ]
-
+        @offset_options  <<  a.to_f / 2
       end
-
+      @offset_options << ["Specify"]
     end
 
+    if @task.duration_is_days
+      @duration_options=[]
+      [0, 1, 2, 3, 4, 5, 6, 7, 10, 14, 28].each do |a|
+        @duration_options << duration_days_stg(a)
+      end
+    else
+      @duration_options=[]
+      (0..20).each do |a|
+        @duration_options << duration_hours_stg(a.to_f/2)
+      end
+      (11..20).each do |a|
+        @duration_options << duration_hours_stg(a)
+      end
+      (5..10).each do |a|
+        @duration_options << duration_hours_stg(a * 5)
+      end
+      (6..10).each do |a|
+        @duration_options << (a * 10)
+      end
+    end
+    @duration_options << ["Specify"]
+
+    @progress=[]
     (0..10).each do |a|
       @progress << (a * 10).to_s # + '%'
     end
@@ -112,9 +134,16 @@ class TasksController < ApplicationController
 
   end
 
+  def edit_set_up_links
+    @task.job.tasks.each  do |task|
+      if task.id != @task.id
+        @tasks_to_link_to << [task.name , task.id]
+      end
+    end
+  end
+
   def import_schedule
 
-    set_task
     schedule = ReminderSchedule.find(params[:schedule])
 
     schedule.update_reminders.each do |reminder|
@@ -126,23 +155,23 @@ class TasksController < ApplicationController
 
   def timing
 
-    set_task
-
     if @task.linked_flag
 
       @task.link_to_start = params[:start_end] == "1"
       @task.linked_to_task_id=params[:linked_to_task].to_i
 
-      offset = params[:offset_days_select]
+      @task.offset_in_days = (params[:offset_days_hours] == "Days")
+
+      offset = params[:offset_period_select]
       if !offset.blank?
         if offset == "Specify"
           @task.bespoke_offset_flag = true
-          if !params[:offset_days_text].blank?
-            @task.offset = params[:offset_days_text]
+          if !params[:offset_bespoke_period].blank?
+            @task.offset = params[:offset_bespoke_period].to_f
           end
         else
           @task.bespoke_offset_flag = false
-          @task.offset = offset.to_i
+          @task.offset = offset.to_f
         end
       end
     else
@@ -152,25 +181,32 @@ class TasksController < ApplicationController
     end
 
     @task.fixed_end_date = (params[:duration] == "1")
+
     if !@task.fixed_end_date
 
-      duration = params[:duration_days_select]
-      if !duration.blank?
+      @task.duration_in_days = (params[:duration_days_hours] == "Days")
+
+      duration = params[:duration_period_select]
+
+      puts "******" + duration.to_s
+
+      if @task.bespoke_duration_flag
+        if duration.blank? or duration == "Specify"
+          duration = params[:duration_bespoke_period]
+          @task.duration = duration.to_f
+        else
+          @task.duration = duration.to_f
+          @task.bespoke_duration_flag=false
+        end
+      else
+        puts "1******" + duration.to_s
         if duration== "Specify"
           @task.bespoke_duration_flag = true
-          if !params[:duration_days_text].blank?
-            @task.duration = params[:duration_days_text]
-          end
         else
-          @task.bespoke_duration_flag = false
-          @task.duration = params[:duration_days_select].to_i
+          @task.duration = duration.to_f
         end
       end
 
-      duration_hours = params[:duration_hours]
-      if !duration_hours.blank?
-        @task.duration += duration_hours.to_f
-      end
     else
 
       @task.end_date = @task.parse_date(params[:end_date])
@@ -180,8 +216,9 @@ class TasksController < ApplicationController
 
     @task.save(validate: false)
 
-    @task.job.UpdateTimings
-    redirect_to edit_task_path(@task)
+    @task.job.update_timings
+
+    redirect_to edit1_task_path(@task)
 
   end
 
@@ -210,13 +247,12 @@ class TasksController < ApplicationController
     task = Task.find(params[:id])
     task.linked_flag = (params[:linked]) == "1"
     task.save(validate: false)
-    task.job. UpdateTimings
+    task.job. update_timings
     redirect_to edit_task_path(task)
   end
 
   def remove_users
     task= Task.find(params[:id])
-    puts "&&&" + task.id.to_s + "; " + task.for_template_flag.to_s
     myusers = Myuser.all
     myusers.each do |myuser|
       s = params['check'+myuser.id.to_s]
@@ -234,7 +270,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     job = @task.job
-    puts "***" + job.name
+
     if @task.save
       redirect_to job_path(job)
     else
@@ -246,7 +282,6 @@ class TasksController < ApplicationController
   def update
     @task.update(task_params)
     redirect_to edit_task_path(@task)
-
   end
 
   def reminders_completed
@@ -267,45 +302,97 @@ class TasksController < ApplicationController
   end
 
 
-  def offset_days_value(task)
+  def offset_period_value(task)
     if task.bespoke_offset_flag
       "Specify"
-    else
+    elsif task.offset_in_days
       task.offset.to_i
+    else
+      task.offset.to_f
     end
   end
 
-  def duration_days_value(task)
+  def duration_period_value(task)
     if task.bespoke_duration_flag
       "Specify"
     else
-      puts "!!" + task.duration.to_s
-      task.duration.to_i
+      @task.duration_is_days ? duration_days_stg(task.duration) : duration_hours_stg(task.duration)
     end
   end
 
-  def offset_duration_hours_value(value)
-    f=false
-    value = value.modulo(1).round(3)
-    if value < 0
-      value= - value
-      f=true
-    end
-    v=Time.at(value * 3600 * 24+0.5).strftime("%H:%M")
-    if f
-      "-" + v
+  def duration_unit_text(task)
+    task.duration_is_days ? "days" : "hours"
+  end
+
+  def action
+
+    if Action.where(message_id: params[:message_id]).count==0
+      action = Action.new
+      action.message_id =params[:message_id]
     else
-      v
+      action =  Action.where(message_id: params[:message_id]).first
     end
+
+    action.content = params[:action_text]
+
+#    action.do_date = ActiveSupport::TimeZone.parse(params[:action_date]) if params[:action_date]
+    action.do_date = DateTime.parse params[:action_date] rescue Date.today() if params[:action_date]
+
+    action.myusers.clear
+    Myuser.all.each do |myuser|
+      action.myusers << myuser if params["action_user" + myuser.id.to_s]
+    end
+    action.save
+    task_id = Message.find(action.message_id).forum_name.sub!("task", "").to_i
+    puts "******** Task_id ********" + task_id.to_s
+    redirect_to tasks_message_forum_path(task_id)
   end
 
+  def action_delete
+    if Action.where(:id => params[:action_id]).count
+      Action.find(params[:action_id].to_i).delete
+    end
 
-  helper_method :offset_days_value, :offset_duration_hours_value, :duration_days_value
+    redirect_to root_path
+  end
+
+  def action_update
+    Action.all.each do |action|
+      action.done = params["action_done"+action.id.to_s] == "1"
+      action.save
+    end
+    redirect_to root_path
+  end
+
+  def message_forum
+    @message_forum_name = "task" + @task.id.to_s
+    @myusers_for_message_forum = @task.myusers
+    @is_task = true
+    render :layout => "message_forum"
+  end
+
+  def summons_email
+
+    @task.myusers.each do |myuser|
+      if params["check" + myuser.id.to_s] == "1"
+        UserMailer.summons_email(params[:email_message],  myuser, @task, request.base_url.to_s).deliver_now
+      end
+    end
+    @is_task = true
+    render "summons_email_sent", :layout => "message_forum"
+
+  end
+
+  def summons_landing
+
+  end
+
+  helper_method :offset_period_value, :duration_period_value, :email_summons_text_task, :duration_unit_text
 
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_task
+    def get_task
       @task = Task.find(params[:id])
     end
 

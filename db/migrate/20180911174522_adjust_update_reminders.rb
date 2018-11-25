@@ -4,8 +4,8 @@ class AdjustUpdateReminders < ActiveRecord::Migration[5.2]
     rename_column :update_reminders, :offset, :offset_days
     add_column :update_reminders, :offset_hours, :string
 
-    change_column :update_reminders, :day_time, :integer
-    rename_column :update_reminders, :day_time, :repeat_weekday
+    remove_column :update_reminders, :day_time
+    add_column :update_reminders, :repeat_weekday, :boolean
     add_column :update_reminders, :repeat_time, :string
 
     add_column :update_reminders, :allow_email_flag, :boolean

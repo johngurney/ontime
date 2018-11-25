@@ -1,0 +1,94 @@
+<%= form_tag( user_invite_return_path(@myuser),  method: :post ) do |f| %>
+  <table>
+    <col width="20%"/>
+    <col width="40%"/>
+    <col width="40%"/>
+    <tr>
+      <div class="heading1">
+      <td></td>
+      <td>
+        <span class="user_text">Email address: <%= @myuser.email %></span>
+        <br/>
+        <br/>
+        <span style="color: blue">Welcome to Legal On Time.  <br/><br/>Please confirm your name and enter a password below.</span>
+      </td>
+      <td>
+      </td>
+      </div >
+
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <div class="user_text">
+          First name
+        </div>
+        <%= text_field_tag :first_name, @myuser.first_name, :class =>"user" %><br/>
+
+      </td>
+      <td>
+        <div class="user_text">
+          Last_name
+        </div>
+        <%= text_field_tag :last_name, @myuser.last_name , :class =>"user" %><br/>
+
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <div class="user_text">
+          Password
+        </div>
+      </td>
+      <td>
+
+        <div class="user_text">
+          Confirm password
+        </div>
+
+      </td>
+    </tr>
+
+
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %> characters minimum)</em><br />
+        <% end %>
+        <%= password_field_tag :password, "" , autofocus: true, autocomplete: "new-password" , :class =>"user" %>
+    </td>
+      <td>
+
+        <%= password_field_tag :password_confirmation, "" , autocomplete: "off" , :class =>"user" %>
+
+      </td>
+    </tr>
+
+
+
+
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <%= submit_tag "Confirm", :class =>"large_button" %>
+
+      </td>
+      <td>
+
+      </td>
+
+    </tr>
+
+
+
+  </table>
+<% end %>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head >
+  <title>OnTime</title>
+    <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+
+
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+  <script type="text/javascript">
+
+  function confSubmit(form, message) {
+  if (confirm(message)) {
+  form.submit();
+  }
+
+  else {
+  }
+  }
+  </script>
+
+
+</head>
+
+
+<body style="background-color: #f0f0f0">
+  <%= yield %>
+</body>
+</html>

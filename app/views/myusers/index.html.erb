@@ -1,102 +1,180 @@
-Existing users
-<br/>
-<br/>
+<span class="heading1">Users</scan>
+  <%= @myusers.count.to_s %>
 
-<table align="left" style="background-color: lightblue; border-style: solid; border-width: 1px;" width="70%" height="50">
+  <div class="select_box_wrapper" style="margin-top: 4px; height: 140px; background-color: yellow;">
+    Invited users, yet to confirm1
+      <table width="100%">
+        <col width="20%">
+        <col width="15%">
+        <col width="25%">
+        <col width="40%">
+        <tr>
+          <td>Name</td>
+          <td>Email</td>
+          <td>Date invite sent</td>
+          <td></td>
+        </tr>
+      </table>
+      <div class="select_box_list" style="margin-top: 4px; height: 100px;">
+      <table width="100%">
+        <col width="20%">
+        <col width="15%">
+        <col width="25%">
+        <col width="40%">
+      <% Myuser.where(:has_confirmed_flag => false).order("request_another_confirmation_email DESC, confirmation_sent_at DESC").each do |myuser| %>
+      <tr>
+        <td><%= link_to myuser.first_name + " " + myuser.last_name, invited_user_show_path(myuser) %></td>
+        <td><%= myuser.email %></td>
+        <td><%= myuser.confirmation_sent_at_string %>
 
-  <col width="25%">
-  <col width="10%">
-  <col width="10%">
-  <col width="15%">
-  <col width="10%">
-  <col width="30%">
+          <% if (  DateTime.now.to_i - myuser.confirmation_sent_at.to_i ) > Rails.configuration.days_to_confirm_invite_email.days * 4 %>
+          <span style="color: red"> - Invite expired -</span>
+          <% end %>
+        </td>
+        <td>
+          <% if  myuser.request_another_confirmation_email %>
+          New email requested
+          <% end %>
+        </td>
 
-  <tr >
-    <td align="left">
-      Name
 
-    </td>
-    <td align="left">
-      Team
-    </td>
-    <td align="left">
-      Office
-    </td>
-    <td align="left">
-      Position
-    </td>
-    <td align="left">
-      Experience
-    </td>
-    <td align="left">
-      Email
-      <br>
-      <br>
-    </td>
-  </tr>
+      </tr>
 
-  <%= form_tag('/myusers/search') do %>
-    <tr>
+      <% end %>
+    </table>
+    </div>
+</div>
+
+<div class="select_box_wrapper" style="margin-top: 4px; height: 420px; background-color: cyan;">
+  <table width="100%" style="border-style: solid; border-width: 2px;">
+
+    <col width="25%">
+    <col width="10%">
+    <col width="10%">
+    <col width="15%">
+    <col width="10%">
+    <col width="30%">
+
+    <tr >
       <td align="left">
-        <%= text_field_tag :search  , @search_term %></div>
+        Name
       </td>
-
       <td align="left">
-        <%= select_tag :team, options_for_select(@allmyusers.select(:team).distinct.order(:team).collect{|u| [u.team]}, @team_term ) %>
+        Team
       </td>
-
       <td align="left">
-        <%= select_tag 'office', options_for_select(@allmyusers.select(:office).distinct.order(:office).collect{|u| [u.office]}, @office_term ) %>
+        Office
       </td>
-
       <td align="left">
-        <%= select_tag 'position', options_for_select(@allmyusers.select(:position).distinct.order(:position).collect{|u| [u.position]}, @position_term ) %>
+        Position
       </td>
-
       <td align="left">
-        <%= select_tag 'experience', options_for_select(@allmyusers.select(:experience).distinct.order(:experience).collect{|u| [u.experience]}, @experience_term ) %>
+        Experience
       </td>
-
       <td align="left">
-      <%= submit_tag 'Search' %></div>
+        Email
       </td>
     </tr>
-  <% end %>
 
-  <%= form_tag('/myusers/') do %>
-    <% if @myusers%>
-      <% @myusers.each do |myuser| %>
-        <tr>
+    <%= form_tag myusers_search_path , :id => 'search_form' do %>
+      <tr>
         <td align="left">
-        <%=check_box_tag "test" %>
-          <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+          <%= text_field_tag :search  , @search_term %>
+          <%= submit_tag 'Search' %>
         </td>
+
         <td align="left">
-          <%= myuser.team %>
+          <%= select_tag 'team', options_for_select(@allmyusers.select(:team).distinct.order(:team).collect{|u| [u.team]}, @team_term ) , {:style => "width:100px", :onchange => 'search_form.submit()' } %>
         </td>
+
         <td align="left">
-          <%= myuser.office%>
+          <%= select_tag 'office', options_for_select(@allmyusers.select(:office).distinct.order(:office).collect{|u| [u.office]}, @office_term ), {:style => "width:100px" , :onchange => 'search_form.submit()' }  %>
         </td>
+
         <td align="left">
-          <%= myuser.position %>
+          <%= select_tag 'position', options_for_select(@allmyusers.select(:position).distinct.order(:position).collect{|u| [u.position]}, @position_term), {:style => "width:100px" , :onchange => 'search_form.submit()' }   %>
         </td>
+
         <td align="left">
-          <%= myuser.experience %>
+          <%= select_tag 'experience', options_for_select(@allmyusers.select(:experience).distinct.order(:experience).collect{|u| [u.experience]}, @experience_term), {:style => "width:100px" , :onchange => 'search_form.submit()' }   %>
         </td>
+
         <td align="left">
-          <%= myuser.email %>
         </td>
       </tr>
-      <% end %>
     <% end %>
-    <%= submit_tag 'Search' %></div>
-  <% end %>
 
 </table>
-<br>
-<br>
+  <div class="select_box_list" style="margin-top: 4px; height: 350px">
+    <table width=100%>
+
+      <col width="25%">
+      <col width="10%">
+      <col width="10%">
+      <col width="15%">
+      <col width="10%">
+      <col width="30%">
 
 
+      <% if @myusers %>
+        <%= form_tag delete_selected_users_path, :method => "delete", :id => 'delete_users_form' do %>
+          <% @myusers.each do |myuser| %>
+            <tr>
+              <td align="left">
+                <%=check_box_tag "check" + myuser.id.to_s %>
+                <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
+                </td>
+              <td align="left">
+                <%= myuser.team %>
+              </td>
+              <td align="left">
+                <%= myuser.office%>
+              </td>
+              <td align="left">
+                <%= myuser.position %>
+              </td>
+              <td align="left">
+                <%= myuser.experience %>
+              </td>
+              <td align="left">
+                <%= myuser.email %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </table>
+  </div>
+</div>
 
+<table>
+  <col width="17%">
+  <col width="17">
+  <col width="17%">
+  <col width="49%">
+<tr>
+  <td align="center">
+    <%= submit_tag 'Delete selected users',  { :class=>"large_button" , :method =>:get, :style =>"width: 200px", onclick: 'confSubmit(delete_users_form,\'Do you want to delete these users?\');'.html_safe } %>
+  </td>
+  <td align="center">
+    <%= button_to 'Create new user', new_myuser_path,  {:class=>"large_button", :method =>:get, :style =>"width: 200px"} %>
+  </td>
+  <td align="center">
+    <%= button_to 'Show invited users', new_myuser_path,  {:class=>"large_button", :method =>:get, :style =>"width: 200px"} %>
+  </td>
+  <td align="center">
 
-  <%= link_to 'Create new user', new_myuser_path %>
+  <%= form_tag upload_user_file_path, :multipart => true do  %>
+    <span class="small_user" >
+      <span style="font-size: 12pt; font-family: Arial; margin-right: 25px">
+      Upload file of users
+      </span>
+      <%= file_field_tag :file , :style =>"width: 300px; font-size: 12pt;"%>
+    </span>
+      <%= submit_tag "Upload",  {:class=>"large_button", :style =>"width: 120px; margin-left: 10px"} %>
+  <% end %>
+</td>
+
+</tr>
+
+</table>

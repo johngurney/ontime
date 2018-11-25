@@ -3,49 +3,51 @@
   <col width="67%">
   <tr>
     <td>
-      <span class="page_heading">
+      <span class="heading1">
         Configure task<br/>
       </span>
       <span class="heading1" style="font-size: 18pt">
         <br/>
-          Client: <%= link_to @client.name, client_path(@client) %><br/>
-          Job: <%= link_to @job.name , edit_job_path(@job) %><br/>
+          Client: <%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
+          Job: <%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
         <%= form_for @task do |f| %>
-            Name <%= f.text_field :name , :style => "width: 200px;" %>  <%= f.submit "OK" %><br/>
+            Task name <%= f.text_field :name , :class=>"input" , :style => "width: 200px;" %>  <%= f.submit "OK", :class=>"small_button" %><br/>
         <% end %>
       </span>
 
-      <%= form_tag task_remove_user_path(@task),  :id => 'remove_users' do %>
         <div class="select_box_wrapper" style="height: 140px; margin-top: 10px; background-color: lightpink">
           <span class="heading2">Fee-earners for this task</span>
           <br/>
           <div class="select_box_list" style="height: 100px">
-            <% if @taskmyusers%>
+            <%= form_tag task_remove_user_path(@task),  :id => 'remove_users' do %>
+              <% if @task.myusers%>
 
-              <% @taskmyusers.each do |myuser| %>
-                <span style="white-space: nowrap;">
-                  <%=check_box_tag 'check'+myuser.id.to_s %>
-                  <%= link_to myuser.first_name + " " + myuser.last_name + " " + myuser.id.to_s, myuser_path(myuser) %>
-                </span>
+                <% @task.myusers.each do |myuser| %>
+                  <span style="white-space: nowrap;">
+                    <%=check_box_tag 'check'+myuser.id.to_s %>
+                    <%= link_to myuser.first_name + " " + myuser.last_name + " " + myuser.id.to_s, myuser_path(myuser) %>
+                  </span>
+                <% end %>
+
               <% end %>
-
             <% end %>
           </div>
           <div style="align-items: right">
-            <input type="submit" value="Remove fee-earners" form='remove_users' style="margin-top: 4px">
+            <input type="submit" value="Remove fee-earners" form='remove_users' class="small_button" style="margin-top: 4px">
+            <button class="small_button" onclick="window.open('<%= tasks_message_forum_path(@task)%>', 'MsgWindow', 'width=400,height=500,left=400,top=100,location=0,status=0,titlebar=0,toolbar=0,menu=0');" >Message forum</bu
+              tton>
           </div>
         </div>
-      <% end %>
 
       <%= form_tag task_add_user_path(@task),  :id => 'add_users' do %>
         <div class="select_box_wrapper" style="height: 140px; background-color: lightpink">
           <span class="heading2">Other fee-earners for this job</span>
           <br/>
           <div class="select_box_list" style="height: 100px">
-            <% if @jobmyusers%>
+            <% if @task.job.myusers%>
 
-              <% @jobmyusers.each do |myuser| %>
-                <% if @taskmyusers.where(:id => myuser.id).count == 0 %>
+              <% @task.job.myusers.each do |myuser| %>
+                <% if @task.myusers.where(:id => myuser.id).count == 0 %>
                   <span style="white-space: nowrap;">
                     <%=check_box_tag 'check'+myuser.id.to_s %>
                     <%= link_to myuser.first_name + " " + myuser.last_name + " " + myuser.id.to_s, myuser_path(myuser) %>
@@ -56,14 +58,14 @@
             <% end %>
           </div>
           <div style="align-items: right">
-            <input type="submit" value="Add fee-earners" form='add_users' style="margin-top: 4px">
+            <input type="submit" value="Add fee-earners" form='add_users' class="small_button" style="margin-top: 4px">
           </div>
         </div>
       <% end %>
 
     </td>
   <td>
-    <div class="select_box_wrapper" style="height: 140px; background-color: yellow">
+    <div class="select_box_wrapper" style="height: 140px; background-color: lightblue">
       <table>
         <col width="30%"/>
         <col width="35%"/>
@@ -73,17 +75,17 @@
             <span class="heading2">Timetabling</span>
           </td>
           <td style="color: red">
-            Estimated start date:
+            Estimated start:
             <% if !@task.date_error %>
-              <%= @task.start_datestg %>
+              <%= @task.start_date_timestg %>
             <% else %> %>
               #DATE ERROR#
             <% end %>
           </td>
           <td style="color: red">
-            Estimated end date:
+            Estimated end:
             <% if !@task.date_error %>
-              <%= @task.end_datestg %>
+              <%= @task.end_date_timestg %>
             <% else %> %>
               #DATE ERROR#
             <% end %>
@@ -104,36 +106,34 @@
           End<%= raw( radio_button_tag :start_end, 0, !@task.link_to_start) %>
 
           Offset
-          <span style="position: relative; top: 0; left: 0;" >
-            <% if @task.bespoke_offset_flag %>>
-              <%= text_field_tag "offset_days_text", @task.offset.to_i ,{:style => "width:74px;  text-align: right; position: absolute; top: -2px; left: -2px; background: lightblue;"}  %>
+          <span style="position: relative; top: 0; left: 0; margin-left: 20px" >
+            <% if @task.bespoke_offset_flag %>
+              <%= text_field_tag "offset_bespoke_period", @task.offset.to_i ,{:style => "width:44px;  text-align: right; position: absolute; top: -2px; left: -2px; background: lightblue;"} %>
             <% end %>
-            <%= select_tag "offset_days_select", options_for_select(@offset_options , offset_days_value(@task) ) , {:style => "width:80px;  text-align-last:right;", :onchange => raw("timing_form.submit()")}%>
-            days
+            <%= select_tag "offset_period_select", options_for_select(@offset_options , offset_period_value(@task) ) , {:style => "width:64px;  text-align-last:right;", :onchange => raw("timing_form.submit()")}%>
           </span>
-          <% if !@job.daily_flag %>
-            <%= select_tag "offset_hours", options_for_select(@offset_options_hours, offset_duration_hours_value(@task.offset)), {:style => "width:80px;  text-align-last:right;" }%>
-            hours
+          <% if !@task.job.daily_flag %>
+            <%= select_tag "offset_days_hours", options_for_select(["Hours", "Days"], @task.offset_in_days ? "Days" : "Hours"), {:style => "width:60px; margin-left: 10px; text-align-last:left;", :onchange => raw("timing_form.submit()")} %>
+          <% else %>
+          days
           <% end %>
 
 
         <% else %>
-          <span> Specify start date<% if !@job.daily_flag %> and time<% end %></span>
+          <span> Specify start date<% if !@task.job.daily_flag %> and time<% end %></span>
 
-          <% if @job.daily_flag %>
+          <% if @task.job.daily_flag %>
             <%= date_select :start_date, "" ,
                             {
                                 :order => [:day, :month, :year],
-                                :default => @task.start_date,
-                                :start_year => 2017,
-                                :end_year => 2030 } %>
+                                :default => @task.start_date} ,
+                                {:class => "input" } %>
             <% else %>
             <%= datetime_select :start_date, "" ,
                                 {
                                 :order => [:day, :month, :year],
-                                :default => @task.start_date,
-                                :start_year => 2017,
-                                :end_year => 2030 } %>
+                                :default => @task.start_date} ,
+                                {:class => "input" }  %>
 
             <% end %>
         <% end %>
@@ -145,44 +145,44 @@
 
         <% if !@task.fixed_end_date %>
           <span style="position: relative; top: 0; left: 0;" >
-              <% if @task.bespoke_duration_flag %>>
-              <%= text_field_tag "duration_days_text", @task.duration.to_i ,{:style => "width:44px;  text-align: right; position: absolute; top: -2px; left: -2px; background: lightblue;"}  %>
+              <% if @task.bespoke_duration_flag %>
+              <%= text_field_tag "duration_bespoke_period", @task.duration.to_i ,{:style => "width:42px;  text-align: right; position: absolute; top: -2px; left: 2px; background: white;"}  %>
               <% end %>
-            <%= select_tag "duration_days_select", options_for_select(@duration_options, duration_days_value(@task)) , {:style => "width:50px;  text-align-last:right;", :onchange => raw("timing_form.submit()")}%>
-            days
+            <%= select_tag "duration_period_select", options_for_select(@duration_options, duration_period_value(@task)) , {:class =>"input" , :style => "width:64px;  text-align-last:right;", :onchange => raw("timing_form.submit()")}%>
             </span>
 
-          <% if !@job.daily_flag %>
-            <%= select_tag "duration_hours", options_for_select(@duration_options_hours, offset_duration_hours_value(@task.duration)), {:style => "width:80px;  text-align-last:right;" }%>
-            hours
+          <% if !@task.job.daily_flag %>
+          <%= select_tag "duration_days_hours", options_for_select(["Hours", "Days"], @task.duration_in_days ? "Days" : "Hours"), {:style => "width:60px; margin-left: 10px; text-align-last:left;", :onchange => raw("timing_form.submit()")} %>
+          <% else %>
+          days
           <% end %>
         <% end %>
 
-        <span style="margin-left: 30px"> Specify end date<% if !@job.daily_flag %> and time<% end %></span>
+        <span style="margin-left: 30px"> Specify end date<% if !@task.job.daily_flag %> and time<% end %></span>
         <%= radio_button_tag :duration, 1, @task.fixed_end_date, onclick: "this.parentNode.submit();" %>
           <% if @task.fixed_end_date%>
-            <% if @job.daily_flag %>
+            <% if @task.job.daily_flag %>
 
             <%= date_select :end_date, "" ,
                            {
                                 :order => [:day, :month, :year],
-                                :default => @task.end_date,
-                                :start_year => 2017,
-                                :end_year => 2030 } %>
+                                :default => @task.end_date
+                              },
+                              {:class => "input" }  %>
 
             <% else %>
 
             <%= datetime_select :end_date, "" ,
                                 {
                                 :order => [:day, :month, :year],
-                                :default => @task.end_date,
-                                :start_year => 2017,
-                                :end_year => 2030 } %>
+                                :default => @task.end_date
+                               },
+                               {:class => "input" }  %>
             <% end %>
           <% end %>
           <br/>
         <div style="margin-top: 6px">
-          <%= submit_tag "OK" %>
+          <%= submit_tag "OK",  :class=>"small_button" %>
         </div>
 
       <% end %>
@@ -190,34 +190,43 @@
 
     </div>
 
-    <div class="select_box_wrapper" style="height: 140px; background-color: lightblue; margin-top: 14px">
+    <div class="select_box_wrapper" style="height: 30px; background-color: lightblue; margin-top: 4px">
+      <%= form_tag task_update_progress_path(@task),  :id => 'progress' do %>
       <table>
-        <col width="40%"/>
-        <col width="60%"/>
-        <tr>
-          <td>
-            <span class="heading2">Progress</span>
-            <%= form_tag task_update_progress_path(@task),  :id => 'progress' do %>
-              <%= select_tag "progress", options_for_select(@progress, 0), {:style => "width: 50px;  margin-left: 10px;  text-align-last: right;" }%>% complete
-              <%= submit_tag "OK" %>
-            <% end %>
-
-            <br/><br/>
-            <%= button_to "List updates", list_updates_for_task_path(@task), :method =>'get' %>
-
+        <col width="10%">
+        <col width="20%">
+        <col width="40%">
+        <col width="30%">
+        <tr >
+          <td><span class="heading2">Progress</span></td>
+          <td>Currently: 70%</td>
+          <td >Update:
+              <%= select_tag "progress", options_for_select(@progress, 0), {:class=>"input" , :style => "width: 50px;  margin-left: 10px; margin-right: 10px; margin-top: 0px;  text-align-last: right;" }%>% complete
+              <%= submit_tag "OK",  :class=>"small_button" %>
           </td>
           <td>
+            <%= button_to "List all updates", list_updates_for_task_path(@task), :method =>'get', :class=>"small_button" %>
+          </td>
+        </tr></table>
+        <% end %>
+    </div>
+
+
+
+
+
+    <div class="select_box_wrapper" style="height: 170px; background-color: lightblue; margin-top: 4px">
             <%= form_tag tasks_import_schedule_path(@task) do %>
             <table>
               <col width="50%"/>
               <col width="50%"/>
               <tr>
                 <td>
-                  <span class="heading2">Update reminder schedule</span>
+                  <span class="heading2">Reminders</span>
                 </td>
                 <td style="align-items: right">
-                   <%= select_tag "schedule", options_for_select(@schedules, "") , {include_blank: 'Choose schedule' , :style => "width:150px;"} %>
-                   <%= submit_tag "OK" %>
+                   <%= select_tag "schedule", options_for_select(@schedules, "") , {include_blank: 'Choose bespoke schedule' , :class=> "input", :style => "width:190px;"} %>
+                   <%= submit_tag "OK", class: "small_button" %>
                 <% end %>
 
                 </td>
@@ -226,7 +235,7 @@
             </table>
 
             <%= form_tag task_reminders_completed_path(@task),  :id => 'reminders' do %>
-              <div class="select_box_list" style="height: 100px">
+              <div class="select_box_list" style="height: 114px">
                 <table>
 
                 <% @task.update_reminders.each do |reminder| %>
@@ -254,11 +263,10 @@
               </table>
             </div>
 
-            <%= button_to "Add new reminder", update_reminder_new_for_task_path(@task), :method => "get" %>
+            <%= button_to "Add new reminder", update_reminder_new_for_task_path(@task), :method => "get",  :class=>"small_button" %>
           </td>
         </tr></table>
     </div>
-
 
   </td>
 
@@ -266,5 +274,3 @@
 
   </tr>
 </table>
-
-

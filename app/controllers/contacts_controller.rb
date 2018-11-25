@@ -31,7 +31,7 @@ class ContactsController < ApplicationController
   def create
     client_id = params[:contact][:client_id]
     client=Client.find(client_id)
-    puts "@@@"+client_id.to_s
+
     @contact= Contact.new (contact_params)
     @contact.client_id = client_id
     if @contact.save

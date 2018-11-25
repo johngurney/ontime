@@ -1,29 +1,68 @@
+<table>
+  <col width="20%"/>
+  <col width="40%"/>
+  <col width="40%"/>
+  <tr>
+    <td></td>
+    <td>
+    <div class="heading1">New user</div >
 
-<h2>New user</h2>
+    </td>
+    <%= form_for @myuser do |f| %>
+      <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <div class="user_text">
+            Email address
+          </div>
+          <%= email_field_tag :email, "", { :autofocus => true, :autocomplete => "email", :class =>"user"} %>
 
-<%= form_for @myuser do |f| %>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+          <div class="user_text">
+            First name
+          </div>
+          <%= f.text_field :first_name , class:  "user" %>
+          <td>
+            <div class="user_text">
+              Last name
+            </div>
+            <%= f.text_field :last_name , class:  "user" %>
 
-  <div class="field">
-    <%= f.label :first_name %><br />
-    <%= f.text_field :first_name %>
-  </div>
+          </td>
+        </tr>
 
-  <div class="field">
-    <%= f.label :last_name %><br />
-    <%= f.text_field :last_name %>
-  </div>
+        <tr>
+          <td></td>
+          <td>
 
-  <div class="field">
-    <%= f.label :user_status %><br />
-    <%= f.select :user_status, ["Admin", ["Case chief" ,{class: 'abc'}], "users"], {include_blank: 'Please choose' } , { class: 'abc1'} %>
-  </div>
+            <div class="user_text">
+              User status
+            </div>
+            <%= f.select :user_status, options_for_select(logged_in_user_helper.add_new_user_options, "User") ,{},  {:class => 'user' }  %><br/>
+            <td>
+            </td>
+          </tr>
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+
+
+        <tr>
+          <td></td>
+          <td>
+            <%= f.submit "Sign up" , { :class => "user", :style => "width: 160px; margin-top:20px; background: lightyellow;" } %>
+
+
+          </td>
+          <td></td>
+        </tr>
+
+
+      <% end %>
+</table>

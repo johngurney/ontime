@@ -7,27 +7,49 @@ Rails.application.routes.draw do
   get 'test1' => 'user_setup#test1'
   get 'test2' => 'user_setup#test2'
 
-  get 'new_user' => 'user_setup#new_user' , as:  :new_user
+  get 'new_user' => 'myusers#new_user' , as:  :new_user
+
+  get 'tasks/message_forum/.:id' => 'tasks#message_forum', as: :tasks_message_forum
+  get 'jobs/message_forum/.:id' => 'jobs#message_forum', as: :jobs_message_forum
+  post 'task_summons_email/.:id' => 'tasks#summons_email', as: :task_summons_email
+  post 'job_summons_email/.:id' => 'jobs#summons_email', as: :job_summons_email
+  get 'tasks/summons_landing/.:id' => 'tasks#summons_landing', as: :summons_landing
+
   #get 'myusers.:id' => 'user_setup#new_user_resend_email'
   #post 'myusers' => 'user_setup#new_user_details'
   #patch 'myusers.:id', :to => 'user_setup#new_user_confirm_details', :as => :myuser
 
   get 'myuser/confirmation' => 'myusers#new_user_confirmation'
-  post 'myusers/search' => 'myusers#search'
+  get 'myuser/invited_user_show/.:id' => 'myusers#invited_user_show', as: :invited_user_show
+  patch 'myuser/update_invited_myuser/.:id' => 'myusers#update_invited_user', as: :update_invited_user
+  patch 'myuser/myuser_amend/.:id' => 'myusers#myuser_amend', as: :myuser_amend
+  #patch 'myuser/update_user/.:id' => 'myusers#update_user', as: :update_user
 
-  get 'login' => 'user_setup#login'
-  post 'login_response' => 'user_setup#login_response'
-  delete 'logout' => 'user_setup#logout'
+  post 'myuser/user_invite_return/.:id' => 'myusers#user_invite_return', as: :user_invite_return
+  post 'myuser/confirm_for_new_admin_user' => 'myusers#confirm_for_new_admin_user', as: :confirm_for_new_admin_user
+
+  post 'myusers/search' => 'myusers#search', as:  :myusers_search
+
+  get 'login' => 'myusers#login', as:  :login
+  post 'login_submit' => 'myusers#login_submit', as:  :login_submit
+  delete 'logout' => 'myusers#logout', as: :logout
 
   #get 'jobs.:clientid' => 'jobs#index_for_client'
   #get 'jobs/new.:clientid' => 'jobs#new'
   post 'clients/client_users/.:id', to:  "clients#client_users" , as:  :client_users
+  post 'clients/search', to:  "clients#search" , as:  :clients_search
 
   get 'clients/show_with_all_fes/.:id', to:  "clients#show_with_all_fes" , as:  :show_with_all_fes
 
 
   get 'client/newcontact/.:id', to:  "contacts#new_contact_for_client" , as:  :new_contact_for_client
   get 'client/newjob/.:id', to:  "jobs#new_job_for_client" , as:  :new_job_for_client
+  post 'upload_user_file', to:  "myusers#upload_user_file" , as:  :upload_user_file
+  post 'import_users', to:  "myusers#import_users" , as:  :import_users
+  get 'edit_temp_user/.:id', to:  "myusers#edit_temp_user" , as:  :edit_temp_user
+  post 'temp_user/.:id', to:  "myusers#update_temp_user" , as:  :temp_user
+  get 'list_temp_users', to:  "myusers#list_temp_users" , as:  :list_temp_users
+  delete 'delete_selected_users', to:  "myusers#delete_selected_users" , as:  :delete_selected_users
 
   get 'job/newtask/.:jobid', to:  "tasks#new_task_for_job" , as:  :new_task_for_job
 
@@ -39,6 +61,7 @@ Rails.application.routes.draw do
 
   post 'job/timing/.:id', to:  "jobs#timing" , as:  :job_timing
   get 'job/today/.:id', to:  "jobs#today" , as:  :job_today
+  get 'job/now/.:id', to:  "jobs#now" , as:  :job_now
 
   get 'update_reminder/new_for_task/.:taskid', to:  "update_reminders#new_for_task" , as:  :update_reminder_new_for_task
   get 'update_reminder/new_for_schedule/.:scheduleid', to:  "update_reminders#new_for_schedule" , as:  :update_reminder_new_for_schedule
@@ -56,6 +79,7 @@ Rails.application.routes.draw do
 
   post 'task/linked_flag/.:id', to:  "tasks#linked" , as:  :task_linked
   post 'task/timing/.:id', to:  "tasks#timing" , as:  :task_timing
+  get 'task/.:id/edit1', to:  "tasks#edit1" , as:  :edit1_task
   get 'task/progress/.:id', to:  "tasks#progress" , as:  :task_update_progress
   post 'task/reminders_completed/.:id', to:  "tasks#reminders_completed" , as:  :task_reminders_completed
   get 'job/delete_task/.:taskid', to:  "jobs#delete_task" , as:  :job_delete_task
@@ -71,7 +95,12 @@ Rails.application.routes.draw do
   get 'update/list_updates_for_task/.:taskid', to:  "updates#list_updates_for_task" , as:  :list_updates_for_task
   #get 'clients' => 'jobs#index_for_client'
 
-  resources :clients
+  post 'action_update' => 'tasks#action_update', as: :action_update
+  post 'action/.:message_id' => 'tasks#action', as: :action
+  post 'action_delete/.:action_id' => 'tasks#action_delete', as: :action_delete
+
+
+    resources :clients
   resources :jobs
   resources :myusers
   resources :templates

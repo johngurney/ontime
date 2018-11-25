@@ -1,8 +1,32 @@
-<h1>Clients</h1>
+<span class="heading1">Clients</scan>
+<div class="select_box_wrapper" style="margin-top: 4px; height: 410px; background-color: lightblue; margin-bottom: -10px">
+  <div class="select_box_list" style="margin-top: 4px; height: 400px;">
 
-<% @clients.each do |client| %>
-  <%= link_to client.name, client %>
-  <br>
-<% end %>
+    <table width="100%">
+      <col width="50%">
+      <col width="50%">
+      <tr>
+        <td>
+          <%= form_tag clients_search_path , :id => 'search_form', :method => "get" do %>
+            Name<%= text_field_tag :search  , @search_term , :class => "input", :style => "margin-left: 20px" %>
+            <%= submit_tag 'Search' , class: "small_button" , style:  "margin-left: 5px"%>
+            <% if !@search_term.blank? %>
+              <%= button_to "Clear", clients_path %>
+            <% end %>
+          <% end %>
+          </td>
+        <td></td>
+      </tr>
+      <% @clients.each do |client| %>
+        <tr>
+          <td>
+          <%= link_to client.name, client %>
+          </td>
+          <td></td>
+        </tr>
+      <% end %>
 
-<%= link_to "New client", new_client_path %>
+    </table>
+  </div>
+</div>
+<%= button_to 'Create new client', new_client_path,  {:method => :get , :class=>"small_button" , :style => "margin-left: 10px"} %>

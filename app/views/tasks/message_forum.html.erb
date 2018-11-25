@@ -1,0 +1,202 @@
+<%= javascript_include_tag 'channels\message_forum' %>
+
+
+<script type="text/javascript">
+
+  (function ()  {
+    start_up("<%= @message_forum_name %>", "<%= j(email_summons_text_availability_job(@job)) %>");
+    }).call(this);
+    myusers_for_message_forum = [ <% @myusers_for_message_forum.each do |myuser| %><%= myuser.id %><% if myuser != @myusers_for_message_forum.last %>,<% end %><% end %> ];
+</script>
+
+
+<table style="width: 350px; border-style: solid; border-width: 4px;">
+  <tr>
+    <td>
+      <div style="height:300px; overflow: auto;";>
+
+        <div id="messages">
+
+        </div>
+      </div>
+      <form>
+        <label>Message:</label>
+        <br>
+        <textarea data-behavior="room_speaker" style="width:98%; height: 80px"></textarea>
+      </form>
+
+      <table style="width: 100%;" >
+        <col width="80%">
+        <col width="20%">
+        <tr>
+          <td style="text-align: center;">
+            <div style="border-color: #606060; border-style: solid; border-width: 2px; border-radius: 10px; padding: 4px">
+
+              <button class="messages_button" onclick="newest()">Newest</button>
+              <button class="messages_button" onclick="next_messages_call()">Next</button>
+              <button class="messages_button" onclick="previous_messages_call()">Previous</button>
+              <button class="messages_button" onclick="oldest()">Oldest</button>
+
+            </div>
+          </td>
+          <td style="text-align: center;">
+            <button class="messages_button" style="margin-top: 2px" onclick="show_hide_email(1)";>Summons email</button>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <table id="email_users" style="width: 100%; display: none">
+        <tr>
+          <td>
+            <%= form_tag @is_task ? task_summons_email_path(@task) : job_summons_email_path(@job)do %>
+              <div style="border-color: #606060; border-style: solid; border-width: 3px; border-radius: 10px; padding: 1px; font-size: 8pt">
+                <table style="width: 100%;" >
+                  <tr>
+                    <td>
+                      <table style="width: 100%;" >
+                        <col width="85%">
+                        <col width="15%">
+                        <tr>
+                          <td>
+                            <div id="email_users" style="border-color: #606060; border-style: solid; border-width: 1px; border-radius: 6px; padding: 2px">
+                              Summons emails to:
+                              <table style="width: 100%;" >
+                                <col width="8%">
+                                <col width="42%">
+                                <col width="8%">
+                                <col width="42%">
+
+
+
+                                <% if @myusers_for_message_forum %>
+                                  <% @myusers_for_message_forum.order(:id).all.each_slice(2) do |myusers| %>
+                                    <tr>
+                                      <td class="action_cbs">
+                                        <% myuser = myusers.first %>
+                                        <%=check_box_tag 'check' + myuser.id.to_s , "1" , 1 %>
+                                      </td>
+                                      <td >
+                                        <%= myuser.name %>
+                                      </td>
+
+                                      <td class="action_cbs">
+                                        <% if myusers.count == 2 %>
+                                          <% myuser = myusers.last %>
+                                          <%=check_box_tag 'check' + myuser.id.to_s , "1" , 1 %>
+                                        <% end %>
+                                      </td>
+                                      <td >
+                                        <% if myusers.count == 2 %>
+                                          <%= myuser.name %>
+                                        <% end %>
+                                      </td>
+                                    </tr>
+
+                                  <% end %>
+                                <% end %>
+                              </table>
+                            </div>
+                          </td>
+
+                          <td  style="text-align: center;">
+                            <%= submit_tag "Send" , class: "messages_button"  %>
+                            <button class="messages_button" style="margin-top: 7px"  onclick="show_hide_email(0)">Close</button>
+                          </td>
+                        </tr>
+                      </table>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Email message<br/>
+                      <% if !@is_task %>
+                      <table width="100%">
+                        <col width="5%">
+                        <col width="28%">
+                        <col width="5%">
+                        <col width="28%">
+                        <col width="5%">
+                        <col width="28%">
+                        <tr>
+                          <td>
+                            <%= radio_button_tag "email_type", "avail" , 0 , onclick: 'job_email_radio("avail")' %>
+                          </td>
+                          <td>
+                            Availability
+                          </td>
+                          <td>
+                            <%= radio_button_tag "email_type", "avail_prox" , 0, onclick: 'job_email_radio("avail")' %>
+                          </td>
+                          <td>
+                            Availability (with proxies)
+                          </td>
+                          <td>
+                            <%= radio_button_tag "email_type", "other", 1, onclick: 'job_email_radio("other")' %>
+                          </td>
+                          <td>
+                            Other
+                          </td>
+                        </tr>
+
+                      </table>
+                      <% end %>
+                      <%= text_area_tag :email_message , @is_task ? email_summons_text_task(@task) : email_summons_text_job(@job), style: "width:98%; height: 80px", id: "email_message" %>
+                    </td>
+                  </tr>
+
+                </table>
+              </div>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+
+</table>
+
+
+<div id="action_insert" style="display: none">
+
+  <div style="font-size: 8pt">
+    Do by date<input type="date" name="action_date" id="action_date" value="<%= Date.today().strftime("%Y-%m-%d") %>" style="margin-left: 6px; width: 135px" onchange="date_picker(this)" /><br/>
+    <% if @myusers_for_message_forum %>
+      <table class="action_ut" frame="void" rules="all" >
+        <col width="8%">
+        <col width="42%">
+        <col width="8%">
+        <col width="42%">
+        <% @myusers_for_message_forum.order(:id).all.each_slice(2) do |myusers| %>
+        <tr>
+          <td class="action_cbs">
+            <% myuser = myusers.first %>
+            <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="true">
+          </td>
+          <td>
+            <%= myuser.name %>
+          </td>
+          <td class="action_cbs">
+            <% if myusers.count == 2 %>
+              <% myuser = myusers.last %>
+              <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="true">
+            <% end %>
+          </td>
+          <td>
+            <% if myusers.count == 2 %>
+              <%= myuser.name %>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+
+
+</div>

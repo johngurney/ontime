@@ -1,0 +1,106 @@
+<%= form_for @tempuser, method: :post do |f| %>
+  <table>
+    <col width="20%"/>
+    <col width="40%"/>
+    <col width="40%"/>
+    <tr>
+      <td></td>
+      <td>
+        <div class="heading1">Edit user to import</div >
+        <div class="small_user_text">
+          <%= f.label :email, :class =>"small_user_text" %><br />
+        </div>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email" , :class =>"small_user"  %><br/>
+      </td>
+
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <div class="small_user_text">
+          <%= f.label :first_name %><br />
+        </div>
+        <%= f.text_field :first_name, :class =>"small_user" %><br/>
+
+      </td>
+      <td>
+        <div class="small_user_text">
+          <%= f.label :last_name  %><br />
+        </div>
+        <%= f.text_field :last_name, :class =>"small_user" %><br/>
+
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <div class="small_user_text">
+          Position
+        </div>
+        <%= f.text_field :position, :class =>"small_user" %><br/>
+
+      </td>
+      <td>
+        <div class="small_user_text">
+          Experience
+        </div>
+        <%= f.text_field :experience, :class =>"small_user" %><br/>
+
+      </td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>
+        <div class="small_user_text">
+          Team
+        </div>
+        <%= f.text_field :team, :class =>"small_user" %><br/>
+
+      </td>
+      <td>
+        <div class="small_user_text">
+          Office
+        </div>
+        <%= f.text_field :office, :class =>"small_user" %><br/>
+
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <div class="small_user_text">
+          User status
+        </div>
+
+
+      </td>
+      <td>
+        <div class="user_text">
+        </div>
+
+
+      </td>
+    </tr>
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <%= f.select :user_status, options_for_select(logged_in_user_helper.add_new_user_options, "User") , {} , {class: 'small_user'} %><br/>
+
+      </td>
+      <td>
+        <%= f.submit "OK", :class =>"large_button" %>
+
+      </td>
+
+    </tr>
+
+
+
+  </table>
+<% end %>

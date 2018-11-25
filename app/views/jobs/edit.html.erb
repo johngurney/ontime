@@ -1,21 +1,21 @@
 <table>
-  <col width="60%">
-  <col width="40%">
+  <col width="53%">
+  <col width="47%">
   <tr>
     <td>
       <span class="heading1" style="font-size: 18pt">
-        Configure job<br/><br/>
-        Client: <%= link_to @client.name, client_path(@client) %><br/>
+        Configure job<br/>
+        Client: <%= link_to @client.name, client_path(@client) %><br/><br/>
         <%= form_for @job, :method => 'patch' do |f| %>
           <table>
             <col width="20%">
             <col width="70%">
             <tr>
               <td>
-                    Name
+                    Job name
                 </td>
               <td>
-                <%= f.text_field :name , :style => "width: 300px;" %>          <%= f.submit "OK" %>
+                <%= f.text_field :name , :class=> "input" ,:style => "width: 300px;"  %>          <%= f.submit "OK" , :class=> "input" %>
 
               </td>
             </tr>
@@ -25,7 +25,7 @@
 
               </td>
               <td>
-              <%= f.text_field :comments , :style => "width: 300px; height: 100px;" %>  <br/>
+              <%= f.text_area :comments , :class=> "input" ,:style => "width: 300px; height: 100px;" %>  <br/>
               </td>
             </tr>
           </table>
@@ -36,8 +36,8 @@
 
     </td>
     <td>
-      <div class="select_box_wrapper" style="height: 80px">
-        The team
+      <div class="select_box_wrapper" style="height: 86px">
+        <span style="font-weight: bold">The team</span>
         <br/>
         <div class="select_box_list" style="height: 45px">
           <% if @jobmyusers%>
@@ -49,30 +49,101 @@
           <% end %>
         </div>
         <div style="align-items: right">
-          <%= button_to "Amend team" , job_amend_team_path(@job) , :method => :get %>
+          <table>
+            <col width="25%">
+            <col width="75%">
+            <tr>
+              <td>
+                <%= button_to "Amend team" , job_amend_team_path(@job) , :method => :get , :class=> "small_button" %>
+              </td>
+              <td>
+                <button class="small_button" onclick="window.open('<%= jobs_message_forum_path(@job)%>', 'MsgWindow', 'width=400,height=500,left=400,top=100,location=0,status=0,titlebar=0,toolbar=0,menu=0');" >Message forum</button>
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
-      <div class="select_box_wrapper" style="height: 80px">
-        Timing
-        <br/>
+      <div class="select_box_wrapper" style="height: 120px; margin-top: 4px">
+
         <%= form_tag job_timing_path(@job), :id => 'timing_form' do %>
-          Daily<%= raw( radio_button_tag :daily_option, 1, @job.daily_flag,  onclick: "timing_form.submit();" ) %>
-          Hourly<%= raw( radio_button_tag :daily_option, 0, !@job.daily_flag,  onclick: "timing_form.submit();" ) %>
-          <br/>Start date:
+        <table>
+          <col width=30%/>
+          <col width=70%/>
+          <tr>
+            <td>
+              <span style="font-weight: bold">Timing</span>
+            </td>
+            <td style="background: lightblue">
+
+            Time zone <%= select_tag "time_zone", options_for_select(ActiveSupport::TimeZone.all.map{|zone| [zone, zone.name]}, @job.time_zone) , {include_blank: 'Please choose' ,  onchange: "timing_form.submit();" , :class=> "input", :style => "width:150px; margin-right: 20px"} %>
+          Include weekends <%=check_box_tag :inc_weekends , 1 , @job.include_weekends,  onclick: "timing_form.submit();" %>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Daily<%= raw( radio_button_tag :daily_option, 1, @job.daily_flag,  onclick: "timing_form.submit();" ) %>
+              Hourly<%= raw( radio_button_tag :daily_option, 0, !@job.daily_flag,  onclick: "timing_form.submit();" ) %>
+            </td>
+            <td style="background: lightblue">
+              <% if !@job.daily_flag %>
+                Working day start<%= time_select :working_day_start, "" ,
+                                              {
+                                                  :order => [:hour, :minute],
+                                                  :default =>  @job.local_date_time(@job.working_day_start),
+                                                  :minute_step => 30
+                                            },
+                                              {:class => "input" ,
+                                              :onchange => "timing_form.submit()"} %>
+
+               End<%= time_select :working_day_end, "" ,
+                                              {
+                                                  :order => [:hour, :minute],
+                                                  :default => @job.local_date_time(@job.working_day_end),
+                                                  :minute_step => 30
+                                            },
+                                              {:class => "input" ,
+                                                :onchange => "timing_form.submit()"} %>
+              <% end %>
+            </td>
+          </tr>
+
+        </table>
+
+
+        <div style="margin-top: 10px">
+
+          Start date:
           <%= date_select :start, "" ,
 
                           {
                               :order => [:day, :month, :year],
-                              :default => @job.start,
+                              :default => @job.local_date_time(@job.start),
                               :start_year => 2017,
                               :end_year => 2030
                           },
-                          {:onchange => "timing_form.submit()"} %>
-          <%= link_to "<button>Today</button>".html_safe , job_today_path(@job) , :method => :get %> <br/>
+                          {:class=> "input",
+                          :onchange => "timing_form.submit()"} %>
+          <% if @job.daily_flag %>
+              <%= button_to "Set to today" , job_today_path(@job) , :method => :get , :class=> "small_button", :style => "margin-right: 10px" %>
+          <% end %>
+          <% if !@job.daily_flag %>
+          Time:
+          <%= time_select :start_time, "" ,
+                                          {
+                                              :order => [:hour, :minute],
+                                              :default => @job.local_date_time(@job.start),
+                                              :minute_step => 30
+                                        },
+                                          {:class=> "input",
+                                          :onchange => "timing_form.submit()"} %>
+          <%= button_to "Set to now" , job_now_path(@job) , {:class=>"small_button", :method => :get }%>
+          <% end %>
+          <br/>
 
-          <span style="color: red">Scheduled end date: <%= @job.end_datestg %> </span>
+          <div style="color: red; margin-top: 10px">Scheduled end date: <%= @job.end_datestg %> </div>
       <% end %>
-
+      </div>
       </div>
 
 
@@ -81,7 +152,7 @@
 
 </table>
 
-<div class="select_box_wrapper" style="margin-top: 4px; background-color: yellow; ">
+<div class="select_box_wrapper" style="margin-top: 4px; background-color: lightblue; height: 250px;">
   <table>
     <col width="10%"/>
     <col width="90%"/>
@@ -92,13 +163,14 @@
       </td>
       <td>
         <%= form_tag jobs_import_template_path(@job) do %>
-          Templates <%= select_tag "template", options_for_select(@templates, "") , {include_blank: 'Please choose' , :style => "width:250px;"} %>
-          <%= submit_tag "OK" %>
+          Templates <%= select_tag "template", options_for_select(@templates, "") , {include_blank: 'Please choose' , :class=> "input", :style => "width:250px;"} %>
+          <%= submit_tag "OK", :class=> "small_button" %>
         <% end %>
+
       </td>
     </tr>
   </table>
-  <div class="select_box_list">
+  <div class="select_box_list" style="height: 188px">
     <% if @tasks %>
       <table width="100%">
         <col width="25%">
@@ -114,10 +186,10 @@
             </td>
 
             <td style="color: red">
-              Estimated start date: <%= task.start_datestg %>
+              Estimated start: <%= task.start_date_timestg %>
             </td>
             <td style="color: red">
-              Estimated end date: <%= task.end_datestg %>
+              Estimated end: <%= task.end_date_timestg %>
             </td>
 
             <td>
@@ -136,10 +208,10 @@
     <col width="60%"/>
     <tr>
       <td>
-        <%= button_to "Add task" , new_task_for_job_path(@job) , :method => :get %>
+        <%= button_to "Add task" , new_task_for_job_path(@job) , :method => :get, :class=> "small_button"%>
       </td>
       <td>
-        <%= button_to "Delete all tasks" , jobs_delete_all_tasks_path(@job) , :method => :get %>
+        <%= button_to "Delete all tasks" , jobs_delete_all_tasks_path(@job) , :method => :get , :class=> "small_button" %>
       </td>
       <td>
 
@@ -149,5 +221,3 @@
 
 
 </div>
-
-

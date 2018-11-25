@@ -51,7 +51,6 @@ class UpdateReminder < ApplicationRecord
 
 
   def set_dates
-    puts "********* " + self.id.to_s
     task=self.task
 
     if !task.date_error
@@ -102,4 +101,3 @@ class UpdateReminder < ApplicationRecord
   end
 
 end
-

@@ -13,3 +13,200 @@
  *= require_tree .
  *= require_self
  */
+
+
+ html, body { padding: 0px; }
+
+ .box{
+   border-style: solid;
+   border-width: 6px;
+   border-radius: 6px;
+   padding: 6px
+ }
+
+ .select_box {
+   style: box;
+   background: #f0f0f0;
+   border-color: #101010;
+ }
+
+ .entry_box {
+   style: box;
+   background: #e0e0e0;
+   border-color: yellow;
+ }
+
+ .select_box_wrapper, .right_box {
+   height: 184px;
+   background: #f0f0f0;
+   border-color: #606060;
+   border-style: solid;
+   border-width: 6px;
+   border-radius: 10px;
+   padding: 6px;
+   font-family: Arial;
+   font-size: 11pt;
+ }
+
+ .select_box_list {
+   height: 140px;
+   overflow-y: scroll;
+ }
+
+ .page_heading {
+   color: #707070;
+   font-size: 28pt;
+   font-weight: bold;
+
+ }
+
+ .heading1 {
+
+   font-size: 28pt;
+   font-weight: bold;
+
+ }
+
+ .heading2 {
+   font-weight: bold;
+ }
+
+
+
+ table {
+   width: 100%;
+ }
+
+ td {
+   vertical-align: top;
+ }
+
+ .solid_borders {
+   border: 1px solid black;
+ }
+
+ .user {
+   border-style: solid;
+   border-width: 8px;
+   border-radius: 16px;
+   border-color: yellow;
+   font-size: 20pt;
+   padding: 10px;
+   width: 400px;
+   margin-top: 4px;
+ }
+ .user_text{
+   font-size: 20pt;
+   font-weight: bold;
+   padding-top: 24px;
+ }
+
+ .small_button{
+   border-style: solid;
+   border-width: 6px;
+   border-radius: 6px;
+   border-color: yellow;
+   font-size: 12pt;
+   padding: 6px;
+   width: 240px;
+   margin-top: 3px;
+ }
+
+ .message {
+   width: 200px;
+   background: #f0f0f0;
+   border-color: #606060;
+   border-style: solid;
+   border-width: 6px;
+   border-radius: 10px;
+   padding: 3px;
+   font-family: Arial;
+   font-size: 11pt;
+   margin-bottom: 10px;
+ }
+
+ .message_content {
+   width: 194px;
+   background: #e0ffff;
+   border-color: #808080;
+   border-style: solid;
+   border-width: 1px;
+   border-radius: 3px;
+   padding: 2px;
+   font-family: Arial;
+   font-size: 11pt;
+ }
+
+ .large_button{
+   border-style: solid;
+   border-width: 5px;
+   border-radius: 10px;
+   border-color: yellow;
+   font-size: 12pt;
+   padding: 6px;
+   width: 160px;
+   margin-top: 3px;
+ }
+
+ .small_button{
+   border-style: solid;
+   border-width: 2px;
+   border-radius: 4px;
+   border-color: yellow;
+   font-size: 10pt;
+   padding: 2px;
+   padding-left: 10px;
+   padding-right: 10px;
+   width: auto;
+   margin-top: 0px:
+ }
+
+ .messages_button{
+   border-style: solid;
+   border-width: 2px;
+   border-radius: 4px;
+   border-color: yellow;
+   font-size: 10pt;
+   padding: 2px;
+   padding-left: 3px;
+   padding-right: 3px;
+   width: auto;
+   margin-top: 2px;
+   margin-left: 2px;
+   margin-right: 2px;
+ }
+
+/* action table cell for check boxes */
+.action_cbs {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* action user table */
+.action_ut {
+  margin-top: 2px;
+  style="width: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-color:#f0f0f0;
+}
+
+.act_outline {
+  width: 194px;
+  border-color: #808080;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+
+.input {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: darkblue;
+  font-size: 10pt;
+  padding: 2px;
+
+}

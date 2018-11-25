@@ -1,4 +1,15 @@
-<h1>Edit Post</h1>
-
-<%= render 'form' %>
-
+<table>
+  <col width="20%"" />
+  <col width="80%"" />
+  <tr>
+    <td></td>
+    <td>
+      <h1>Edit client</h1>
+      <%= form_for @client do |f| %>
+        <%= f.label :name , :class =>"user_text" %><br/>
+        <%= f.text_field :name , :class=>"user" , :style =>"width: 550px" %><br/><br/>
+        <%= f.submit :class=>"large_button" , :style =>"width: 200px" %><br/>
+      <% end %>
+    </td>
+  </tr>
+</table>

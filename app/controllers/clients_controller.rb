@@ -46,7 +46,7 @@ class ClientsController < ApplicationController
     @myusers = Myuser.all
     @contacts = @client.contacts
     @jobs = @client.jobs
-    puts "+++" + @jobs.count.to_s
+
     @clientmyusers=@client.myusers
     @clients=Client.all.order("created_at DESC")
     render 'show'
@@ -69,9 +69,9 @@ class ClientsController < ApplicationController
       myusers.each do |myuser|
         s = params['check'+myuser.id.to_s]
         if !s.blank?
-          puts "***" + myuser.id.to_s
+
           if @client.myusers.where("myuser_id=?", myuser.id).count==0 #Just to ensure not already assigned as a user
-            puts "+++" + myuser.id.to_s
+
             @client.myusers << myuser
           end
         end
@@ -93,7 +93,7 @@ class ClientsController < ApplicationController
       redirect_to client_path(@client)
 
     elsif params[:function] == "Remove superviser(s)"
-      puts "%%%%%%%%"
+
       myusers = @client.myusers
       myusers.each do |myuser|
         s = params['check'+myuser.id.to_s]
@@ -118,6 +118,19 @@ class ClientsController < ApplicationController
     redirect_to client_path(@client)
 
   end
+
+  def search
+
+    @clients = Myuser.all
+    @search_term = params[:search]
+    if !@search_term.blank?
+      @clients = Client.where('name LIKE ? ', '%'+ @search_term +"%" ).order("created_at DESC")
+    end
+
+    render 'index'
+
+  end
+
 
   private
 

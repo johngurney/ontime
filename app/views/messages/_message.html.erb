@@ -1,0 +1,66 @@
+<% if (message.number.to_i.modulo 2) == 1 %>
+  <div style="display: flex; justify-content: flex-end">
+<% else %>
+  <div>
+<% end %>
+
+  <div class="message" style="background: <%= message.colour_lookup() %>">
+  <div id="apc<%= message.id -%>" class="ap">
+      From <span  style="font-weight: bold"><%= message.name -%></span> at <%= message.created_at.strftime("%e %b %Y at %H:%M") -%><br/>
+
+      <div class="message_content" >
+        <%= message.decrypt_content_for_read -%><br/>
+      </div>
+      <div id="act_but<%= message.id -%>" >
+        <button class="messages_button" onclick="show_action(<%= message.id -%>)" )>Action</button>
+      </div>
+      </div>
+
+      <div id="apa<%= message.id -%>" class="act_outline" style="display: none; margin-top: 2px">
+        <span style="font-size: 8pt">Action description</span>
+        <% if message.action.blank? %>
+          <textarea data-behavior="action_text" style="width:98%; height: 80px" id="text<%= message.number.to_s %>"></textarea>
+          <div id="insert" />
+        <% else %>
+        <textarea data-behavior="action_text" style="width:97%; height: 80px" id="text<%= message.number.to_s %>"><%= message.action.content %></textarea>
+        <div style="font-size: 8pt">
+          Do by date<input type="date" name="action_date" id="action_date" value="<%= message.action.do_date.strftime("%Y-%m-%d") %>" style="margin-left: 6px; width: 130px" onchange="date_picker(this)" /><br/>
+          <table class="action_ut" frame="void" rules="all" >
+            <col width="8%">
+            <col width="42%">
+            <col width="8%">
+            <col width="42%">
+            <% message.myusers.order(:id).all.each_slice(2) do |myusers| %>
+            <tr>
+              <td class="action_cbs">
+                <% myuser = myusers.first %>
+                <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="<%=message.action.myusers.include?(myuser).to_s%>">
+              </td>
+              <td>
+                <%= myuser.name %>
+              </td>
+              <td>
+                <% if myusers.count == 2 %>
+                  <% myuser = myusers.last %>
+                  <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="<%=message.action.myusers.include?(myuser).to_s%>">
+                <% end %>
+              </td>
+              <td>
+                <% if myusers.count == 2 %>
+                  <%= myuser.name %>
+                <% end %>
+              </td>
+            </tr>
+            <% end %>
+          </table>
+          </div>
+        <% end %>
+        <button class="messages_button" onclick="save_action_button(<%= message.id -%>)" )>Save</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+
+</script>
