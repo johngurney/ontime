@@ -13,7 +13,6 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
-//= require jquery
 //= require_tree .
 
 var past_messages_downloaded, myusers_for_message_forum
