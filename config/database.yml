@@ -80,3 +80,15 @@ development:
   database: ontime
   username: postgres
   password: password
+
+test:
+  <<: *default
+  database: ontime
+  username: postgres
+  password: password
+
+production:
+  <<: *default
+  database: ontime
+  username: postgres
+  password: password
