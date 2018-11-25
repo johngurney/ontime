@@ -10,6 +10,7 @@ module Ontime1
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
+    config.assets.initialize_on_precompile = false
 
     config.days_to_confirm_invite_email = 7
     config.working_day_start_time = "9:00"
