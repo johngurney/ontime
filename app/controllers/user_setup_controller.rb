@@ -99,11 +99,7 @@ class UserSetupController < ApplicationController
   end
 
   def test1
-    puts "*********** Test 1 ***********"
-    Message.all.each do |message|
-      message.forum_name = "task1"
-      message.save
-    end
+    Myuser.delete_all
     redirect_to root_path
   end
 
