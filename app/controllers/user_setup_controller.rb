@@ -99,7 +99,7 @@ class UserSetupController < ApplicationController
   end
 
   def test1
-    Myuser.delete_all
+    #Myuser.delete_all
     redirect_to root_path
   end
 
