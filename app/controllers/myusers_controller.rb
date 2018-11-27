@@ -101,7 +101,7 @@ class MyusersController < ApplicationController
 
         render "password_check_for_making_new_admin"
       else
-        create_myuser_and_send_email @myuser
+        create_myuser_and_send_email 
       end
     end
 
