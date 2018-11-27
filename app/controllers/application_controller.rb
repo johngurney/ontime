@@ -31,8 +31,11 @@ class ApplicationController < ActionController::Base
         end
       end
     end
+  end
 
-
+  def add_new_user_options
+    #NB This will be called when logged_in_user_helper is blank only when there are no users, ie at forst start up
+    logged_in_user_helper.blank? ? [Rails.configuration.super_admin_name , Rails.configuration.admin_name, Rails.configuration.user_name, Rails.configuration.client_name] : logged_in_user_helper.add_new_user_options
   end
 
   def resend_email_message_helper
@@ -87,11 +90,11 @@ class ApplicationController < ActionController::Base
   end
 
   def duration_days_stg(v)
-    "%.0f" % v 
+    "%.0f" % v
   end
 
 
-  helper_method :duration_stg
+  helper_method :duration_stg, :add_new_user_options
 
   helper_method :time_stg_at, :resend_email_message_helper
   helper_method :email_summons_text_job, :email_summons_text_availability_job

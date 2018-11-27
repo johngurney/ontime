@@ -74,7 +74,7 @@
         <div class="small_user_text">
           User status
         </div>
-        <%= select_tag :user_status, options_for_select(logged_in_user_helper.add_new_user_options, @myuser.user_status) , {class: 'small_user'} %><br/>
+        <%= select_tag :user_status, options_for_select(add_new_user_options, @myuser.user_status) , {class: 'small_user'} %><br/>
         <div class="small_user_text">
           Email
         </div>
