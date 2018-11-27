@@ -97,7 +97,7 @@ class MyusersController < ApplicationController
 
       @myuser= Myuser.new (myuser_params)
 
-      if @myuser.user_status == Rails.configuration.super_admin_name or @myuser.user_status == Rails.configuration.admin_name
+      if (@myuser.user_status == Rails.configuration.super_admin_name or @myuser.user_status == Rails.configuration.admin_name) and (Myuser.count > 0)
 
         render "password_check_for_making_new_admin"
       else
