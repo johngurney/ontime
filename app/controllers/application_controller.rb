@@ -34,8 +34,8 @@ class ApplicationController < ActionController::Base
   end
 
   def add_new_user_options
-    #NB This will be called when logged_in_user_helper is blank only when there are no users, ie at forst start up
-    logged_in_user_helper.blank? ? [Rails.configuration.super_admin_name , Rails.configuration.admin_name, Rails.configuration.user_name, Rails.configuration.client_name] : logged_in_user_helper.add_new_user_options
+    #NB This will be called when logged_in_user_helper is blank only when there are no users, ie at first start up - the only option should be super user
+    logged_in_user_helper.blank? ? [Rails.configuration.super_admin_name ] : logged_in_user_helper.add_new_user_options
   end
 
   def resend_email_message_helper
