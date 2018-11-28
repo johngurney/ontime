@@ -14,6 +14,7 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+//= require_directory channels
 
 var past_messages_downloaded, myusers_for_message_forum
 var client_public_key, client_private_key, server_public_key, crypt, previous_messages , next_messages, allow_new_messages, message_packets, message_id
