@@ -63,3 +63,5 @@ gem 'devise'
 #gem 'rails_12factor', group: :production
 
 gem 'rufus-scheduler'
+
+gem 'jquery-rails'
