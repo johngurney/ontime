@@ -1,7 +1,6 @@
 
 function start_up(v , job_email_availability_content) {
   message_forum_name=v;
-  alert(job_email_availability_content);
   job_email_type = "other";
   job_email_other = document.querySelector("#email_message");
   job_email_availability = job_email_availability_content;
@@ -119,7 +118,8 @@ function start_up(v , job_email_availability_content) {
     }
   }, $(document).on('keypress', '[data-behavior~=room_speaker]', function(event) {
     if (event.keyCode === 13) {
-      App.room.send_message( event.target.value);
+      App.room.send_message(event.target.value);
+      event.target.value = '';
       return event.preventDefault();
     }
   })
@@ -138,9 +138,6 @@ function start_up(v , job_email_availability_content) {
 
 );
 }
-
-
-
 
 
 
