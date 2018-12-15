@@ -114,6 +114,7 @@ Rails.application.configure do
   config.serve_static_assets = true
   config.assets.compile = true
   config.assets.digest = true
+  config.middleware.use ChatActionCable  
   config.web_socket_server_url = "wss://stark-river-78489.herokuapp.com/cable"
   config.action_cable.allowed_request_origins = ['https://stark-river-78489.herokuapp.com']
 
