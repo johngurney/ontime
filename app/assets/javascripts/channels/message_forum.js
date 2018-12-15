@@ -1,4 +1,5 @@
 function start_up(v , job_email_availability_content) {
+  alert("hi");
   message_forum_name=v;
   job_email_type = "other";
   job_email_other = document.querySelector("#email_message");
