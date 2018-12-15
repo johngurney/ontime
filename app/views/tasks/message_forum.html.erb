@@ -9,6 +9,7 @@
     }).call(this);
     myusers_for_message_forum = [ <% @myusers_for_message_forum.each do |myuser| %><%= myuser.id %><% if myuser != @myusers_for_message_forum.last %>,<% end %><% end %> ];
 </script>
+<%= Rails.configuration.web_socket_server_url %>
 <table style="width: 350px; border-style: solid; border-width: 4px;">
   <tr>
     <td>
