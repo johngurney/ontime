@@ -19,42 +19,47 @@
       <div id="apa<%= message.id -%>" class="act_outline" style="display: none; margin-top: 2px">
         <span style="font-size: 8pt">Action description</span>
         <% if message.action.blank? %>
-          <textarea data-behavior="action_text" style="width:98%; height: 80px" id="text<%= message.number.to_s %>"></textarea>
+          Msg id=<%= message.id.to_s %>
+          <input type="checkbox" checked="1" style="margin:0; padding: 0;" name="test" id="test43">
+          <textarea data-behavior="action_text" onkeypress="actionkeypress()" style="width:98%; height: 80px" id="text<%= message.id.to_s %>"></textarea>
           <div id="insert" />
         <% else %>
-        <textarea data-behavior="action_text" style="width:97%; height: 80px" id="text<%= message.number.to_s %>"><%= message.action.content %></textarea>
-        <div style="font-size: 8pt">
-          Do by date<input type="date" name="action_date" id="action_date" value="<%= message.action.do_date.strftime("%Y-%m-%d") %>" style="margin-left: 6px; width: 130px" onchange="date_picker(this)" /><br/>
-          <table class="action_ut" frame="void" rules="all" >
-            <col width="8%">
-            <col width="42%">
-            <col width="8%">
-            <col width="42%">
-            <% message.myusers.order(:id).all.each_slice(2) do |myusers| %>
-            <tr>
-              <td class="action_cbs">
-                <% myuser = myusers.first %>
-                <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="<%=message.action.myusers.include?(myuser).to_s%>">
-              </td>
-              <td>
-                <%= myuser.name %>
-              </td>
-              <td>
-                <% if myusers.count == 2 %>
-                  <% myuser = myusers.last %>
-                  <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="<%=message.action.myusers.include?(myuser).to_s%>">
+          <textarea data-behavior="action_text" onkeypress="actionkeypress()" style="width:97%; height: 80px" id="text<%= message.id.to_s %>"><%= message.action.content %></textarea>
+
+          <div style="font-size: 8pt">
+            Do by date<input type="date" name="action_date" id="action_date" value="<%= message.action.do_date.strftime("%Y-%m-%d") %>" style="margin-left: 6px; width: 130px" onchange="date_picker(this)" /><br/>
+            <% if !myusers_for_message_forum? %>
+              <table class="action_ut" frame="void" rules="all" >
+                <col width="8%">
+                <col width="42%">
+                <col width="8%">
+                <col width="42%">
+                <% myusers_for_message_forum.order(:id).all.each_slice(2) do |myusers| %>
+                <tr>
+                  <td class="action_cbs">
+                    <% myuser = myusers.first %>
+                    <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="<%=message.action.myusers.include?(myuser).to_s%>">
+                  </td>
+                  <td>
+                    <%= myuser.name %>
+                  </td>
+                  <td>
+                    <% if myusers.count == 2 %>
+                      <% myuser = myusers.last %>
+                      <input type="checkbox" style="margin:0; padding: 0;" name="action_user<%= myuser.id.to_s%>" id="action_user<%= myuser.id.to_s%>" checked="<%=message.action.myusers.include?(myuser).to_s%>">
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if myusers.count == 2 %>
+                      <%= myuser.name %>
+                    <% end %>
+                  </td>
+                </tr>
                 <% end %>
-              </td>
-              <td>
-                <% if myusers.count == 2 %>
-                  <%= myuser.name %>
-                <% end %>
-              </td>
-            </tr>
+              </table>
             <% end %>
-          </table>
-          </div>
-        <% end %>
+            </div>
+          <% end %>
         <button class="messages_button" onclick="save_action_button(<%= message.id -%>)" )>Save</button>
       </div>
 

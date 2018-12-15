@@ -75,9 +75,12 @@ class MessageForumChannel < ApplicationCable::Channel
         ActionCable.server.broadcast 'room_channel' + uuid.id.to_s, action: "all", allow_new_messages: allow_new_messages, message: encrypted_encoded_message, previous_messages: previous_messages, next_messages: next_messages
       else
         total_no_packets = (encrypted_encoded_message.length / packet_length) + 1
+
+        # broadcast first packet
         ActionCable.server.broadcast 'room_channel' + uuid.id.to_s, action: "all", allow_new_messages: allow_new_messages, \
           message: encrypted_encoded_message[0,packet_length], previous_messages: previous_messages, next_messages: next_messages, packet_number: 0, total_no_packets:  total_no_packets
 
+          # broadcast remaining packets
         (1..total_no_packets - 1).each do |packet_number|
           puts "*******" + packet_number.to_s
           ActionCable.server.broadcast 'room_channel' + uuid.id.to_s, message: encrypted_encoded_message[packet_number * packet_length ,packet_length], packet_number: packet_number,  total_no_packets: total_no_packets

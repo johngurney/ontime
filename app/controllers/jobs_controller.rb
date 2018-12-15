@@ -257,7 +257,6 @@
   end
 
   def message_forum
-    puts "****** JOB **********"
     @message_forum_name = "job" + @job.id.to_s
     @is_task = false
     @myusers_for_message_forum = @job.myusers

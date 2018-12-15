@@ -1,4 +1,3 @@
-
 function start_up(v , job_email_availability_content) {
   message_forum_name=v;
   job_email_type = "other";
@@ -116,30 +115,48 @@ function start_up(v , job_email_availability_content) {
         message_forum_name: message_forum_name, message_number: message_number
       });
     }
-  }, $(document).on('keypress', '[data-behavior~=room_speaker]', function(event) {
-    if (event.keyCode === 13) {
-      App.room.send_message(event.target.value);
-      event.target.value = '';
-      return event.preventDefault();
-    }
-  })
-  , $(document).on('keypress', '[data-behavior~=action_text]', function(event) {
-    if (event.keyCode === 13) {
-      var message_number = event.target.id.replace("text","");
-      save_action(message_number, event.target.value);
-      event.keyCode = 0;
-    }
-    if (event.keyCode === 65) {
-      alert("test");
-      event.keyCode = 0;
-    }
-  })
-
+  },
+  // $(document).on('keypress', '[data-behavior~=room_speaker]', function(event) {
+  //   if (event.keyCode === 13) {
+  //     App.room.send_message(event.target.value);
+  //     event.target.value = '';
+  //     return event.preventDefault();
+  //   }
+  // })
+  // ,
+  // $(document).on('keypress', '[data-behavior~=action_text]', function(event) {
+  //   if (event.keyCode === 13) {
+  //     var message_number = event.target.id.replace("text","");
+  //     save_action(message_number, event.target.value);
+  //     event.keyCode = 0;
+  //   }
+  //   if (event.keyCode === 65) {
+  //     alert("test");
+  //     event.keyCode = 0;
+  //   }
+  // })
 
 );
 }
 
+function messagekeypress (event) {
+  event = event || window.event;
+  if (event.keyCode === 13) {
+    App.room.send_message(event.target.value);
+    event.target.value = '';
+    return event.preventDefault();
+  }
+};
 
+function actionkeypress (event) {
+  event = event || window.event;
+  if (event.keyCode === 13) {
+    var message_number = event.target.id.replace("text","");
+    save_action(message_number, event.target.value);
+    event.target.value = '';
+    return event.preventDefault();
+  }
+};
 
 function oldest()  {
   stg = "";
@@ -170,6 +187,9 @@ function messages_call(message_number)  {
   App.room.request_past_messages(message_number);
 };
 
+  function test() {
+    alert(document.querySelector("#apa31").querySelector("#action_user1").checked);
+}
 
 function check_all_downloaded()  {
   var flag = true;
@@ -206,7 +226,6 @@ function save_action(message_number, action_content) {
       });
     crypt = new JSEncrypt();
     App.room.send_action(message_number, action_content, action_date, action_myusers_stg);
-
     document.getElementById("apa" + message_number).style.display = "none";
     document.getElementById("act_but" + message_number).style.display = "block";
 }

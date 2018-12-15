@@ -4,12 +4,11 @@
 <script type="text/javascript">
 
   (function ()  {
-    start_up("<%= @message_forum_name %>", "<%= j(email_summons_text_availability_job(@job)) %>");
+    start_up("","");
+    // start_up("<%= @message_forum_name %>", "<%= j(email_summons_text_availability_job(@job)) %>");
     }).call(this);
     myusers_for_message_forum = [ <% @myusers_for_message_forum.each do |myuser| %><%= myuser.id %><% if myuser != @myusers_for_message_forum.last %>,<% end %><% end %> ];
 </script>
-
-
 <table style="width: 350px; border-style: solid; border-width: 4px;">
   <tr>
     <td>
@@ -22,7 +21,7 @@
       <form>
         <label>Message:</label>
         <br>
-      <textarea data-behavior="room_speaker" onkeypress="testkeypress()" style="width:98%; height: 80px"></textarea>
+      <textarea data-behavior="room_speaker1" onkeypress="messagekeypress()" style="width:98%; height: 80px"></textarea>
       </form>
 
       <table style="width: 100%;" >
@@ -32,6 +31,7 @@
           <td style="text-align: center;">
             <div style="border-color: #606060; border-style: solid; border-width: 2px; border-radius: 10px; padding: 4px">
 
+              <button class="messages_button" onclick="test()">Test</button>
               <button class="messages_button" onclick="newest()">Newest</button>
               <button class="messages_button" onclick="next_messages_call()">Next</button>
               <button class="messages_button" onclick="previous_messages_call()">Previous</button>

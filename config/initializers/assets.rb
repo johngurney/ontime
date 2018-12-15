@@ -11,7 +11,7 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 #It seems that we need to include assets in subfolders here so that they pre-compile
 #so that they work on Heroku
 
-Rails.application.config.assets.precompile += %w( channels/message_forum.js )
+# Rails.application.config.assets.precompile += %w( channels/message_forum.js )
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
