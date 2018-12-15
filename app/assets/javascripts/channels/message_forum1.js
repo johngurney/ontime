@@ -1,5 +1,5 @@
 function start_up(v , job_email_availability_content) {
-  alert("hi");
+  alert("hi1");
   message_forum_name=v;
   job_email_type = "other";
   job_email_other = document.querySelector("#email_message");
@@ -142,6 +142,7 @@ function start_up(v , job_email_availability_content) {
 
 function messagekeypress (event) {
   event = event || window.event;
+  alert("b");
   if (event.keyCode === 13) {
     App.room.send_message(event.target.value);
     event.target.value = '';
