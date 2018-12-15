@@ -142,7 +142,6 @@ function start_up(v , job_email_availability_content) {
 
 function messagekeypress (event) {
   event = event || window.event;
-  alert("b");
   if (event.keyCode === 13) {
     App.room.send_message(event.target.value);
     event.target.value = '';
