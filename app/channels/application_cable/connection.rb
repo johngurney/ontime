@@ -4,6 +4,7 @@ module ApplicationCable
     identified_by :uuid
 
     def connect
+      puts "************ CONNECT ************ " 
       user_id = logged_in_user_helper
       if !user_id.blank?
         self.uuid = user_id
