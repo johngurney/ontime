@@ -6,4 +6,11 @@ test:
 
 production:
   adapter: redis
-  url:  redis://redistogo:18b7b4b563e637b4c083d03d22c577d8@spinyfin.redistogo.com:11746/
+  host: spinyfin.redistogo.com
+  url:  redis://redistogo:18b7b4b563e637b4c083d03d22c577d8@spinyfin.redistogo.com:11746
+  password: 18b7b4b563e637b4c083d03d22c577d8
+  port: 11746
+  inline: true
+  timeout: 1
+
+#https://medium.com/@JeremyVe/rails-5-actioncable-and-heroku-b10880dafb58
