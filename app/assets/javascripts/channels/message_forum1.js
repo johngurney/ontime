@@ -1,10 +1,10 @@
 function start_up(v , job_email_availability_content) {
-  alert("hi1");
   message_forum_name=v;
+  alert("1");
   job_email_type = "other";
   job_email_other = document.querySelector("#email_message");
   job_email_availability = job_email_availability_content;
-
+  alert("2");
   App.room = App.cable.subscriptions.create("MessageForumChannel", {
     // Called when the subscription is ready for use on the server
     connected: function() {
