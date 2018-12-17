@@ -71,7 +71,7 @@ private
   end
 
   def render_message(message)
-    ApplicationController.renderer.render(partial: 'messages/message', locals: { message: message })
+    ApplicationController.renderer.render(partial: 'messages/message', locals: { message: message, myusers_for_message_forum: Myuser.all })
   end
 
   def encrypt_and_encode (key, content)

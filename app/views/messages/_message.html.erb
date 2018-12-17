@@ -28,13 +28,13 @@
 
           <div style="font-size: 8pt">
             Do by date<input type="date" name="action_date" id="action_date" value="<%= message.action.do_date.strftime("%Y-%m-%d") %>" style="margin-left: 6px; width: 130px" onchange="date_picker(this)" /><br/>
-            <% if !myusers_for_message_forum? %>
+            <% if !Myuser.count  %>
               <table class="action_ut" frame="void" rules="all" >
                 <col width="8%">
                 <col width="42%">
                 <col width="8%">
                 <col width="42%">
-                <% myusers_for_message_forum.order(:id).all.each_slice(2) do |myusers| %>
+                <% Myuser.order(:id).all.each_slice(2) do |myusers| %>
                 <tr>
                   <td class="action_cbs">
                     <% myuser = myusers.first %>
