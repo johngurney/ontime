@@ -187,7 +187,6 @@ function messages_call(message_number)  {
 };
 
   function test() {
-    $('#mydiv').show();
     // alert(document.querySelector("#apa31").querySelector("#action_user1").checked);
 }
 
