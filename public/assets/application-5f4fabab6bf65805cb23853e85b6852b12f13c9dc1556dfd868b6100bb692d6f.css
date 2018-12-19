@@ -1,0 +1,316 @@
+/*
+body {
+  background-color: #fff;
+  color: #333;
+  margin: 33px;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a {
+  color: #000;
+
+  &:visited {
+    color: #666;
+  }
+
+  &:hover {
+    color: #fff;
+    background-color: #000;
+  }
+}
+
+th {
+  padding-bottom: 5px;
+}
+
+td {
+  padding: 0 5px 7px;
+}
+
+div {
+  &.field, &.actions {
+    margin-bottom: 10px;
+  }
+}
+
+#notice {
+  color: green;
+}
+
+.field_with_errors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#error_explanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px 7px 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px -7px 0;
+    background-color: #c00;
+    color: #fff;
+  }
+
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
+}
+
+label {
+  display: block;
+}
+*/
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+/* line 19, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+html, body {
+  padding: 0px;
+}
+
+/* line 21, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.box {
+  border-style: solid;
+  border-width: 6px;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+/* line 28, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.select_box {
+  style: box;
+  background: #f0f0f0;
+  border-color: #101010;
+}
+
+/* line 34, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.entry_box {
+  style: box;
+  background: #e0e0e0;
+  border-color: yellow;
+}
+
+/* line 40, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.select_box_wrapper, .right_box {
+  height: 184px;
+  background: #f0f0f0;
+  border-color: #606060;
+  border-style: solid;
+  border-width: 6px;
+  border-radius: 10px;
+  padding: 6px;
+  font-family: Arial;
+  font-size: 11pt;
+}
+
+/* line 52, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.select_box_list {
+  height: 140px;
+  overflow-y: scroll;
+}
+
+/* line 57, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.page_heading {
+  color: #707070;
+  font-size: 28pt;
+  font-weight: bold;
+}
+
+/* line 64, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.heading1 {
+  font-size: 28pt;
+  font-weight: bold;
+}
+
+/* line 71, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.heading2 {
+  font-weight: bold;
+}
+
+/* line 77, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+table {
+  width: 100%;
+}
+
+/* line 81, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+td {
+  vertical-align: top;
+}
+
+/* line 85, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.solid_borders {
+  border: 1px solid black;
+}
+
+/* line 89, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.user {
+  border-style: solid;
+  border-width: 8px;
+  border-radius: 16px;
+  border-color: yellow;
+  font-size: 20pt;
+  padding: 10px;
+  width: 400px;
+  margin-top: 4px;
+}
+
+/* line 99, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.user_text {
+  font-size: 20pt;
+  font-weight: bold;
+  padding-top: 24px;
+}
+
+/* line 105, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.small_button {
+  border-style: solid;
+  border-width: 6px;
+  border-radius: 6px;
+  border-color: yellow;
+  font-size: 12pt;
+  padding: 6px;
+  width: 240px;
+  margin-top: 3px;
+}
+
+/* line 116, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.message {
+  width: 200px;
+  background: #f0f0f0;
+  border-color: #606060;
+  border-style: solid;
+  border-width: 6px;
+  border-radius: 10px;
+  padding: 3px;
+  font-family: Arial;
+  font-size: 11pt;
+  margin-bottom: 10px;
+}
+
+/* line 129, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.message_content {
+  width: 194px;
+  background: #e0ffff;
+  border-color: #808080;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: 2px;
+  font-family: Arial;
+  font-size: 11pt;
+}
+
+/* line 141, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.large_button {
+  border-style: solid;
+  border-width: 5px;
+  border-radius: 10px;
+  border-color: yellow;
+  font-size: 12pt;
+  padding: 6px;
+  width: 160px;
+  margin-top: 3px;
+}
+
+/* line 152, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.small_button {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: yellow;
+  font-size: 10pt;
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: auto;
+  margin-top: 0px;
+}
+
+/* line 165, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.messages_button {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: yellow;
+  font-size: 10pt;
+  padding: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
+  width: auto;
+  margin-top: 2px;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+/* action table cell for check boxes */
+/* line 181, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.action_cbs {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* action user table */
+/* line 187, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.action_ut {
+  margin-top: 2px;
+  width: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #f0f0f0;
+}
+
+/* line 195, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.act_outline {
+  width: 194px;
+  border-color: #808080;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+/* line 205, d:/projects/ontime/app/assets/stylesheets/application.css.scss */
+.input {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: darkblue;
+  font-size: 10pt;
+  padding: 2px;
+}
