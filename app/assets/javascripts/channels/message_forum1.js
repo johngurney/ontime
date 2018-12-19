@@ -140,6 +140,7 @@ function start_up(v , job_email_availability_content) {
 }
 
 function messagekeypress (event) {
+  alert("aa");
   event = event || window.event;
   if (event.keyCode === 13) {
     App.room.send_message(event.target.value);
@@ -188,6 +189,7 @@ function messages_call(message_number)  {
 };
 
   function test() {
+    alert("test test");
     // alert(document.querySelector("#apa31").querySelector("#action_user1").checked);
 }
 
