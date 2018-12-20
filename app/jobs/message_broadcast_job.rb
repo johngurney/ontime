@@ -6,7 +6,11 @@ class MessageBroadcastJob < ApplicationJob
 
     puts "PERFORM"
 
-    message.encrypt_and_send_message_to_user(Myuser.find(1))
+
+    message.myusers.each do |myuser|
+      puts "*** Broadcast to user: " + myuser.name + " ***"
+      message.encrypt_and_send_message_to_user(myuser)
+    end
     #message.encrypt_and_send_message_to_user(User.find(2))
 
   end

@@ -42,9 +42,11 @@ class Message < ApplicationRecord
   end
 
   def encrypt_and_send_message_to_user(user)
-    pubkey = user.client_public_key
-    key      = OpenSSL::PKey::RSA.new(pubkey)
-    ActionCable.server.broadcast 'room_channel' + user.id.to_s, action: "add", message: self.encrypt_with_public_key(key)
+    if !user.client_public_key.blank?
+      pubkey = user.client_public_key
+      key      = OpenSSL::PKey::RSA.new(pubkey)
+      ActionCable.server.broadcast 'room_channel' + user.id.to_s, action: "add", message: self.encrypt_with_public_key(key)
+    end
   end
 
   def colour_lookup()
@@ -59,7 +61,7 @@ class Message < ApplicationRecord
   def myusers
     if self.forum_name[0,4] == "task"
       Task.find(self.forum_name.sub!("task", "").to_i).myusers
-    elsif self.forum_name[0,4] == "job"
+    elsif self.forum_name[0,3] == "job"
       Job.find(self.forum_name.sub!("job", "").to_i).myusers
     end
   end

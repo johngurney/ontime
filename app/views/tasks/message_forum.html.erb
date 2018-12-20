@@ -4,12 +4,10 @@
 <script type="text/javascript">
 
   (function ()  {
-    start_up("","");
-    // start_up("<%= @message_forum_name %>", "<%= j(email_summons_text_availability_job(@job)) %>");
+    start_up("<%= @message_forum_name %>", "<%= j(email_summons_text_availability_job(@job)) %>");
     }).call(this);
     myusers_for_message_forum = [ <% @myusers_for_message_forum.each do |myuser| %><%= myuser.id %><% if myuser != @myusers_for_message_forum.last %>,<% end %><% end %> ];
 </script>
-
  <table style="width: 350px; border-style: solid; border-width: 4px;">
   <tr>
     <td>

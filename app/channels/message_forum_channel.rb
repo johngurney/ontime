@@ -149,7 +149,7 @@ class MessageForumChannel < ApplicationCable::Channel
         unencrypted_message  = private_key.private_decrypt(Base64.decode64(encoded_encrypted_message))
         message_forum_name = data["message_forum_name"]
 
-        puts message_forum_name
+        puts "message_forum_name:" + message_forum_name
 
         key   = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base).generate_key Rails.configuration.encryption_salt, Rails.configuration.encryption_key_length
         crypt = ActiveSupport::MessageEncryptor.new(key)
