@@ -15,7 +15,7 @@ class HomepageController < ApplicationController
 
     @browser = Browser.new("Some user agent")
 
-    if @browser.device.mobile?
+    if @browser.mobile?
       render "mobile_homepage"
     end
   end
