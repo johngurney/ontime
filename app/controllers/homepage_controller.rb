@@ -9,15 +9,21 @@ class HomepageController < ApplicationController
       @tasks=@myuser.tasks
     end
 
-    require "browser/aliases"
+    # require "browser/aliases"
+    #
+    # Browser::Base.include(Browser::Aliases)
+    #
+    # @browser = Browser.new("Some user agent")
+    #
+    # if @browser.mobile?
+    #   render "mobile_homepage"
+    # end
 
-    Browser::Base.include(Browser::Aliases)
-
-    @browser = Browser.new("Some user agent")
-
-    if @browser.mobile?
+    if browser.device.mobile?
       render "mobile_homepage"
     end
+
+
   end
 
 end
