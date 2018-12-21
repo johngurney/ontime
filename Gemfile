@@ -65,3 +65,5 @@ gem 'devise'
 gem 'rufus-scheduler'
 
 gem 'jquery-rails'
+
+gem 'browser'
