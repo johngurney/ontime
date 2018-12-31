@@ -8,7 +8,7 @@
         Amend team<br/><br/>
       </span>
       <span class="heading1">
-        Client: <%= link_to @client.name, client_path(@client) %><br/><br/>
+        Client: <%= link_to @job.client.name, client_path(@job.client) %><br/><br/>
         Job: <%= link_to @job.name , job_path(@job) %><br/><br/>
       </span>
 
@@ -17,9 +17,9 @@
         <span class="heading2">The team</span>
         <br/>
         <div class="select_box_list" style="height: 100px">
-          <% if @jobmyusers%>
+          <% if @job.myusers%>
 
-            <% @jobmyusers.each do |myuser| %>
+            <% @job.myusers.each do |myuser| %>
               <span style="white-space: nowrap;">
                 <%=check_box_tag 'check'+myuser.id.to_s %>
                 <%= link_to myuser.first_name + " " + myuser.last_name + " " + myuser.id.to_s, myuser_path(myuser) %>
@@ -39,21 +39,21 @@
 
       <%= form_tag job_add_user_path(@job),  :id => 'add_client_users' do %>
         <div class="select_box_wrapper">
-          <% if @jobmyusers.count==0 %>
+          <% if @job.myusers.count==0 %>
             Fee-earners associated with this client
           <% else %>
             Other fee-earners associated with this client
           <% end %>
           <div class="select_box_list">
-            <% if @clientmyusers%>
+            <% if @job.client.myusers%>
               <table width="100%">
                 <col width="45%">
                 <col width="15%">
                 <col width="20%">
                 <col width="20%">
 
-                <% @clientmyusers.each do |myuser| %>
-                  <% if @jobmyusers.where(:id => myuser.id).count == 0 %>
+                <% @job.client.myusers.each do |myuser| %>
+                  <% if @job.myusers.where(:id => myuser.id).count == 0 %>
                     <tr>
                       <td>
                         <%=check_box_tag 'check'+myuser.id.to_s %>
@@ -84,7 +84,7 @@
                 <col width="20%">
 
                 <% @myusers.each do |myuser| %>
-                  <% if @jobmyusers.where(:id => myuser.id).count == 0 && @clientmyusers.where(:id => myuser.id).count == 0 %>
+                  <% if @job.myusers.where(:id => myuser.id).count == 0 && @job.client.myusers.where(:id => myuser.id).count == 0 %>
                     <tr>
                       <td>
                         <%=check_box_tag 'check'+myuser.id.to_s %>

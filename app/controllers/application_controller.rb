@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
   end
 
   def email_summons_text_task(task)
-    ApplicationController.renderer.render(partial: 'tasks/message_summons_email', locals: { task: task, job: nil, sending_user: logged_in_user_helper })
+    ApplicationController.renderer.render(partial: 'tasks/message_summons_email', locals: { task: task, job: task.job, sending_user: logged_in_user_helper })
   end
 
   def duration_hours_stg(v)
@@ -93,6 +93,15 @@ class ApplicationController < ActionController::Base
     "%.0f" % v
   end
 
+  def order_jobs_tasks_helper(task_job, field, homepage_hidepage = nil)
+    if (logged_in_user_helper.order_jobs_field == field  && task_job == "j") || (logged_in_user_helper.order_tasks_field == field  && task_job == "t")
+      code = "&#x25B2".html_safe
+    else
+      code = "&#x25BC".html_safe
+    end
+    self.class.helpers.link_to '<span style="font-size: 10px">'.html_safe + code + '</span>'.html_safe , order_jobs_tasks_path(task_job: task_job , field: field, homepage_hidepage: homepage_hidepage)
+
+  end
 
   helper_method :duration_stg, :add_new_user_options
 
@@ -100,6 +109,7 @@ class ApplicationController < ActionController::Base
   helper_method :email_summons_text_job, :email_summons_text_availability_job
   helper_method :email_confirmation_url, :telephone_link
   helper_method :alert_helper, :root_url_helper
+  helper_method :order_jobs_tasks_helper
 
 private
 

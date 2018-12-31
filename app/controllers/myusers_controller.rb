@@ -15,6 +15,7 @@ class MyusersController < ApplicationController
 
   def new_user
     @myuser=Myuser.new
+    setup_new_user @myuser
     render 'new_user'
   end
 
@@ -62,6 +63,7 @@ class MyusersController < ApplicationController
 
   def new
     @myuser=Myuser.new
+    setup_new_user @myuser
   end
 
   def test1
@@ -84,6 +86,7 @@ class MyusersController < ApplicationController
       @myuser = Myuser.where(:email => params[:myuser][:email]).last
       if @myuser.has_confirmed_flag
         @myuser=Myuser.new
+        setup_new_user @myuser
         add_to_alert "That email is already registered"
         render 'index'
       else
@@ -96,12 +99,13 @@ class MyusersController < ApplicationController
     else
 
       @myuser= Myuser.new (myuser_params)
+      setup_new_user @myuser
 
       if (@myuser.user_status == Rails.configuration.super_admin_name or @myuser.user_status == Rails.configuration.admin_name) and (Myuser.count > 0)
 
         render "password_check_for_making_new_admin"
       else
-        create_myuser_and_send_email 
+        create_myuser_and_send_email
       end
     end
 
@@ -114,7 +118,7 @@ class MyusersController < ApplicationController
 #    params.require(:myuser).permit(:email, :first_name, :last_name, :user_status)
 
       @myuser= Myuser.new (params.permit(:email, :first_name, :last_name, :user_status))
-      puts "+++" + @myuser.user_status.to_s
+      setup_new_user @myuser
       create_myuser_and_send_email
     else
       @alert_message="Incorrect password"
@@ -123,8 +127,6 @@ class MyusersController < ApplicationController
   end
 
   def create_myuser_and_send_email()
-
-    puts "***" + @myuser.user_status.to_s
 
     raw, enc = Devise.token_generator.generate(User, :confirmation_token )
     @myuser.confirmation_token = enc
@@ -287,6 +289,7 @@ class MyusersController < ApplicationController
 
   def login
     @myuser=Myuser.new
+    setup_new_user @myuser
     render 'login'
   end
 
@@ -425,9 +428,9 @@ class MyusersController < ApplicationController
     TempUser.all.each do |temp_user|
       s = params['check'+temp_user.id.to_s]
       if !s.blank?
-        print "***" + temp_user.last_name
 
         myuser=Myuser.new
+        setup_new_user myuser
         myuser.first_name = temp_user.first_name
         myuser.last_name = temp_user.last_name
         myuser.experience = temp_user.experience
@@ -481,4 +484,13 @@ class MyusersController < ApplicationController
   def myuser_all_params
     params.require(:myuser).permit(:email, :first_name, :last_name, :user_status, :experience, :team, :position, :office, :work_tel, :mobile_tel, :home_tel, :other_tel1, :other_tel2 )
   end
+
+  def setup_new_user(myuser)
+    myuser.show_tasks_by_client = true
+    myuser.show_tasks_by_job = true
+    myuser.show_tasks_by_task = true
+    myuser.show_jobs_by_client = true
+    myuser.show_jobs_by_job = true
+  end
+
 end

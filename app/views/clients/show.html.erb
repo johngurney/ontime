@@ -25,7 +25,9 @@
             </table>
           <% end %>
         </div>
-        <%= button_to "Add job" , new_job_for_client_path(@client) , :method => :get, class: "small_button" %>
+        <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+          <%= button_to "Add job" , new_job_for_client_path(@client) , :method => :get, class: "small_button" %>
+        <% end %>
       </div>
 
 
@@ -53,7 +55,9 @@
                   <% myuser=Myuser.find(superviser.myuser_id) %>
                   <tr>
                     <td>
-                      <%=check_box_tag 'check'+myuser.id.to_s %>
+                      <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+                        <%=check_box_tag 'check'+myuser.id.to_s %>
+                      <% end %>
                       <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
                     </td>
                     <td><%= myuser.team %></td>
@@ -65,7 +69,9 @@
               </table>
             <% end %>
           </div>
-          <input type="submit" name="function" value="Remove superviser(s)" form='remove_supervisers' class="small_button" >
+          <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+            <input type="submit" name="function" value="Remove super" form='remove_supervisers' class="small_button" >
+          <% end %>
         </div>
 
       <% end %>
@@ -90,9 +96,10 @@
                   <% if Superviser.where('client_id =? AND myuser_id=?', @client.id, myuser.id).count==0 %>
                    <tr>
                       <td>
-                        <%=check_box_tag 'check'+myuser.id.to_s %>
-                        <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
-                        <%= myuser.id.to_s  %>
+                        <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+                          <%=check_box_tag 'check'+myuser.id.to_s %>
+                        <% end %>
+                        <%= link_to myuser.name, myuser_path(myuser) %>
                       </td>
                       <td><%= myuser.team %></td>
                       <td><%= myuser.office %></td>
@@ -104,11 +111,13 @@
               </table>
             <% end %>
           </div>
-          <input type="submit" name="function" value="Remove user(s)" form='client_users' class="small_button" style="width: 120px" />
-          <input type="submit" name="function" value="Add as superviser(s)" form='client_users' class="small_button" style="width: 150px" />
+          <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+            <input type="submit" name="function1" value="Remove user" id="test_123" form='client_users' class="small_button"  />
+            <input type="submit" name="function" value="Add as super" form='client_users' class="small_button" />
 
-          <% if !@show_all_fes_flag %>
-            <input type="submit" name="function" value="Show other user(s)" form='client_users' class="small_button" style="width: 140px" />
+            <% if !@show_all_fes_flag %>
+              <input type="submit" name="function" value="Show all" form='client_users' class="small_button"  />
+            <% end %>
           <% end %>
 
         </div>
@@ -133,7 +142,9 @@
                   <% if @clientmyusers.where(:id => myuser.id).count == 0 %>
                     <tr>
                       <td>
-                        <%=check_box_tag 'check'+myuser.id.to_s %>
+                        <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+                          <%=check_box_tag 'check'+myuser.id.to_s %>
+                        <% end %>
                         <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
                       </td>
                       <td><%= myuser.team %></td>
@@ -145,8 +156,10 @@
                 </table>
               <% end %>
             </div>
-            <input type="submit" name="function" value="Add user(s)" form='add_users' class="small_button" style="width: 180px">
-            <input type="submit" name="function" value="Hide other user(s)" form='add_users'  class="small_button" style="width: 130px; background-color: lightpink; margin-top: 4px; margin-left: 14px">
+            <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+              <input type="submit" name="function" value="Add user(s)" form='add_users' class="small_button" style="width: 180px">
+              <input type="submit" name="function" value="Hide other user(s)" form='add_users'  class="small_button" style="width: 130px; background-color: lightpink; margin-top: 4px; margin-left: 14px">
+            <% end %>
 
 
           </div>
@@ -176,7 +189,9 @@
               </table>
             <% end %>
           </div>
-          <%= button_to "Add contacts" , new_contact_for_client_path(@client) , :method => :get , class: "small_button" %>
+          <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+            <%= button_to "Add contacts" , new_contact_for_client_path(@client) , :method => :get , class: "small_button" %>
+          <% end %>
         </div>
 
 
@@ -192,7 +207,9 @@
 <table>
   <col width="100%">
   <tr>
-    <%= button_to "Edit client", edit_client_path(@client),  method: :get, class: "small_button" , style: "margin-left: 10px" %>
+    <% if @client.myuser_is_superviser(logged_in_user_helper) %>
+      <%= button_to "Edit client", edit_client_path(@client),  method: :get, class: "small_button" , style: "margin-left: 10px" %>
+    <% end %>
 
     <% if Myuser.find(session[:logged_in_user]).user_status == Rails.configuration.super_admin_name %>
       <%= button_to "Delete client", client_path(@client) , method: :delete, data: {confirm: "Are you sure?"} , class: "small_button" , style: "margin-left: 10px"  %>

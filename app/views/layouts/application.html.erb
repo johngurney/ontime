@@ -26,7 +26,7 @@
 </head>
 
 
-<body style="background-color: #d3d3e0">
+<body style="background-color: #d3d3e0; font-family: Arial;" >
 
 <% if ! alert_helper.blank? %>
   <p class="alert"><%= alert_helper  %></p>
@@ -42,21 +42,33 @@
 
     <td align="center" style="font-size: 40px"; >
       <%= link_to('Home', root_path) %>
-      <div align="center" style="font-size: 10pt; color: darkblue; font-weight: bold">Project management for legal services</div>
+      <div align="center" style="font-size: 10pt; color: darkblue; font-weight: bold">Project management for legal
+        <div class="dropdown">
+          services
+          <div class="dropdown-content">
+            <%= link_to('Test1', test1_path) %>
+            <%= link_to('Test2', test2_path) %>
+            <%= link_to('Reset to two users', reset_to_two_users_path) %>
+            <%= link_to('Add jobs and tasks', add_jobs_and_tasks_path) %>
+            <%= link_to('Set up clients', set_up_clients_path) %>
+          </div>
+        </div>
+      </div>
 
     </td>
 
-    <td align="center" style="font-size: 50pt; font-weight: bold">On
-      <span style="font-style: italic">Time</span>
+
+    <td align="center" style="font-size: 50pt; font-weight: bold">
+      <%= image_tag("LOT.jpg") %>
     </td>
 
     <td align="center" style="font-size: 10pt; font-weight: bold">
       <% if logged_in_user_helper then %>
-      Logged in as <%= logged_in_user_helper.first_name %> <%= logged_in_user_helper.last_name %>(<%= logged_in_user_helper.email %>)<br/>
-        <%= logged_in_user_helper.id%><br/>
+      Logged in as <%= logged_in_user_helper.name %> (<%= logged_in_user_helper.email %>; user id:<%= logged_in_user_helper.id%>; <%= logged_in_user_helper.user_status %>)<br/>
+      <%= link_to('Account', logout_path) %>   <%= link_to('Logout', logout_path, method: :delete) %><br/>
       <% end %>
-      Number of users:
-      <%= Myuser.count.to_s %>
+      [Number of users:
+      <%= Myuser.count.to_s %>]
     </td>
 
   </tr>

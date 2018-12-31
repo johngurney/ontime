@@ -165,7 +165,7 @@ class MessageForumChannel < ApplicationCable::Channel
           end
         end
 
-        Message.create! encrypted_content: encrypted_message , myuser_id: uuid.id, number: Message.maximum("number").to_i + 1, colour: colour, forum_name: message_forum_name
+        Message.create! encrypted_content: encrypted_message , myuser_id: uuid.id, number: Message.where("forum_name=?",message_forum_name).maximum("number").to_i + 1, colour: colour, forum_name: message_forum_name
 
 
       end

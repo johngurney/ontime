@@ -1,6 +1,6 @@
   class JobsController < ApplicationController
 
-    before_action :get_job, only: [:amend_team, :timing, :today, :now, :edit, :update, :import_template, :delete_all_tasks, :message_forum]
+    before_action :get_job, only: [:amend_team, :timing, :today, :show, :now, :edit, :update, :import_template, :delete_all_tasks, :message_forum]
 
 
 
@@ -12,15 +12,11 @@
   end
 
   def new_job_for_client
-    puts "***** new_job_for_client ******"
+
     @job= Job.new
+    @job.set_up_new_job
     get_client
-    @client=Client.find(params[:id])
     @job.client=@client
-    @job.name="New job"
-    @job.start=DateTime.now
-    @job.daily_flag=true
-    @job.time_zone = Rails.configuration.default_time_zone
     @job.save
 
     setup_for_edit
@@ -30,8 +26,9 @@
 
 
   def create
-    puts "CREATE"
-    @job= Job.new (job_params)
+    @job = Job.new (job_params)
+    @job.set_up_new_job
+    @job.name = params[:name]
     client=Client.find(@job.client_id)
     if @job.save
       redirect_to client_path(client)
@@ -41,10 +38,6 @@
   end
 
   def amend_team
-    @client = @job.client
-    @jobmyusers = @job.myusers
-    @clientmyusers = @client.myusers
-    @myusers = Myuser.all
   end
 
   def add_users
@@ -127,6 +120,10 @@
 
   end
 
+  def show
+
+  end
+
   def today
     if @job.daily_flag
       @job.start = Date.today
@@ -156,10 +153,6 @@
 
   def edit
     @job.update_timings
-    @client=@job.client
-    @tasks = @job.tasks
-    @jobmyusers=@job.myusers
-    @clientmyusers=@client.myusers
     setup_for_edit
 
   end
@@ -169,10 +162,6 @@
     @job=@task.job
     @task.delete
     @job.update_timings
-    @client=@job.client
-    @tasks = @job.tasks
-    @jobmyusers=@job.myusers
-    @clientmyusers=@client.myusers
     setup_for_edit
     render 'edit'
 
@@ -192,6 +181,7 @@
     template.tasks.each do |task|
 
       new_task=Task.new
+      new_task.set_up_new_task
       new_task.name=task.name
       new_task.linked_to_task_id=task.linked_to_task_id
       if new_task.linked_to_task_id.blank?
@@ -286,6 +276,7 @@
 
   def get_job
     @job = Job.find(params[:id])
+    puts "****** job_id" + @job.id.to_s
   end
 
   def get_task

@@ -3,7 +3,7 @@
   <col width="40%">
   <tr>
     <td>
-      <h1>Client: <%=@client.name %></h1>
+      <h1>Client: <%=@job.client.name %></h1>
       <br/>
       <br/>
       Job: <%=@job.name %>
@@ -16,9 +16,9 @@
         The team
         <br/>
         <div class="select_box_list" style="height: 45px">
-          <% if @jobmyusers%>
+          <% if @job.myusers%>
 
-            <% @jobmyusers.each do |myuser| %>
+            <% @job.myusers.each do |myuser| %>
               <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
             <% end %>
 
@@ -49,12 +49,12 @@
 <div class="select_box_wrapper" style="margin-top: 4px; background-color: yellow; ">
   Tasks
   <div class="select_box_list">
-    <% if @tasks %>
+    <% if @job.tasks %>
       <table width="100%">
         <col width="60%">
         <col width="40%">
 
-        <% @tasks.each do |task| %>
+        <% @job.tasks.each do |task| %>
           <tr>
             <td>
               <%= link_to task.name , task_path(task) %>
@@ -68,5 +68,3 @@
   <%= button_to "Add task" , new_task_for_job_path(@job) , :method => :get %>
 
 </div>
-
-

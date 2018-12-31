@@ -6,7 +6,7 @@
 
   <div class="message" style="background: <%= message.colour_lookup() %>">
   <div id="apc<%= message.id -%>" class="ap">
-      From <span  style="font-weight: bold"><%= message.name -%></span> at <%= message.created_at.strftime("%e %b %Y at %H:%M") -%><br/>
+      From <span  style="font-weight: bold"><%= message.number.to_s -%><%= message.name -%></span> at <%= message.created_at.strftime("%e %b %Y at %H:%M") -%><br/>
 
       <div class="message_content" >
         <%= message.decrypt_content_for_read -%><br/>

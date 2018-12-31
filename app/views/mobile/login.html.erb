@@ -1,0 +1,51 @@
+<table>
+  <col width="10%"/>
+  <col width="70%"/>
+  <col width="20%"/>
+  <tr>
+    <td></td>
+    <td>
+    <div class="heading1">log in</div >
+
+    </td>
+    <%= form_tag login_submit_path , :method => 'post' do  %>
+      <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <div class="user_text">
+            Email
+          </div>
+          <%= email_field_tag :email, "", { :autofocus => true, :autocomplete => "email", :class =>"user"} %>
+
+        </td>
+        <td></td>
+      </tr>
+<tr>
+  <td></td>
+  <td>
+
+    <div class="user_text">
+      Password
+    </div>
+    <%= password_field_tag :password, "", {:autofocus => true, :autocomplete=> "new-password", :class =>"user" } %>
+    <td>
+
+    </td>
+  <td></td>
+</tr>
+      <tr>
+        <td></td>
+        <td>
+            <%= submit_tag "Log in", :class =>"user", :style =>"width: 160px; margin-top:20px; background: lightyellow;" %>
+
+
+        </td>
+        <td></td>
+      </tr>
+
+
+      <% end %>
+  </td>
+</table>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head >
+  <title>OnTime</title>
+    <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+
+
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+  <script type="text/javascript">
+
+  function confSubmit(form, message) {
+  if (confirm(message)) {
+  form.submit();
+  }
+
+  else {
+  }
+  }
+  </script>
+
+
+</head>
+
+
+<body style="background-color: #d3d3e0">
+
+<% if ! alert_helper.blank? %>
+  <p class="alert"><%= alert_helper  %></p>
+  <% @alert ="" %>
+<% end %>
+
+<table style="width:100%" align="center" >
+  <col width="15%">
+  <col width="60%">
+  <col width="15%">
+
+  <tr>
+
+    <td align="center" style="font-size: 20px"; >
+      <%= link_to('Home', root_path) %>
+
+    </td>
+
+
+    <td align="center" style="font-size: 50pt; font-weight: bold">
+      Law on time
+    </td>
+
+    <td align="center" style="font-size: 10pt; font-weight: bold">
+    </td>
+
+  </tr>
+</table>
+
+
+
+<%= yield %>
+</body>
+</html>

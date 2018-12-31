@@ -32,21 +32,8 @@ class TasksController < ApplicationController
   end
 
   def setup_task
-    @task= Task.new
-    @task.name="New task"
-    @task.linked_flag=false
-    @task.link_to_start=true
-    @task.offset=0
-    @task.duration=7
-    @task.completed_flag=false
-    @task.percentage_completed=0.0
-    @task.bespoke_offset_flag=false
-    @task.bespoke_duration_flag=false
-    @task.fixed_end_date=false
-
-    @task.start_date=Date.today
-    @task.end_date=Date.today + @task.duration.to_i.days
-
+    @task = Task.new
+    @task.set_up_new_task
   end
 
   # GET /tasks/1/edit
@@ -222,11 +209,13 @@ class TasksController < ApplicationController
 
   end
 
-
-
   def progress
     task = Task.find(params[:id])
-    task.percentage_completed= params[:progress].to_i
+    task.percentage_completed = params[:progress].to_i
+    update = Update.new
+    update.new_update(task, logged_in_user_helper, task.percentage_completed, params[:comments]) 
+
+    task.save
     redirect_to edit_task_path(task)
   end
 
@@ -269,6 +258,8 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(task_params)
+    @task.set_up_new_task
+    @task.name=params[:name]
     job = @task.job
 
     if @task.save
@@ -367,6 +358,7 @@ class TasksController < ApplicationController
   def message_forum
     @message_forum_name = "task" + @task.id.to_s
     @myusers_for_message_forum = @task.myusers
+    @job=@task.job
     @is_task = true
     render :layout => "message_forum"
   end

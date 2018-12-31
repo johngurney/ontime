@@ -190,25 +190,55 @@
 
     </div>
 
-    <div class="select_box_wrapper" style="height: 30px; background-color: lightblue; margin-top: 4px">
-      <%= form_tag task_update_progress_path(@task),  :id => 'progress' do %>
+    <div class="select_box_wrapper" style="height: 70px; background-color: lightblue; margin-top: 4px">
+      <%= form_tag task_update_progress_path(@task),  :id => 'form_progress' do %>
       <table>
         <col width="10%">
-        <col width="20%">
-        <col width="40%">
-        <col width="30%">
-        <tr >
+        <col width="35%">
+        <col width="35%">
+        <col width="15%">
+        <tr>
           <td><span class="heading2">Progress</span></td>
-          <td>Currently: 70%</td>
-          <td >Update:
-              <%= select_tag "progress", options_for_select(@progress, 0), {:class=>"input" , :style => "width: 50px;  margin-left: 10px; margin-right: 10px; margin-top: 0px;  text-align-last: right;" }%>% complete
-              <%= submit_tag "OK",  :class=>"small_button" %>
+          <td>
+            Comments
+            <%= text_area_tag :comments, "", style: "width:97%; height: 40px" %></textarea>
           </td>
           <td>
-            <%= button_to "List all updates", list_updates_for_task_path(@task), :method =>'get', :class=>"small_button" %>
-          </td>
-        </tr></table>
-        <% end %>
+            <table>
+              <col width="40%">
+              <col width="20%">
+              <col width="40%">
+              <tr>
+                <td>
+                  Time elapsed:
+                </td>
+                <td>
+                  <div class="input" style = "width: 43px;  margin-left: 10px; margin-right: 10px; margin-top: 0px; text-align-last: right; background: #d0d0d0">
+                  <%= number_to_percentage(@task.est_progress * 100, precision: 0) %>
+                  </div>
+                </td>
+                <td>
+                  complete
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Work done:
+                </td>
+                <td>
+                  <%= select_tag "progress", options_for_select(@progress, @task.percentage_completed.to_i), {:class=>"input" , :style => "width: 50px;  margin-left: 10px; margin-right: 10px; margin-top: 0px;  text-align-last: right;", :onchange  => "form_progress.submit()"} %>
+                  <% end %>
+                </td>
+                <td>
+                  % complete
+                </td>
+              </tr>
+            </table>
+            <td>
+              <%= button_to "List all updates", list_updates_for_task_path(@task), :method =>'get', :class=>"small_button" %>
+            </td>
+          </tr>
+        </table>
     </div>
 
 

@@ -3,10 +3,18 @@ class Job < ApplicationRecord
   has_many :tasks
   has_and_belongs_to_many :myusers
 
+
   @circular_flags={}
   @done_flags={}
 
+  def set_up_new_job
 
+    self.name = "New job"
+    self.start = DateTime.now
+    self.daily_flag = true
+    self.time_zone = Rails.configuration.default_time_zone
+
+  end
 
   def update_timings
     check_if_timezone_exists_and_valid
@@ -92,8 +100,11 @@ class Job < ApplicationRecord
   end
 
   def end_date
-    d= self.end.strftime("%d %b %Y")
+    if !self.end.blank?
+      d= self.end.strftime("%d %b %Y")
+    end
   end
+
 
   def date123
     check_if_timezone_exists_and_valid
@@ -105,6 +116,41 @@ class Job < ApplicationRecord
     if self.time_zone.blank? or ActiveSupport::TimeZone[self.time_zone].present?
       self.time_zone =  Rails.configuration.default_time_zone
       self.save
+    end
+  end
+
+  def on_schedule
+
+    #Returns false if any task is behind schedule
+
+    flag = true
+    self.tasks.each do |task|
+      if task.percentage_completed < task.est_progress * 100
+        flag = false
+      end
+    end
+    flag
+
+  end
+
+  def task_update_array
+    tasks = self.tasks
+
+    if tasks.count > 0
+      stg ="[ "
+      flag = false
+      tasks.each do |task|
+        if flag == true
+          stg += ", "
+        else
+          flag = true
+        end
+        stg += task.task_update_array_entry
+      end
+      stg += " ]"
+      stg
+    else
+      ""
     end
   end
 
@@ -309,7 +355,6 @@ class Job < ApplicationRecord
   def get_date_part(datetime)
     datetime - seconds_in_day(datetime)
   end
-
 
 
 end

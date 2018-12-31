@@ -4,8 +4,21 @@ Rails.application.routes.draw do
   root 'homepage#homepage'
   #devise_for :users
 
-  get 'test1' => 'user_setup#test1'
-  get 'test2' => 'user_setup#test2'
+  get 'test1' => 'user_setup#test1', as: :test1
+  get 'test2' => 'user_setup#test2', as: :test2
+  get 'reset_to_two_users'=> 'user_setup#reset_to_two_users', as: :reset_to_two_users
+  get 'add_jobs_and_tasks'=> 'user_setup#add_jobs_and_tasks', as: :add_jobs_and_tasks
+
+  get 'set_up_clients'=> 'user_setup#set_up_clients', as: :set_up_clients
+
+  get 'hide_jobs'=> 'homepage#hide_jobs', as: :hide_jobs
+  post 'hide_selected_jobs'=> 'homepage#hide_selected_jobs', as: :hide_selected_jobs
+  post 'unhide_selected_jobs'=> 'homepage#unhide_selected_jobs', as: :unhide_selected_jobs
+  get 'order_jobs_tasks'=> 'homepage#order_jobs_tasks', as: :order_jobs_tasks
+
+  get 'hide_tasks'=> 'homepage#hide_tasks', as: :hide_tasks
+  post 'hide_selected_tasks'=> 'homepage#hide_selected_tasks', as: :hide_selected_tasks
+  post 'unhide_selected_tasks'=> 'homepage#unhide_selected_tasks', as: :unhide_selected_tasks
 
   get 'new_user' => 'myusers#new_user' , as:  :new_user
 
@@ -14,6 +27,10 @@ Rails.application.routes.draw do
   post 'task_summons_email/.:id' => 'tasks#summons_email', as: :task_summons_email
   post 'job_summons_email/.:id' => 'jobs#summons_email', as: :job_summons_email
   get 'tasks/summons_landing/.:id' => 'tasks#summons_landing', as: :summons_landing
+
+  post 'jobs_selection' => 'homepage#jobs_include', as: :homepage_jobs_include
+  post 'tasks_selection' => 'homepage#tasks_include', as: :homepage_tasks_include
+
 
   #get 'myusers.:id' => 'user_setup#new_user_resend_email'
   #post 'myusers' => 'user_setup#new_user_details'
@@ -80,7 +97,7 @@ Rails.application.routes.draw do
   post 'task/linked_flag/.:id', to:  "tasks#linked" , as:  :task_linked
   post 'task/timing/.:id', to:  "tasks#timing" , as:  :task_timing
   get 'task/.:id/edit1', to:  "tasks#edit1" , as:  :edit1_task
-  get 'task/progress/.:id', to:  "tasks#progress" , as:  :task_update_progress
+  post 'task/progress/.:id', to:  "tasks#progress" , as:  :task_update_progress
   post 'task/reminders_completed/.:id', to:  "tasks#reminders_completed" , as:  :task_reminders_completed
   get 'job/delete_task/.:taskid', to:  "jobs#delete_task" , as:  :job_delete_task
   get 'client/delete_job/.:jobid', to:  "clients#delete_job" , as:  :client_delete_job
@@ -98,6 +115,9 @@ Rails.application.routes.draw do
   post 'action_update' => 'tasks#action_update', as: :action_update
   post 'action/.:message_id' => 'tasks#action', as: :action
   post 'action_delete/.:action_id' => 'tasks#action_delete', as: :action_delete
+
+
+  get 'cannot_access' => 'general#cannot_access', as: :cannot_access
 
 
     resources :clients

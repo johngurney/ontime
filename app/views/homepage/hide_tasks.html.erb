@@ -1,0 +1,183 @@
+<span class="heading1">
+  Hide tasks<br/>
+</span>
+
+<div class="select_box_wrapper" style="height: 20px; margin-top: 4px; background-color: lightgreen; ">
+  <table>
+    <col width="31%">
+    <col width="30%">
+    <col width="13%">
+    <col width="13%">
+    <col width="13%">
+    <tr>
+      <td>
+        Include if associated by:
+      </td>
+      <%= form_tag homepage_tasks_include_path,  :id => 'tasks_include' do %>
+      <td>
+        Clients <%= check_box_tag 'tasks_include_clients', 1, logged_in_user_helper.show_tasks_by_client, onchange: "tasks_include.submit()" %>
+      </td>
+      <td>
+        Jobs <%= check_box_tag 'tasks_include_jobs', 1, logged_in_user_helper.show_tasks_by_job, onchange: "tasks_include.submit()" %>
+      </td>
+      <td>
+        Tasks<%= check_box_tag 'tasks_include_tasks', 1, logged_in_user_helper.show_tasks_by_task, onchange: "tasks_include.submit()" %>
+      </td>
+      <% end %>
+    </tr>
+  </table>
+</div>
+
+<div class="select_box_wrapper" style="height: 174px; margin-top: 4px; background-color: lightgreen; ">
+  <div class="select_box_list">
+    <table>
+      <col width="20%"/>
+      <col width="15%"/>
+      <col width="15%"/>
+      <col width="10%"/>
+      <col width="30%"/>
+      <col width="3%"/>
+
+      <%= form_tag hide_selected_tasks_path do %>
+        <tr>
+          <td>
+            <span style="font-weight: bold"> Hide</span>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+            <%= submit_tag "OK" , class: "messages_button"  %>
+          </td>
+        </tr>
+
+        <tr style="font-weight: bold">
+          <td>
+            Client<%= order_jobs_tasks_helper("t","client","task_hide") %>
+          </td>
+          <td>
+            Job<%= order_jobs_tasks_helper("t","job","task_hide") %>
+          </td>
+          <td>
+            Task<%= order_jobs_tasks_helper("t","task","task_hide") %>
+          </td>
+          <td>
+            Start date<%= order_jobs_tasks_helper("t","start_date","task_hide") %>
+          </td>
+          <td>
+            End date<%= order_jobs_tasks_helper("t","end_date","task_hide") %>
+          </td>
+          <td>
+          </td>
+        </tr>
+
+        <% logged_in_user_helper.tasks_for_myuser.each do |task| %>
+          <tr>
+            <td>
+              <%=check_box_tag 'hide' + task.id.to_s , "1" , false %>
+              <%= task.job.client.name %>
+            </td>
+            <td>
+              <%= link_to task.job.name, edit_job_path(task.job) %>
+            </td>
+            <td>
+              <%= link_to task.name, edit_task_path(task) %>
+            </td>
+            <td>
+              <%=  task.start_date.strftime("%e %b %Y") %>
+            </td>
+            <td>
+              <%=  task.end_date.strftime("%e %b %Y") %>
+            </td>
+          </tr>
+        <% end %>
+
+        <% end %>
+    </table>
+
+  </div>
+</div>
+
+<div class="select_box_wrapper" style="height: 174px; margin-top: 4px; background-color: lightgreen; ">
+  <div class="select_box_list">
+    <table>
+      <col width="20%"/>
+      <col width="15%"/>
+      <col width="15%"/>
+      <col width="10%"/>
+      <col width="30%"/>
+      <col width="3%"/>
+
+      <%= form_tag unhide_selected_tasks_path do %>
+        <tr>
+          <td>
+            <span style="font-weight: bold"> Unhide</span>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+            <%= submit_tag "OK" , class: "messages_button"  %>
+          </td>
+        </tr>
+
+        <tr style="font-weight: bold">
+          <td>
+            Client<%= order_jobs_tasks_helper("t","client","task_hide") %>
+          </td>
+          <td>
+            Job<%= order_jobs_tasks_helper("t","job","task_hide") %>
+          </td>
+          <td>
+            Task<%= order_jobs_tasks_helper("t","task","task_hide") %>
+          </td>
+          <td>
+            Start date<%= order_jobs_tasks_helper("t","start_date","task_hide") %>
+          </td>
+          <td>
+            End date<%= order_jobs_tasks_helper("t","end_date","task_hide") %>
+          </td>
+          <td>
+          </td>
+        </tr>
+
+        <% Hide.where(:myuser_id => logged_in_user_helper.id).each do |hide| %>
+          <% if hide.element[0,4] == "task" %>
+          <% task=Task.find(hide.element.sub("task","").to_i) %>
+              <tr>
+                <td>
+                  <%=check_box_tag 'unhide' + task.id.to_s , "1" , false %>
+                  <%= task.job.client.name %>
+                </td>
+                <td>
+                  <%= link_to task.job.name, edit_job_path(task.job) %>
+                </td>
+                <td>
+                  <%=  task.start_date.strftime("%e %b %Y") %>
+                </td>
+                <td>
+                  <%=  task.end_date.strftime("%e %b %Y") %>
+                </td>
+              </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+
+    </table>
+
+  </div>
+</div>

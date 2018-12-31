@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_12_220531) do
+ActiveRecord::Schema.define(version: 2018_12_30_073927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,13 @@ ActiveRecord::Schema.define(version: 2018_11_12_220531) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "client_id"
+  end
+
+  create_table "hides", force: :cascade do |t|
+    t.integer "myuser_id"
+    t.string "element"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -124,6 +131,13 @@ ActiveRecord::Schema.define(version: 2018_11_12_220531) do
     t.text "server_private_key"
     t.text "client_public_key"
     t.integer "messageroom_id"
+    t.boolean "show_jobs_by_client"
+    t.boolean "show_jobs_by_job"
+    t.boolean "show_tasks_by_client"
+    t.boolean "show_tasks_by_job"
+    t.boolean "show_tasks_by_task"
+    t.string "order_jobs_field"
+    t.string "order_tasks_field"
   end
 
   create_table "myusers_tasks", id: false, force: :cascade do |t|

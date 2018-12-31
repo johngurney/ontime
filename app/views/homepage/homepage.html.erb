@@ -1,16 +1,28 @@
-<br/>
-<table align="center" style="background-color: lightblue; border-style: solid; border-width: 5px;" width="25%" height="50">
-  <tr>
-    <td align="center">
-      <%= link_to('test 1', 'test1' ) %>
-    </td>
-    <td align="center">
-      <%= link_to('test 2', 'test2') %>
-    </td>
-  </tr>
-</table>
+<%= javascript_include_tag 'homepage.js' %>
 
-Test
+<script type="text/javascript">
+
+  window.onload = function() {
+
+      var tasks_progress;
+      tasks_progress = <%= @myuser.task_update_array %>
+
+      tasks_progress.forEach (function(task) {
+        var c = document.getElementById("myCanvas" + task["task"]);
+        var ctx = c.getContext("2d");
+        ctx.lineWidth = "0";
+        ctx.fillStyle = "red";
+        ctx.fillRect(0 , c.height * 0.05 , c.width * task["exp_prog"], c.height * 0.4);
+
+        ctx.fillStyle = "green";
+        ctx.fillRect(  0, c.height * 0.55, c.width * task["act_prog"], c.height * 0.4);
+
+      })
+
+    }
+</script>
+
+<br/>
 <% if Myuser.count==0 %>
   <table align="center" style="background-color: lightblue; border-style: solid; border-width: 5px;" width="25%" height="50">
     <tr>
@@ -20,40 +32,64 @@ Test
     </tr>
   </table>
 <% elsif logged_in_user_helper %>
-  <table align="center" style="background-color: lightblue; border-style: solid; border-width: 5px;" width="70%" height="50">
-    <col width="25%">
-    <col width="25%">
-    <col width="25%">
-    <col width="25%">
-    <tr>
-      <td align="center">
-        <%= link_to('Add user', new_user_path) %><br/>
-        <%= link_to('Users', myusers_path) %><br/>
-        <%= link_to('Updates', updates_path) %>
-      </td>
-      <td align="center">
-        <%= link_to('Logout', logout_path, method: :delete) %>
-      </td>
-      <td align="center">
-        <%= link_to('Clients', clients_path) %>
-      </td>
-      <td align="center">
-        <%= link_to('Update schedules', reminder_schedules_path) %><br/>
-        <%= link_to('Templates', templates_path) %>
-      </td>
-    </tr>
-  </table>
+ <% if logged_in_user_helper.is_admin? %>
+    <table align="center" style="background-color: lightblue; border-style: solid; border-width: 5px;" width="70%" height="50">
+      <col width="25%">
+      <col width="25%">
+      <col width="25%">
+      <col width="25%">
+      <tr>
+        <td align="center">
+          <div class="dropdown" style="text-decoration: underline;">
+            Hide
+            <div class="dropdown-content">
+              <%= link_to('Hide updates', root_path) %>
+              <%= link_to('Hide forums', root_path) %>
+              <%= link_to('Hide jobs', hide_jobs_path) %>
+              <%= link_to('Hide tasks', hide_tasks_path) %>
+              <%= link_to('Hide clients', root_path) %>
+            </div>
+          </div>
+        </td>
+        <td align="center">
+          <div class="dropdown">
+            <%= link_to('Users', myusers_path, class: "dropbtn") %>
+            <div class="dropdown-content">
+              <%= link_to('Users', myusers_path) %>
+              <%= link_to('Add user', new_user_path) %>
+            </div>
+          </div>
+        </td>
+        <td align="center">
+          <div class="dropdown">
+            <%= link_to('Clients', clients_path, class: "dropbtn") %>
+            <div class="dropdown-content">
+              <%= link_to('Clients', clients_path) %>
+              <%= link_to('New client', clients_path) %>
+            </div>
+          </div>
+        </td>
+        <td align="center">
+          <div class="dropdown" style="text-decoration: underline;">
+            Templates
+            <div class="dropdown-content">
+              <%= link_to('Job templates', templates_path) %>
+              <%= link_to('Update schedules', reminder_schedules_path) %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  <% end %>
 <% else %>
   <table align="center" style="background-color: lightblue; border-style: solid; border-width: 5px;" width="25%" height="50">
     <tr>
       <td align="center">
-        <%= link_to("Login", login_path )  %>
+        <%= link_to("Log in", login_path )  %>
       </td>
     </tr>
   </table>
 <% end %>
-
-</body>
 
 <table>
   <col width="50%"/>
@@ -77,66 +113,226 @@ Test
         </div>
       </div>
 
-    </td>
-    <td>
-      <div class="select_box_wrapper" style="margin-top: 4px; background-color: lightblue; ">
-
-        <span style="font-weight: bold">Your tasks</span>
+      <div class="select_box_wrapper" style="margin-top: 4px; background-color: pink; ">
+        <span style="font-weight: bold">Your message forums</span>
 
         <div class="select_box_list">
           <table>
-            <col width="18%"/>
-            <col width="25%"/>
-            <col width="25%"/>
-            <col width="16%"/>
-            <col width="16%"/>
+            <col width=75%>
+            <col width=25%>
+            <tr style="font-weight: bold">
+              <td>Forum</td>
+              <td>Last message</td>
+            </tr>
+
+           <% @myuser.message_forums.each do |message| %>
+           <tr>
+             <td>
+              <% if message.message_forum_type == "task" %>
+                <span style="color: green"> Task forum</span>
+
+                <a href="#" onclick="window.open('<%= tasks_message_forum_path(message.task)%>', 'MsgWindow', 'width=400,height=500,left=400,top=100,location=0,status=0,titlebar=0,toolbar=0,menu=0');" ><%= message.message_forum_name_stg %></a>
+              <% elsif message.message_forum_type == "job" %>
+                <span style="color: red">Job forum</span>
+                <a href="#" onclick="window.open('<%= jobs_message_forum_path(message.job)%>', 'MsgWindow', 'width=400,height=500,left=400,top=100,location=0,status=0,titlebar=0,toolbar=0,menu=0');" ><%= message.message_forum_name_stg %></a>
+              <% end %>
+              </td>
+
+              <td>
+                <%= message.time_date_stg %>
+              </td>
+              </tr>
+
+           <% end %>
+           </table>
+
+        </div>
+      </div>
+
+
+
+
+    </td>
+    <td>
+
+      <div class="select_box_wrapper" style="height: 174px; margin-top: 4px; background-color: lightgreen; ">
+        <table>
+          <col width="31%">
+          <col width="30%">
+          <col width="13%">
+          <col width="13%">
+          <col width="13%">
+          <tr>
+            <td>
+              <span style="font-weight: bold">Your jobs</span>
+            </td>
+            <td>
+              Include if associated by:
+            </td>
+            <%= form_tag homepage_jobs_include_path,  :id => 'jobs_include' do %>
+            <td>
+              Clients <%= check_box_tag 'jobs_include_clients', 1, @myuser.show_jobs_by_client, onchange: "jobs_include.submit()" %>
+            </td>
+            <td>
+              Jobs <%= check_box_tag 'jobs_include_jobs', 1, @myuser.show_jobs_by_job, onchange: "jobs_include.submit()" %>
+            </td>
+            <td>
+            </td>
+            <% end %>
+          </tr>
+        </table>
+        <div class="select_box_list">
+          <table>
+            <col width="30%"/>
+            <col width="30%"/>
+            <col width="15%"/>
+            <col width="15%"/>
+            <col width="12%"/>
 
             <tr style="font-weight: bold">
               <td>
-                Client
+              Client<%= order_jobs_tasks_helper("j","client") %>
               </td>
               <td>
-                Job
-              </td>
-
-              <td>
-                Task
+                Job<%= order_jobs_tasks_helper("j","job") %>
               </td>
               <td>
-                Start date
+                Start date<%= order_jobs_tasks_helper("j","start_date") %>
               </td>
               <td>
-                End date
+                End date<%= order_jobs_tasks_helper("j","end_date") %>
+              </td>
+              <td>
+                Progress<%= order_jobs_tasks_helper("j","progress") %>
               </td>
             </tr>
-            <% if !@tasks %>
-              <% @tasks.each do |task| %>
-                <tr>
 
-                  <td><%=  link_to task.job.client.name, edit_client_path(task.job.client) %></td>
-                  <td><%=  link_to task.job.name, edit_job_path(task.job) %></td>
-                  <td><%=  link_to task.name, edit_task_path(task) %></td>
-                  <td style="color: red"><%=  task.start_datestg %></td>
-                  <td style="color: red"><%=  task.end_datestg %></td>
-
-                </tr>
-              <% end %>
+            <% @myuser.jobs_for_myuser.each do |job| %>
+              <tr>
+                <td>
+                  <%= job.client.name %>
+                </td>
+                <td>
+                  <%= link_to job.name, edit_job_path(job) %>
+                </td>
+                <td>
+                  <%= job.start_date %>
+                </td>
+                <td>
+                  <%= job.end_date %>
+                </td>
+                <td>
+                  <% if job.on_schedule %>
+                  <span style="color: green">ok</span>
+                  <% else %>
+                  <span style="color: red">?</span>
+                  <% end %>
+                </td>
+              </tr>
             <% end %>
+
           </table>
 
         </div>
       </div>
 
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <div class="select_box_wrapper" style="margin-top: 4px; background-color: lightgreen; ">
-        <span style="font-weight: bold">Your clients</span>
+
+      <div class="select_box_wrapper" style="height: 174px; margin-top: 4px; background-color: lightblue; ">
+        <table>
+          <col width="31%">
+          <col width="30%">
+          <col width="13%">
+          <col width="13%">
+          <col width="13%">
+          <tr>
+            <td>
+              <span style="font-weight: bold">Your tasks</span>
+            </td>
+            <td>
+              Include if associated by:
+            </td>
+            <%= form_tag homepage_tasks_include_path,  :id => 'tasks_include' do %>
+            <td>
+              Clients <%= check_box_tag 'tasks_include_clients', 1, @myuser.show_tasks_by_client, onchange: "tasks_include.submit()" %>
+            </td>
+            <td>
+              Jobs <%= check_box_tag 'tasks_include_jobs', 1, @myuser.show_tasks_by_job, onchange: "tasks_include.submit()" %>
+            </td>
+            <td>
+              Tasks <%= check_box_tag 'tasks_include_tasks', 1, @myuser.show_tasks_by_task, onchange: "tasks_include.submit()" %>
+            </td>
+            <% end %>
+          </tr>
+        </table>
+        <div class="select_box_list">
+          <table>
+            <col width="14%"/>
+            <col width="18%"/>
+            <col width="20%"/>
+            <col width="15%"/>
+            <col width="15%"/>
+            <col width="18%"/>
+
+            <tr style="font-weight: bold">
+              <td>
+                Client<%= order_jobs_tasks_helper("t","client") %>
+              </td>
+              <td>
+                Job<%= order_jobs_tasks_helper("t","job") %>
+              </td>
+
+              <td>
+                Task<%= order_jobs_tasks_helper("t","task") %>
+              </td>
+              <td>
+                Start date<%= order_jobs_tasks_helper("t","start_date") %>
+              </td>
+              <td>
+                End date<%= order_jobs_tasks_helper("t","end_date`") %>
+              </td>
+              <td>
+                  Progress<%= order_jobs_tasks_helper("t","progress") %>
+              </td>
+            </tr>
+              <% @myuser.tasks_for_myuser.each do |task| %>
+                <tr>
+
+                  <td><%=  link_to task.job.client.name, edit_client_path(task.job.client) %></td>
+                  <td><%=  link_to task.job.name, edit_job_path(task.job) %></td>
+                  <td><%=  link_to task.name, edit_task_path(task) %></td>
+                  <td style="color: red"><%=  task.start_date.strftime("%e %b %Y") %></td>
+                  <td style="color: red"><%=  task.end_date.strftime("%e %b %Y") %></td>
+                  <td>
+                    <canvas id="myCanvas<%= task.id.to_s %>" width="70" height="10" style="border:1px solid #000000; background-color:white; "></canvas>
+                    <% p = task.percentage_completed - task.est_progress * 100  %>
+                    <% if p > 0 %>
+                      <span style="color: green; font-size: 10px">
+                      +<%= number_to_percentage(p , precision: 0) %>
+                    <% elsif p == 0 %>
+                      <span style="color: black; font-size: 10px">
+                      ==
+                    <% else %>
+                    <span style="color: red; font-size: 10px">
+                    <%= number_to_percentage(p , precision: 0) %>
+                    <% end %>
+                    </span>
+                  </td>
+                </tr>
+              <% end %>
+          </table>
+
+        </div>
+      </div>
+      <div class="select_box_wrapper" style="margin-top: 4px; background-color: orange; ">
+        <span style="font-weight: bold">Your clients</span><br/>
+          <% @myuser.clients.each do |client|%>
+            <%= link_to client.name, client_path(client) %>
+          <% end %>
 
         <div class="select_box_list">
         </div>
       </div>
 
     </td>
+  </tr>
 </table>

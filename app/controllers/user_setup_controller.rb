@@ -29,7 +29,7 @@ class UserSetupController < ApplicationController
         @alert="That email is already registered"
         render 'user_setup/new_user'
       else
-        @resend_email_message="That email has already been registered but there user has not confirmed.  Resend confirmation email?"
+        @resend_email_message="That email has already been registered but the user has not confirmed.  Resend confirmation email?"
         render 'user_setup/new_user_resend_email'
 
       end
@@ -98,8 +98,183 @@ class UserSetupController < ApplicationController
 
   end
 
+  def reset_to_two_users
+
+    Myuser.delete_all
+
+    myuser = Myuser.create(user_status: Rails.configuration.admin_name, first_name: "Dan", last_name: "Tench", email: "dan.tench@gmail.com" )
+    encrypted_password=User.new(password: "password").encrypted_password
+    myuser.encrypted_password=encrypted_password
+    myuser.save
+
+    myuser = Myuser.create(user_status: Rails.configuration.user_name, first_name: "John", last_name: "Gurney", email: "dan.tench@googlemail.com" )
+    encrypted_password=User.new(password: "password").encrypted_password
+    myuser.encrypted_password=encrypted_password
+    myuser.save
+
+    redirect_to root_path
+  end
+
+  def add_jobs_and_tasks
+
+    Job.delete_all
+    Task.delete_all
+
+    file_name = File.join(Rails.root, 'public', 'jobs_and_tasks.txt')
+
+    f = File.open(file_name, "r")
+    jobs = []
+    job = {}
+    tasks =[]
+    flag = false
+    f.each_line(chomp: true) do |line|
+      entries = line.split("\t")
+      if entries[0] != ""
+        if flag
+          job[:tasks] = tasks
+
+          jobs.push job
+
+          job = {}
+          tasks =[]
+        end
+        job[:job]=entries[0]
+        flag = true
+      else
+        tasks << entries[1]
+
+      end
+    end
+
+    job[:tasks] = tasks
+    jobs.push job
+
+    puts jobs
+
+    clients=[]
+    Client.all.each do |client|
+      clients << client.id
+    end
+
+
+    (0..19).each do |a|
+      a =rand(0..jobs.count-1)
+      puts clients[rand(0..clients.count-1)].to_s + "=>" + a.to_s + " " + jobs[a][:job].to_s
+
+      job = Job.new
+      job.set_up_new_job
+      job.name = jobs[a][:job]
+      job.client =  Client.find(clients[rand(0..clients.count-1)])
+      job.start = DateTime.now - 20 + rand(40)
+      if rand(0..4) == 1
+        job.myusers << Myuser.find(54)
+      end
+      if rand(0..4) == 1
+        job.myusers << Myuser.find(55)
+      end
+      job.save
+
+      old_task_id = 0
+
+      jobs[a][:tasks].each do |task_name|
+        task = Task.new
+        task.set_up_new_task
+        task.name = task_name
+        task.duration = rand(4..30)
+        if old_task_id == 0
+          task.link_to_start = true
+          task.linked_flag = true
+        else
+          task.linked_to_task_id = old_task_id
+          task.linked_flag = true
+        end
+        task.offset = rand(0..6)
+
+        task.job = job
+        if rand(0..19) == 1
+          task.myusers << Myuser.find(54)
+        end
+        if rand(0..19) == 1
+          task.myusers << Myuser.find(55)
+        end
+
+        task.save
+        old_task_id = task.id
+      end
+
+      job.update_timings
+
+    end
+
+    redirect_to root_path
+  end
+
+  def set_up_clients
+    Client.delete_all
+    Job.delete_all
+    Task.delete_all
+
+    Myuser.all.each do |myuser|
+      myuser.clients.all.each do |client|
+        myuser.clients.delete(client)
+      end
+
+      myuser.jobs.all.each do |job|
+        myuser.jobs.delete(job)
+      end
+
+      myuser.tasks.all.each do |task|
+        myuser.jobs.delete(task)
+      end
+
+    end
+
+
+    client = Client.create(name: "ABC Bank")
+    client.myusers << Myuser.find(54)
+    client.myusers << Myuser.find(55)
+    client.save
+
+    client = Client.create(name: "XYZ Limited")
+    client.myusers << Myuser.find(54)
+    client.save
+
+    client = Client.create(name: "Fibre Inc")
+    client.myusers << Myuser.find(54)
+    client.save
+
+    client = Client.create(name: "Imperium Limited")
+    client.myusers << Myuser.find(55)
+    client.save
+
+    client = Client.create(name: "Spec List SA")
+    client.myusers << Myuser.find(54)
+    client.myusers << Myuser.find(55)
+    client.save
+
+    redirect_to root_path
+  end
+
   def test1
-    #Myuser.delete_all
+
+    # Client.all.each do |client|
+    #   client.myusers.all.each do |myuser|
+    #     client.myusers.delete(myuser)
+    #   end
+    # end
+    #
+    # Job.all.each do |job|
+    #   job.myusers.all.each do |myuser|
+    #     job.myusers.delete(myuser)
+    #   end
+    # end
+    #
+    # Task.all.each do |task|
+    #   task.myusers.all.each do |myuser|
+    #     task.myusers.delete(myuser)
+    #   end
+    # end
+
     redirect_to root_path
   end
 

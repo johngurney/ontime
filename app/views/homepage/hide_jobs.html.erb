@@ -1,0 +1,186 @@
+<span class="heading1">
+  Hide jobs<br/>
+</span>
+
+<div class="select_box_wrapper" style="height: 20px; margin-top: 4px; background-color: lightgreen; ">
+  <table>
+    <col width="31%">
+    <col width="30%">
+    <col width="13%">
+    <col width="13%">
+    <col width="13%">
+    <tr>
+      <td>
+        <span style="font-weight: bold">Your jobs</span>
+      </td>
+      <td>
+        Include if associated by:
+      </td>
+      <%= form_tag homepage_jobs_include_path,  :id => 'jobs_include' do %>
+      <td>
+        Clients <%= check_box_tag 'jobs_include_clients', 1, logged_in_user_helper.show_jobs_by_client, onchange: "jobs_include.submit()" %>
+      </td>
+      <td>
+        Jobs <%= check_box_tag 'jobs_include_jobs', 1, logged_in_user_helper.show_jobs_by_job, onchange: "jobs_include.submit()" %>
+      </td>
+      <td>
+      </td>
+      <% end %>
+    </tr>
+  </table>
+</div>
+
+<div class="select_box_wrapper" style="height: 174px; margin-top: 4px; background-color: lightgreen; ">
+  <div class="select_box_list">
+    <table>
+      <col width="3%"/>
+      <col width="32%"/>
+      <col width="20%"/>
+      <col width="10%"/>
+      <col width="10%"/>
+      <col width="25%"/>
+      <col width="25%"/>
+
+      <%= form_tag hide_selected_jobs_path do %>
+        <tr>
+          <td>
+            <span style="font-weight: bold"> Hide</span>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+            <%= submit_tag "OK" , class: "messages_button"  %>
+          </td>
+        </tr>
+
+        <tr style="font-weight: bold">
+          <td>
+          </td>
+          <td>
+            Client<%= order_jobs_tasks_helper("j","client","h") %>
+          </td>
+          <td>
+            Job
+          </td>
+          <td>
+            Start date
+          </td>
+          <td>
+            End date
+          </td>
+          <td>
+          </td>
+        </tr>
+
+        <% logged_in_user_helper.jobs_for_myuser.each do |job| %>
+          <tr>
+            <td>
+              <%=check_box_tag 'hide' + job.id.to_s , "1" , false %>
+            </td>
+            <td>
+              <%= job.client.name %>
+            </td>
+            <td>
+              <%= link_to job.name, edit_job_path(job) %>
+            </td>
+            <td>
+              <%= job.start_date %>
+            </td>
+            <td>
+              <%= job.end_date %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+
+    </table>
+
+  </div>
+</div>
+
+<div class="select_box_wrapper" style="height: 174px; margin-top: 4px; background-color: lightgreen; ">
+  <div class="select_box_list">
+    <table>
+      <col width="3%"/>
+      <col width="32%"/>
+      <col width="20%"/>
+      <col width="10%"/>
+      <col width="10%"/>
+      <col width="25%"/>
+      <col width="25%"/>
+
+      <%= form_tag unhide_selected_jobs_path do %>
+        <tr>
+          <td>
+            <span style="font-weight: bold"> Unhide</span>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+          </td>
+          <td>
+            <%= submit_tag "OK" , class: "messages_button"  %>
+          </td>
+        </tr>
+
+        <tr style="font-weight: bold">
+          <td>
+          </td>
+          <td>
+            Client
+          </td>
+          <td>
+            Job
+          </td>
+          <td>
+            Start date
+          </td>
+          <td>
+            End date
+          </td>
+          <td>
+          </td>
+        </tr>
+
+        <% Hide.where(:myuser_id => logged_in_user_helper.id).each do |hide| %>
+          <% if hide.element[0,3] == "job" %>
+          <% job=Job.find(hide.element.sub("job","").to_i) %>
+              <tr>
+                <td>
+                  <%=check_box_tag 'unhide' + job.id.to_s , "1" , false %>
+                </td>
+                <td>
+                  <%= job.client.name %>
+                </td>
+                <td>
+                  <%= link_to job.name, edit_job_path(job) %>
+                </td>
+                <td>
+                  <%= job.start_date %>
+                </td>
+                <td>
+                  <%= job.end_date %>
+                </td>
+              </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+
+    </table>
+
+  </div>
+</div>

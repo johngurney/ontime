@@ -6,12 +6,25 @@
       <span class="page_heading">
         Updates for<br/>
       </span>
-      <span class="heading1" style="font-size: 18pt">
         <br/>
-          Client: <%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
-          Job: <%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
-          Task: <%= link_to @task.name , edit_task_path(@task) %><br/>
-      </span>
+        <div class="select_box_wrapper" style="height: 30px; margin-top: 10px; background-color: lightpink">
+          <table>
+            <col width="20%"/>
+            <col width="40%"/>
+            <col width="40%"/>
+            <tr>
+              <td>
+                <span style="font-weight:bold">Client: </span><%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
+              </td>
+              <td>
+                <span style="font-weight:bold">Job: </span><%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
+              </td>
+              <td>
+                <span style="font-weight:bold">Task: </span><%= link_to @task.name , edit_task_path(@task) %><br/>
+              <td>
+            </tr>
+          </table>
+        </div>
 
     </td>
   </tr>
@@ -50,4 +63,3 @@
 
 
 </table>
-

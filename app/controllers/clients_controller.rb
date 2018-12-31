@@ -3,7 +3,7 @@ class ClientsController < ApplicationController
   before_action :set_client, only: [:show, :show_with_all_fes, :edit, :update, :destroy, :add_users, :client_users]
 
   def index
-    @clients=Client.all.order("created_at DESC")
+    @clients=Client.all.order("name ASC")
   end
 
   def new
@@ -42,19 +42,23 @@ class ClientsController < ApplicationController
   end
 
   def show1(flag)
-    @show_all_fes_flag=flag
-    @myusers = Myuser.all
-    @contacts = @client.contacts
-    @jobs = @client.jobs
+    if logged_in_user_helper.is_admin? or @client.myusers.include?(logged_in_user_helper)
+      @show_all_fes_flag=flag
+      @myusers = Myuser.all
+      @contacts = @client.contacts
+      @jobs = @client.jobs
 
-    @clientmyusers=@client.myusers
-    @clients=Client.all.order("created_at DESC")
-    render 'show'
+      @clientmyusers=@client.myusers
+      @clients=Client.all.order("created_at DESC")
+      render 'show'
+    else
+      redirect_to cannot_access_path
+    end
   end
 
   def client_users
 
-    if params[:function] == "Remove user(s)"
+    if params[:function] == "Remove user"
       myusers = @client.myusers
       myusers.each do |myuser|
         s = params['check'+myuser.id.to_s]
@@ -64,7 +68,7 @@ class ClientsController < ApplicationController
       end
       @client.save
       redirect_to client_path(@client)
-    elsif params[:function] == "Add user(s)"
+    elsif params[:function] == "Add user"
       myusers = Myuser.all
       myusers.each do |myuser|
         s = params['check'+myuser.id.to_s]
@@ -79,7 +83,7 @@ class ClientsController < ApplicationController
       @client.save
       redirect_to client_path(@client)
 
-    elsif params[:function] == "Add as superviser(s)"
+    elsif params[:function] == "Add as super"
       myusers = @client.myusers
       myusers.each do |myuser|
         s = params['check'+myuser.id.to_s]
@@ -92,7 +96,7 @@ class ClientsController < ApplicationController
       end
       redirect_to client_path(@client)
 
-    elsif params[:function] == "Remove superviser(s)"
+    elsif params[:function] == "Remove super"
 
       myusers = @client.myusers
       myusers.each do |myuser|

@@ -1,0 +1,113 @@
+Acquisition of AlphaGamma Ltd	
+	Consider papers
+	Call with client
+	Preparing draft sale documentation
+	Negotiation
+	Completion
+Acquisition of K Ltd	
+	Consider papers
+	Call with client
+	Preparing draft sale documentation
+	Negotiation
+	Completion
+Advice on trade marks	
+	Consider papers
+	Call with client
+	Detailed review of marks
+	Initial draft of note
+	Review of note
+	Finalisation of note
+Data breach	
+	Call with client
+	Crisis housekeeping
+	Consider regulatory requirements
+	Consider litigation risk
+	Employment issues
+Injunction application	
+	Consider papers
+	Call with client
+	Preparation of witness statement
+	Preparation of court papers
+	Application
+	Service
+Loan note renegotiation	
+	Consider papers
+	Call with client
+	Preparing draft sale documentation
+	Negotiation
+	Completion
+Negotiation on termination of agreement	
+	Consider papers
+	Call with client
+	Detailed review of agreement
+	Negotiation
+	Finalisation termination
+Reputation management matter	
+	Consider papers
+	Call with client
+	Reviewing press coverage
+	Letter of complaint
+	Response
+Sale of RF Ltd	
+	Consider papers
+	Call with client
+	Reviewing draft sale documentation
+	Negotiation
+	Completion
+Contact review	
+	Consider papers
+	Call with client
+	Initial draft of note
+	Review of note
+	Finalisation of note
+Licence review	
+	Consider papers
+	Call with client
+	Initial draft of note
+	Review of note
+	Finalisation of note
+Preparation of Defence	
+	Obtaining instructions from client
+	Liaison with counsel
+	Counsel prepare first draft
+	Review and liaison with client
+	Finalisation of Defence
+Disclosure	
+	Obtaining client's instructions re disc q
+	Initial recovery of documents
+	First level review
+	Second level review
+	Queries with counsel
+	Finalisation of list
+Trial preparation	
+	Prepapring bundle
+	Liaison with witnesses
+	Counsel prepare draft skeleton
+	Reviewing of skeleton with client
+	Finalisation of skeleton
+Advice note	
+	Consider papers
+	Call with client
+	Initial draft of note
+	Review of note
+	Finalisation of note
+Response to letter before claim	
+	Consider papers
+	Call with client
+	Initial draft of letter
+	Review of letter
+	Finalisation of letter
+Lease renewal	
+	Consider papers
+	Call with client
+	Preparing draft sale documentation
+	Negotiation
+	Completion
+Norwich Pharmacal application	
+	Consider papers
+	Call with client
+	Letter to intermediary
+	Preparation of witness statement
+	Preparation of court papers
+	Application
+	Service

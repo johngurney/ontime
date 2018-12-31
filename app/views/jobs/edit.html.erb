@@ -1,3 +1,25 @@
+<script type="text/javascript">
+
+  window.onload = function() {
+
+      var tasks_progress;
+      tasks_progress = <%= @job.task_update_array %>
+
+      tasks_progress.forEach (function(task) {
+        var c = document.getElementById("myCanvas" + task["task"]);
+        var ctx = c.getContext("2d");
+        ctx.lineWidth = "0";
+        ctx.fillStyle = "red";
+        ctx.fillRect(0 , c.height * 0.05 , c.width * task["exp_prog"], c.height * 0.4);
+
+        ctx.fillStyle = "green";
+        ctx.fillRect(  0, c.height * 0.55, c.width * task["act_prog"], c.height * 0.4);
+
+      })
+
+    }
+</script>
+
 <table>
   <col width="53%">
   <col width="47%">
@@ -5,7 +27,7 @@
     <td>
       <span class="heading1" style="font-size: 18pt">
         Configure job<br/>
-        Client: <%= link_to @client.name, client_path(@client) %><br/><br/>
+        Client: <%= link_to @job.client.name, client_path(@job.client) %><br/><br/>
         <%= form_for @job, :method => 'patch' do |f| %>
           <table>
             <col width="20%">
@@ -40,9 +62,9 @@
         <span style="font-weight: bold">The team</span>
         <br/>
         <div class="select_box_list" style="height: 45px">
-          <% if @jobmyusers%>
+          <% if @job.myusers%>
 
-            <% @jobmyusers.each do |myuser| %>
+            <% @job.myusers.each do |myuser| %>
               <%= link_to myuser.first_name + " " + myuser.last_name, myuser_path(myuser) %>
             <% end %>
 
@@ -171,14 +193,31 @@
     </tr>
   </table>
   <div class="select_box_list" style="height: 188px">
-    <% if @tasks %>
+    <% if @job.tasks %>
       <table width="100%">
+        <col width="15%">
+        <col width="12%">
+        <col width="12%">
+        <col width="12%">
         <col width="25%">
-        <col width="25%">
-        <col width="25%">
-        <col width="25%">
+        <tr style="font-weight: bold;">
+          <td>
+              Task name
+          </td>
+          <td>
+            Scheduled start
+          </td>
+          <td>
+            Scheduled end
+          </td>
+          <td>
+            Progress
+          </td>
+          <td>
+          </td>
+        </tr>
 
-        <% @tasks.each do |task| %>
+        <% @job.tasks.each do |task| %>
           <tr>
             <td>
               <%= link_to task.name , edit_task_path(task) %>
@@ -186,10 +225,25 @@
             </td>
 
             <td style="color: red">
-              Estimated start: <%= task.start_date_timestg %>
+              <%= task.start_date_timestg %>
             </td>
             <td style="color: red">
-              Estimated end: <%= task.end_date_timestg %>
+              <%= task.end_date_timestg %>
+            </td>
+            <td>
+              <canvas id="myCanvas<%= task.id.to_s %>" width="70" height="10" style="border:1px solid #000000; background-color:white; "></canvas>
+              <% p = task.percentage_completed - task.est_progress * 100  %>
+              <% if p > 0 %>
+                <span style="color: green">
+                +<%= number_to_percentage(p , precision: 0) %>
+              <% elsif p == 0 %>
+                <span style="color: black">
+                ==
+              <% else %>
+              <span style="color: red">
+              <%= number_to_percentage(p , precision: 0) %>
+              <% end %>
+              </span>
             </td>
 
             <td>

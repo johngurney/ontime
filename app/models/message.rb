@@ -4,6 +4,12 @@ class Message < ApplicationRecord
   has_one :action
 
   after_create_commit { MessageBroadcastJob.perform_later self }
+  after_initialize :setup_on_new
+
+  def setup_on_new
+    self.name="123"
+
+  end
 
   def encrypt_content_for_save(content)
     key   = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base).generate_key Rails.configuration.encryption_salt, Rails.configuration.encryption_key_length
@@ -65,6 +71,50 @@ class Message < ApplicationRecord
       Job.find(self.forum_name.sub!("job", "").to_i).myusers
     end
   end
+
+  def find_myusers_for_forum()
+    if self.forum_name[0,4] == "task"
+      Task.find(self.forum_name.sub("task", "").to_i).myusers
+    elsif self.forum_name[0,3] == "job"
+      Job.find(self.forum_name.sub("job", "").to_i).myusers
+    end
+  end
+
+  def message_forum_name_stg()
+    if self.forum_name[0,4] == "task"
+      task = Task.find(self.forum_name.sub("task", "").to_i)
+      task.job.client.name + "/" + task.job.name + "/" + task.name
+    elsif self.forum_name[0,3] == "job"
+      job = Job.find(self.forum_name.sub("job", "").to_i)
+      job.client.name + "/" + job.name
+    end
+  end
+
+  def message_forum_type()
+    if self.forum_name[0,4] == "task"
+      "task"
+    elsif self.forum_name[0,3] == "job"
+      "job"
+    end
+  end
+
+  def task()
+    if self.forum_name[0,4] == "task"
+      Task.find(self.forum_name.sub("task", "").to_i)
+    end
+  end
+
+  def job()
+    if self.forum_name[0,3] == "job"
+      Job.find(self.forum_name.sub("job", "").to_i)
+    end
+  end
+
+  def time_date_stg()
+    self.created_at.strftime("%d %b %Y at %H:%M")
+  end
+
+
 
 private
 
