@@ -1,10 +1,12 @@
 class Myuser < ApplicationRecord
+
   has_and_belongs_to_many :clients
   has_and_belongs_to_many :jobs
   has_and_belongs_to_many :tasks
   has_many :update_reminders, :through => :tasks
   has_many :updates
   has_and_belongs_to_many :actions
+  has_many :task_logs
 
   def confirmation_sent_at_string
     date_stg self.confirmation_sent_at
@@ -37,14 +39,14 @@ class Myuser < ApplicationRecord
   def message_forums
     forums = []
     Message.select(:forum_name).distinct.each do |message|
-      puts "*!*" + message.forum_name
+
       myusers = message.find_myusers_for_forum()
       if !myusers.blank? and myusers.include?(self)
         max_date = Message.where("forum_name=?", message.forum_name).maximum(:created_at)
         forums << Message.where("forum_name=? AND created_at=?", message.forum_name, max_date).first
       end
     end
-    puts forums
+
     forums.sort {|x,y| -(x.created_at <=> y.created_at)}
     # forums
     # puts forums
@@ -192,5 +194,24 @@ class Myuser < ApplicationRecord
       ""
     end
   end
+
+  def myuser_can_edit(myuser)
+    myuser.is_admin? || self == myuser
+  end
+
+  def updates_for_myuser
+    updates = []
+    self.tasks.each do |task|
+      update = task.next_update
+      updates << update if !update.blank?
+
+    end
+
+    updates.sort_by do |x|
+      time_now = DateTime.now
+       [x[:date] + x[:reminder].due_period > time_now ? 1 : 0 , x[:date] ]
+    end
+  end
+
 
 end

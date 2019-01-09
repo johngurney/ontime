@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
 
-  before_action :get_task, only: [:show, :edit, :edit1, :update, :reminders_completed, :timing, :import_schedule, :message_forum, :summons_landing, :summons_email]
+  before_action :get_task, only: [:show, :edit, :edit1, :update, :reminders_completed, :timing, :import_schedule, :message_forum, :summons_landing, :summons_email, :task_log]
   skip_before_action :verify_authenticity_token, only: [:action]
 
   def new_task_for_job
@@ -11,7 +11,7 @@ class TasksController < ApplicationController
     if Template.count > 0
       @task.template = Template.first
     end
-
+    TaskLog.new_log(@task, "New task", logged_in_user_helper)
     @task.save(validate: false)
 
 
@@ -26,6 +26,7 @@ class TasksController < ApplicationController
     @task.job = Job.first
     @task.template=@template
     @task.for_template_flag = true
+    TaskLog.new_log(@task, "New task", logged_in_user_helper)
     @task.save(validate: false)
     edit_set_up_for_selectors
     render 'edit_for_template'
@@ -38,6 +39,9 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
+    if !params[:search_myusers].blank?
+       @myusers_search = Myuser.where("lower(first_name) LIKE ? OR lower(last_name) LIKE ?", "%" + params[:search_myusers].downcase + "%", "%" + params[:search_myusers].downcase + "%")
+    end
 
     edit_set_up_for_selectors
     if @duration_options.include? @task.duration
@@ -139,8 +143,13 @@ class TasksController < ApplicationController
     redirect_to edit_task_path(@task)
   end
 
+  def task_log
+    render "task_log"
+  end
 
   def timing
+
+    @task.linked_flag = (params[:linked]) == "1"
 
     if @task.linked_flag
 
@@ -163,7 +172,7 @@ class TasksController < ApplicationController
       end
     else
 
-      @task.start_date = @task.parse_date(params[:start_date])
+      @task.start_date = @task.parse_date(params[:start_date]) if !@task.parse_date(params[:start_date]).blank?
 
     end
 
@@ -175,8 +184,6 @@ class TasksController < ApplicationController
 
       duration = params[:duration_period_select]
 
-      puts "******" + duration.to_s
-
       if @task.bespoke_duration_flag
         if duration.blank? or duration == "Specify"
           duration = params[:duration_bespoke_period]
@@ -186,7 +193,6 @@ class TasksController < ApplicationController
           @task.bespoke_duration_flag=false
         end
       else
-        puts "1******" + duration.to_s
         if duration== "Specify"
           @task.bespoke_duration_flag = true
         else
@@ -196,7 +202,9 @@ class TasksController < ApplicationController
 
     else
 
-      @task.end_date = @task.parse_date(params[:end_date])
+      @task.end_date = @task.parse_date(params[:end_date]) if !@task.parse_date(params[:end_date]).blank?
+      @task.end_date = @task.start_date if @task.end_date.blank?
+      @task.end_date = @task.start_date if @task.end_date < @task.start_date
 
     end
 
@@ -205,7 +213,12 @@ class TasksController < ApplicationController
 
     @task.job.update_timings
 
+    #NB here we must send re interrogate the db for task to send new_log to because update_timings will not have updated @task here
+    TaskLog.new_log(Task.find(@task.id), params[:comments], logged_in_user_helper)
+
     redirect_to edit1_task_path(@task)
+
+
 
   end
 
@@ -213,7 +226,7 @@ class TasksController < ApplicationController
     task = Task.find(params[:id])
     task.percentage_completed = params[:progress].to_i
     update = Update.new
-    update.new_update(task, logged_in_user_helper, task.percentage_completed, params[:comments]) 
+    update.new_update(task, logged_in_user_helper, task.percentage_completed, params[:comments])
 
     task.save
     redirect_to edit_task_path(task)
@@ -221,24 +234,24 @@ class TasksController < ApplicationController
 
   def add_users
     task= Task.find(params[:id])
-    myusers = Myuser.all
-    myusers.each do |myuser|
-      s = params['check'+myuser.id.to_s]
-      if !s.blank?
-        task.myusers << myuser
+
+    if  !params[:search_myusers].blank? && params[:search_myusers] != ""
+      redirect_to edit_task_path(task, :search_myusers => params[:search_myusers])
+    else
+
+      myusers = Myuser.all
+      myusers.each do |myuser|
+        s = params['check'+myuser.id.to_s]
+        if !s.blank?
+          puts "*** new user ***" + myuser.id.to_s
+          task.myusers << myuser
+        end
       end
+      task.save
+      redirect_to edit_task_path(task)
     end
-    task.save
-    redirect_to edit_task_path(task)
   end
 
-  def linked
-    task = Task.find(params[:id])
-    task.linked_flag = (params[:linked]) == "1"
-    task.save(validate: false)
-    task.job. update_timings
-    redirect_to edit_task_path(task)
-  end
 
   def remove_users
     task= Task.find(params[:id])
@@ -262,6 +275,7 @@ class TasksController < ApplicationController
     @task.name=params[:name]
     job = @task.job
 
+    TaskLog.new_log(@task, "New task", logged_in_user_helper)
     if @task.save
       redirect_to job_path(job)
     else
@@ -335,7 +349,6 @@ class TasksController < ApplicationController
     end
     action.save
     task_id = Message.find(action.message_id).forum_name.sub!("task", "").to_i
-    puts "******** Task_id ********" + task_id.to_s
     redirect_to tasks_message_forum_path(task_id)
   end
 
@@ -380,6 +393,17 @@ class TasksController < ApplicationController
   end
 
   helper_method :offset_period_value, :duration_period_value, :email_summons_text_task, :duration_unit_text
+
+  def amend_comments_for_log
+
+    log = TaskLog.find(params[:id])
+    log.comments = params[:comments]
+    log.save
+
+    redirect_to task_log_path(log.task)
+
+  end
+
 
 
   private

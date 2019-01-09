@@ -1,0 +1,89 @@
+<span class="page_heading">
+  Log of changes to task timing
+</span>
+  <br/>
+  <div class="select_box_wrapper" style="height: 30px; margin-top: 10px; background-color: lightpink">
+    <table>
+      <col width="20%"/>
+      <col width="40%"/>
+      <col width="40%"/>
+      <tr>
+        <td>
+          <span style="font-weight:bold">Client: </span><%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
+        </td>
+        <td>
+          <span style="font-weight:bold">Job: </span><%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
+        </td>
+        <td>
+          <span style="font-weight:bold">Task: </span><%= link_to @task.name , edit_task_path(@task) %><br/>
+        <td>
+      </tr>
+    </table>
+  </div>
+
+<div class="select_box_wrapper" style="height: 350px; margin-top: 10px; background-color: yellow">
+  <div class="select_box_list" style="height: 350px">
+  <table>
+    <col width="14%"/>
+    <col width="16%"/>
+    <col width="19%"/>
+    <col width="17%"/>
+    <col width="20%"/>
+    <col width="4%"/>
+    <tr style="font-weight: bold">
+      <td>Date/time</td>
+      <td>User making change</td>
+      <td>Change</td>
+      <td></td>
+      <td>Comments</td>
+
+    </tr>
+
+      <% logs = @task.task_logs.order('created_at DESC') %>
+      <% logs.each do |log| %>
+        <tr>
+          <td><%= log.created_at.to_s(:date_time_at) %> </td>
+          <td>
+            <%= log.myuser.name %>
+          </td>
+            <% if log == logs.last %>
+              <td>
+              </td>
+              <td>
+              </td>
+            <% else %>
+              <td>
+                <% old_log = @task.task_logs.where("created_at < ?", log.created_at).order('created_at ASC').last %>
+                Old <%= old_log.start_date.to_s %>
+                New <%= log.start_date.to_s %> 
+                <%= log.changes_to_linking_stg ( old_log ) %>
+              </td>
+              <td>
+                <%= log.changes_to_dates_stg ( old_log ) %>
+              </td>
+              <% if logged_in_user_helper == log.myuser %>
+                <%= form_tag amend_comments_for_log_path(log) do %>
+                  <td>
+                    <%= text_area_tag :comments, log.comments, style: "width:97%; height: 40px" %>
+                  </td>
+                  <td>
+                    <%= submit_tag "Update" , class: "messages_button"  %>
+                  </td>
+                <% end %>
+              <% else %>
+                <td>
+                  <%= log.comments %>
+                </td>
+                <td>
+                </td>
+              <% end %>
+
+
+            <% end %>
+        </tr>
+      <% end %>
+
+
+  </table>
+  </div>
+</div>

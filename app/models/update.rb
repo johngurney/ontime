@@ -19,4 +19,5 @@ class Update < ApplicationRecord
 
   end
 
+
 end

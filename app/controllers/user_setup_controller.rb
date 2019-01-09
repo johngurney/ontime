@@ -100,17 +100,33 @@ class UserSetupController < ApplicationController
 
   def reset_to_two_users
 
-    Myuser.delete_all
+    # Myuser.delete_all
+    #
+    # myuser = Myuser.create(user_status: Rails.configuration.admin_name, first_name: "Dan", last_name: "Tench", email: "dan.tench@gmail.com", has_confirmed_flag: true )
+    # encrypted_password=User.new(password: "password").encrypted_password
+    # myuser.encrypted_password=encrypted_password
+    # myuser.save
+    #
+    # myuser = Myuser.create(user_status: Rails.configuration.user_name, first_name: "John", last_name: "Gurney", email: "dan.tench@googlemail.com", has_confirmed_flag: true )
+    # encrypted_password=User.new(password: "password").encrypted_password
+    # myuser.encrypted_password=encrypted_password
+    # myuser.save
 
-    myuser = Myuser.create(user_status: Rails.configuration.admin_name, first_name: "Dan", last_name: "Tench", email: "dan.tench@gmail.com" )
+    myuser = Myuser.create(user_status: Rails.configuration.user_name, first_name: "Fred", last_name: "Smith", email: "dan.tench@googlemail.com", has_confirmed_flag: true )
     encrypted_password=User.new(password: "password").encrypted_password
     myuser.encrypted_password=encrypted_password
     myuser.save
 
-    myuser = Myuser.create(user_status: Rails.configuration.user_name, first_name: "John", last_name: "Gurney", email: "dan.tench@googlemail.com" )
+    myuser = Myuser.create(user_status: Rails.configuration.user_name, first_name: "Gabriella", last_name: "Surtees", email: "dan.tench@googlemail.com", has_confirmed_flag: true )
     encrypted_password=User.new(password: "password").encrypted_password
     myuser.encrypted_password=encrypted_password
     myuser.save
+
+    myuser = Myuser.create(user_status: Rails.configuration.user_name, first_name: "Jeffrey", last_name: "Brown", email: "dan.tench@googlemail.com", has_confirmed_flag: true )
+    encrypted_password=User.new(password: "password").encrypted_password
+    myuser.encrypted_password=encrypted_password
+    myuser.save
+
 
     redirect_to root_path
   end
@@ -256,6 +272,50 @@ class UserSetupController < ApplicationController
   end
 
   def test1
+
+    UpdateReminder.all.each do |reminder|
+      reminder.update_window_percentage_flag = false
+
+      reminder.update_window_length_in_seconds = 4.hours
+      reminder.save(validate: false)
+    end
+
+
+
+    # Task.all.each do |task|
+    #   case rand(0..4)
+    #     when 0, 1, 2
+    #
+    #       update_reminder = UpdateReminder.new
+    #       update_reminder.is_for_task = true
+    #       update_reminder.task = task
+    #       update_reminder.update_type = 0
+    #       update_reminder.proportion = 0.5
+    #       update_reminder.allow_email_flag=true
+    #       update_reminder.save(validate: false)
+    #
+    #       update_reminder = UpdateReminder.new
+    #       update_reminder.is_for_task = true
+    #       update_reminder.task = task
+    #       update_reminder.update_type = 0
+    #       update_reminder.proportion = 0.9
+    #       update_reminder.allow_email_flag=true
+    #       update_reminder.save(validate: false)
+    #
+    #     when 3
+    #       update_reminder = UpdateReminder.new
+    #       update_reminder.is_for_task=  true
+    #       update_reminder.task = task
+    #       update_reminder.update_type = 2
+    #       update_reminder.repeat_weekday = rand(0..2) != 0 ? 0b0010101 : 0b0000010
+    #       update_reminder.repeat_time = ActiveSupport::TimeZone[task.job.time_zone].parse(Rails.configuration.working_day_start_time)
+    #
+    #       update_reminder.allow_email_flag=true
+    #       update_reminder.save(validate: false)
+    #
+    #   end
+    # end
+
 
     # Client.all.each do |client|
     #   client.myusers.all.each do |myuser|

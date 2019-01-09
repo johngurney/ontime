@@ -1,96 +1,87 @@
-<table>
-  <tr>
-    <td>
-      <span class="page_heading">
-        Update reminder<br/>
+<span class="page_heading">Update reminder</span><%= @update_reminder.id.to_s %> <br/>
+<% if !@task.blank? %>
+  <% if !@task.for_template_flag %>
+  <span class="heading1" style="font-size: 18pt">
+    <br/>
+      Client: <%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
+      Job: <%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
+      Task: <%= link_to @task.name , edit_task_path(@task) %><br/><br/>
+    </span>
+  <% end %>
+
+<% end %>
+
+
+<div class="select_box_wrapper" style="height: 180px; background-color: lightpink">
+  <span style="font-weight: bold">Reminder</span><br/>
+  <%= form_tag update_reminder_update_path(@update_reminder) , :id => 'update_form'  do %>
+    Update type: <%= select_tag "update_type", options_for_select(@update_options, @update_reminder.update_type) , {:style => "width:130px;", :onchange => raw("update_form.submit()") ,:class => "input"} %>
+    <% if @update_reminder.update_type == 0 %>
+      Proportion: <%= select_tag "proportion", options_for_select(@progress, @update_reminder.proportion) , {:style => "width:50px; text-align: right;" ,:class => "input"} %>%
+    <% elsif @update_reminder.update_type == 1 %>
+      <%= select_tag "offset_days", options_for_select([0,1,2,3,4,5,6,7], @update_reminder.update_window_length) , {:style => "width:50px; text-align: right; margin-left: 30px;", :class => "input"} %>days
+      <%= time_field_tag :offset_hours, @update_reminder.offset_hours %> hour(s)
+      <span style="margin-left: 30px">
+        before<%= raw( radio_button_tag :before_after, "before", @update_reminder.before_after) %>
+        after<%= raw( radio_button_tag :before_after, "after", !@update_reminder.before_after ) %>
       </span>
-      <% if !@task.blank? %>
-        <% if !@task.for_template_flag %>
-        <span class="heading1" style="font-size: 18pt">
-          <br/>
-            Client: <%= link_to @client.name, client_path(@client) %><br/>
-            Job: <%= link_to @job.name , edit_job_path(@job) %><br/>
-            Task: <%= link_to @task.name , edit_job_path(@job) %><br/><br/>
-          </span>
-        <% end %>
+      <span style="margin-left: 30px">
+        start<%= raw( radio_button_tag :start_end, "start", @update_reminder.start_end) %>
+        end<%= raw( radio_button_tag :start_end, "end", !@update_reminder.start_end) %>
+      </span>
+    <% elsif @update_reminder.update_type == 2 %>
+      Mon<%= check_box_tag(:mon, 1, @update_reminder.includes_day?(:monday) ) %>
+      Tue<%= check_box_tag(:tue, 1, @update_reminder.includes_day?(:tuesday) ) %>
+      Wed<%= check_box_tag(:wed, 1, @update_reminder.includes_day?(:wednesday) ) %>
+      Thu<%= check_box_tag(:thu, 1, @update_reminder.includes_day?(:thursday) ) %>
+      Fri<%= check_box_tag(:fri, 1, @update_reminder.includes_day?(:friday) ) %>
+      Sat<%= check_box_tag(:sat, 1, @update_reminder.includes_day?(:saturday) ) %>
+      Sun<%= check_box_tag(:sun, 1, @update_reminder.includes_day?(:sunday) ) %>
+      at
 
-      <% end %>
+      <%= time_select :repeat_time, "" ,
+                                    {
+                                        :order => [:hour, :minute],
+                                        :default =>  @update_reminder.task.job.local_date_time(@update_reminder.repeat_time_check),
+                                        :minute_step => 30
+                                  },
+                                    {:class => "input" } %>
+    <% end %>
+    <br/>
+    <br/>
 
-        <div class="select_box_wrapper" style="height: 140px; background-color: lightpink">
-          Reminder<br/>
-          <%= form_tag update_reminder_update_path(@update_reminder) , :id => 'update_form'  do %>
-            Update type: <%= select_tag "update_type", options_for_select(@update_options, @update_reminder.update_type) , {:style => "width:130px;", :onchange => raw("update_form.submit()")} %>
-            <% if @update_reminder.update_type == 0 %>
-              Proportion: <%= select_tag "proportion", options_for_select(@progress, @update_reminder.proportion) , {:style => "width:50px; text-align: right;"} %>%
-            <% elsif @update_reminder.update_type == 1 %>
-              <%= select_tag "offset_days", options_for_select([0,1,2,3,4,5,6,7], @update_reminder.offset_days) , {:style => "width:50px; text-align: right; margin-left: 30px;"} %>days
-              <%= time_field_tag :offset_hours, @update_reminder.offset_hours %>hours
-              <span style="margin-left: 30px">
-                before<%= raw( radio_button_tag :before_after, "before", @update_reminder.before_after) %>
-                after<%= raw( radio_button_tag :before_after, "after", !@update_reminder.before_after ) %>
-              </span>
-              <span style="margin-left: 30px">
-                start<%= raw( radio_button_tag :start_end, "start", @update_reminder.start_end) %>
-                end<%= raw( radio_button_tag :start_end, "end", !@update_reminder.start_end) %>
-              </span>
-            <% elsif @update_reminder.update_type == 2 %>
-              <% day=@update_reminder.repeat_weekday %>
-              Mon<%= raw( radio_button_tag :weekday, 1, day==1 ) %>
-              Tue<%= raw( radio_button_tag :weekday, 2, day==2 ) %>
-              Wed<%= raw( radio_button_tag :weekday, 3, day==3 ) %>
-              Thu<%= raw( radio_button_tag :weekday, 4, day==4 ) %>
-              Fri<%= raw( radio_button_tag :weekday, 5, day==5 ) %>
-              Sat<%= raw( radio_button_tag :weekday, 6, day==6 ) %>
-              Sun<%= raw( radio_button_tag :weekday, 0, day==0 ) %>
-              <%= time_field_tag :repeat_time, @update_reminder.repeat_time,  :minute_step  => 10 %>hours
-            <% end %>
-            <br/>
-            <table>
-              <col width="15%"/>
-              <col width="25%"/>
-              <col width="25%"/>
-              <col width="35%"/>
-              <tr>
-                <td>
-                  Window for update
-                </td>
-                <td>
-                  Proportion: <%= raw( radio_button_tag :update_window, 1, @update_reminder.update_window_percentage_flag, :onchange => raw("update_form.submit()")) %>
-                  <%= select_tag :update_window_percentage, options_for_select(@progress, @update_reminder.update_window_percentage) , {:style => "width:50px; text-align: right;"} %>%
-                </td>
-                <td>
-                  Period: <%= raw( radio_button_tag :update_window, 0, !@update_reminder.update_window_percentage_flag, :onchange => raw("update_form.submit()")) %>
-                  <%= select_tag :update_window_days, options_for_select([0,1,2,3,4,5,6,7], @update_reminder.update_window_days) , {:style => "width:50px; text-align: right;"} %>days
-                  <%= time_field_tag :update_window_hours, @update_reminder.update_window_hours %>hours
-                </td>
-                <td>
+    <span style="font-weight: bold; margin-top: 10px;">Window for update</span><br/>
 
-                </td>
-              </tr>
+    <table>
+      <col width="15%"/>
+      <col width="25%"/>
+      <col width="35%"/>
+      <col width="25%"/>
+      <tr>
+        <td>
+          Proportion: <%= radio_button_tag :update_window, 1, @update_reminder.update_window_percentage_flag, { :onchange => "update_form.submit()"} %>
+          <%= select_tag :update_window_percentage, options_for_select(@progress, @update_reminder.update_window_percentage) , {:style => "width:50px; text-align: right;", :class => "input"} %>%
+        </td>
+        <td>
+          Period: <%= raw( radio_button_tag :update_window, 0, !@update_reminder.update_window_percentage_flag, :onchange => raw("update_form.submit()")) %>
+          <%= select_tag :update_window_length, options_for_select(@options_for_window_length, @update_reminder.update_window_length_in_seconds) , {:style => "width:150px; text-align: right;", :class => "input"} %>
+        </td>
+        <td>
+          Send email reminders when overdue<%= check_box_tag :email, 1, @update_reminder.allow_email_flag  %><br/>
+
+        </td>
+      </tr>
 
 
 
-            </table>
-            Allow email reminders<%= check_box_tag :email, 1, @update_reminder.allow_email_flag  %><br/>
+    </table>
+    <br/>
 
-            <%= submit_tag "OK" %>
-          <% end %>
-          <% if !@task.blank? %>
-            <%= button_to "Back to task" , edit_task_path(@task) , :method => :get %>
-          <% else %>
-            <%= button_to "Back to schedule" , edit_reminder_schedule_path(@reminder_schedule) , :method => :get %>
-          <% end %>
+    <%= submit_tag "OK" %>
+  <% end %>
 
-        </div>
+  <% if @task.blank? %>
+    <%= button_to "Back to schedule" , edit_reminder_schedule_path(@reminder_schedule) , :method => :get %>
+  <% end %>
 
-
-
-
-    </td>
-
-
-
-  </tr>
-</table>
-
-
+</div>

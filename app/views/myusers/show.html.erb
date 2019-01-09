@@ -58,9 +58,11 @@
         <div class="user">
           Email: <%= mail_to @myuser.email %>
         </div>
-        <div class="user_text">
-          <%= link_to('Edit user', edit_myuser_path(@myuser)) %>
-        </div>
+        <% if @myuser.myuser_can_edit(logged_in_user_helper) %>
+          <div class="user_text">
+            <%= link_to('Edit user', edit_myuser_path(@myuser)) %>
+          </div>
+        <% end %>
       </td>
       <td>
         <div class="user" style="height: 120px; width: 500px">

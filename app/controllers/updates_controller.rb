@@ -84,6 +84,24 @@ class UpdatesController < ApplicationController
     end
   end
 
+  def amend_comments_for_update
+
+    update = Update.find(params[:id])
+    update.comments = params[:comments]
+    update.save
+
+    redirect_to list_updates_for_task_path(update.task)
+
+  end
+
+  def amend_progress_for_update
+    update = Update.find(params[:id])
+    update.percentage_completed = params[:progress].sub("%","").to_i
+    update.save
+
+    redirect_to list_updates_for_task_path(update.task)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_update

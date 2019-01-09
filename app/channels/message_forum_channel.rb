@@ -4,21 +4,14 @@ class MessageForumChannel < ApplicationCable::Channel
 
     def subscribed
       stream_from 'room_channel' + uuid.id.to_s
-      #   puts "********************"
-      #   ActionCable.server.connections.each do |connection|
-      #     puts ">>>" + connection.uuid.id.to_s
-      #   end
-      #   transmit message
-      # end
+
     end
 
     def unsubscribed
-      puts "unsubsribed"
       # Any cleanup needed when channel is unsubscribed
     end
 
     def request_past_messages(data)
-       puts "******  request_past_messages *********"
 
       pubkey = uuid.client_public_key
 
@@ -27,8 +20,6 @@ class MessageForumChannel < ApplicationCable::Channel
       encrypted_encoded_message = ""
       message_number = data["message_number"]
       message_forum_name = data["message_forum_name"]
-      puts "*** FORUM NAME ***" + message_forum_name
-
 
       messages_for_forum=Message.where(:forum_name => message_forum_name)
 
@@ -82,7 +73,6 @@ class MessageForumChannel < ApplicationCable::Channel
 
           # broadcast remaining packets
         (1..total_no_packets - 1).each do |packet_number|
-          puts "*******" + packet_number.to_s
           ActionCable.server.broadcast 'room_channel' + uuid.id.to_s, message: encrypted_encoded_message[packet_number * packet_length ,packet_length], packet_number: packet_number,  total_no_packets: total_no_packets
         end
       end
@@ -141,15 +131,12 @@ class MessageForumChannel < ApplicationCable::Channel
     end
 
     def message(data)
-      puts "********* SPEAK *********"
       if !uuid.blank?
         private_key = OpenSSL::PKey::RSA.new(uuid.server_private_key)
         encoded_encrypted_message = data['message']
 
         unencrypted_message  = private_key.private_decrypt(Base64.decode64(encoded_encrypted_message))
         message_forum_name = data["message_forum_name"]
-
-        puts "message_forum_name:" + message_forum_name
 
         key   = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base).generate_key Rails.configuration.encryption_salt, Rails.configuration.encryption_key_length
         crypt = ActiveSupport::MessageEncryptor.new(key)

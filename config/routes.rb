@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   get 'test1' => 'user_setup#test1', as: :test1
   get 'test2' => 'user_setup#test2', as: :test2
+  post 'cheat_log_in' => 'myusers#cheat_log_in', as: :cheat_log_in
   get 'reset_to_two_users'=> 'user_setup#reset_to_two_users', as: :reset_to_two_users
   get 'add_jobs_and_tasks'=> 'user_setup#add_jobs_and_tasks', as: :add_jobs_and_tasks
 
@@ -20,6 +21,8 @@ Rails.application.routes.draw do
   post 'hide_selected_tasks'=> 'homepage#hide_selected_tasks', as: :hide_selected_tasks
   post 'unhide_selected_tasks'=> 'homepage#unhide_selected_tasks', as: :unhide_selected_tasks
 
+  get 'task_log/.:id'=> 'tasks#task_log', as: :task_log
+
   get 'new_user' => 'myusers#new_user' , as:  :new_user
 
   get 'tasks/message_forum/.:id' => 'tasks#message_forum', as: :tasks_message_forum
@@ -31,6 +34,9 @@ Rails.application.routes.draw do
   post 'jobs_selection' => 'homepage#jobs_include', as: :homepage_jobs_include
   post 'tasks_selection' => 'homepage#tasks_include', as: :homepage_tasks_include
 
+  post 'amend_comments_for_update/.:id' => 'updates#amend_comments_for_update', as: :amend_comments_for_update
+  post 'amend_progress_for_update/.:id' => 'updates#amend_progress_for_update', as: :amend_progress_for_update
+  post 'amend_comments_for_log/.:id' => 'tasks#amend_comments_for_log', as: :amend_comments_for_log
 
   #get 'myusers.:id' => 'user_setup#new_user_resend_email'
   #post 'myusers' => 'user_setup#new_user_details'

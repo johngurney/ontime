@@ -2,9 +2,9 @@
 
 
   <table>
-    <col width="20%"/>
+    <col width="10%"/>
     <col width="40%"/>
-    <col width="40%"/>
+    <col width="50%"/>
     <tr>
       <td></td>
       <td>
@@ -16,34 +16,34 @@
 
       <td></td>
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           First name
         </div>
-        <%= text_field_tag :first_name, @myuser.first_name, :class =>"small_user" %><br/>
+        <%= text_field_tag :first_name, @myuser.first_name, :class =>"input" %><br/>
 
       </td>
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           Last name
         </div>
-        <%= text_field_tag :last_name, @myuser.last_name, :class =>"small_user" %><br/>
+        <%= text_field_tag :last_name, @myuser.last_name, :class =>"input" %><br/>
 
       </td>
     </tr>
     <tr>
       <td></td>
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           Position
         </div>
-        <%= text_field_tag :position, @myuser.position, :class =>"small_user" %><br/>
+        <%= text_field_tag :position, @myuser.position, :class =>"input" %><br/>
 
       </td>
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           Experience
         </div>
-        <%= text_field_tag :experience, @myuser.experience, :class =>"small_user" %><br/>
+        <%= text_field_tag :experience, @myuser.experience, :class =>"input" %><br/>
 
       </td>
     </tr>
@@ -51,17 +51,17 @@
     <tr>
       <td></td>
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           Team
         </div>
-        <%= text_field_tag :team, @myuser.team, :class =>"small_user" %><br/>
+        <%= text_field_tag :team, @myuser.team, :class =>"input" %><br/>
 
       </td>
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           Office
         </div>
-        <%= text_field_tag :office, @myuser.office, :class =>"small_user" %><br/>
+        <%= text_field_tag :office, @myuser.office, :class =>"input" %><br/>
 
       </td>
     </tr>
@@ -71,22 +71,27 @@
 
       </td>
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           User status
         </div>
-        <%= select_tag :user_status, options_for_select(add_new_user_options, @myuser.user_status) , {class: 'small_user'} %><br/>
-        <div class="small_user_text">
+        <%if logged_in_user_helper.user_status == Rails.configuration.super_admin_name %>
+          <%= select_tag :user_status, options_for_select(add_new_user_options, @myuser.user_status) , {class: 'input', style: "width: 200px"} %><br/>
+        <% else %>
+        <div class="input" style="width: 200px; background: #f0f0f0" >
+          <%= @myuser.user_status %>
+        </div>
+        <% end %>
+        <div class="small_user_text" style="margin-top: 10px">
           Email
         </div>
-          <%= email_field_tag :email, @myuser.email, autofocus: true, autocomplete: "email" , :class =>"small_user"  %><br/>
+        <%= email_field_tag :email, @myuser.email, autofocus: true, autocomplete: "email" , :class =>"input"  %><br/>
       </td>
 
       <td>
-        <div class="small_user_text">
+        <div class="small_user_text" style="margin-top: 10px">
           Telephone
         </div>
-        <div class="small_user"  style="height: 100px; width: 300px">
-          <div class="select_box_list" style="height: 95px;">
+        <div class="small_user"  style="height: 150px; width: 300px">
           <table>
             <col width="30%"/>
             <col width="70%"/>
@@ -95,7 +100,7 @@
                 Work
               </td>
               <td>
-                <%= text_field_tag :work_tel  , @myuser.work_tel %><br/>
+                <%= text_field_tag :work_tel  , @myuser.work_tel , :class =>"input" %><br/>
               </td>
             </tr>
             <tr>
@@ -103,7 +108,7 @@
                 Mobile
               </td>
               <td>
-                <%= text_field_tag :mobile_tel , @myuser.mobile_tel  %><br/>
+                <%= text_field_tag :mobile_tel , @myuser.mobile_tel , :class =>"input"  %><br/>
               </td>
             </tr>
             <tr>
@@ -111,7 +116,7 @@
                 Home
               </td>
               <td>
-                <%= text_field_tag :home_tel , @myuser.home_tel  %><br/>
+                <%= text_field_tag :home_tel , @myuser.home_tel , :class =>"input"  %><br/>
               </td>
             </tr>
             <tr>
@@ -119,7 +124,7 @@
                 Other 1
               </td>
               <td>
-                <%= text_field_tag :other_tel1 , @myuser.other_tel1   %><br/>
+                <%= text_field_tag :other_tel1 , @myuser.other_tel1 , :class =>"input"   %><br/>
               </td>
             </tr>
             <tr>
@@ -127,12 +132,11 @@
                 Other 2
               </td>
               <td>
-                <%= text_field_tag :other_tel2 , @myuser.other_tel2  %><br/>
+                <%= text_field_tag :other_tel2 , @myuser.other_tel2 , :class =>"input"  %><br/>
               </td>
             </tr>
 
           </table>
-        </div>
       </div>
 
       </td>
@@ -144,9 +148,9 @@
 
       </td>
       <td>
-      </td>
-      <td>
         <%= submit_tag "OK", :class =>"large_button" %>
+    </td>
+      <td>
 
       </td>
 

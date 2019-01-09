@@ -276,7 +276,6 @@
 
   def get_job
     @job = Job.find(params[:id])
-    puts "****** job_id" + @job.id.to_s
   end
 
   def get_task

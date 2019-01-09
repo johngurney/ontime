@@ -33,6 +33,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def myusers_select_helper
+  end
+
   def add_new_user_options
     #NB This will be called when logged_in_user_helper is blank only when there are no users, ie at first start up - the only option should be super user
     logged_in_user_helper.blank? ? [Rails.configuration.super_admin_name ] : logged_in_user_helper.add_new_user_options
@@ -94,14 +97,23 @@ class ApplicationController < ActionController::Base
   end
 
   def order_jobs_tasks_helper(task_job, field, homepage_hidepage = nil)
-    if (logged_in_user_helper.order_jobs_field == field  && task_job == "j") || (logged_in_user_helper.order_tasks_field == field  && task_job == "t")
-      code = "&#x25B2".html_safe
-    else
-      code = "&#x25BC".html_safe
+    if  logged_in_user_helper
+      if (logged_in_user_helper.order_jobs_field == field  && task_job == "j") || (logged_in_user_helper.order_tasks_field == field  && task_job == "t")
+        code = "&#x25B2".html_safe
+      else
+        code = "&#x25BC".html_safe
+      end
+      self.class.helpers.link_to '<span style="font-size: 10px">'.html_safe + code + '</span>'.html_safe , order_jobs_tasks_path(task_job: task_job , field: field, homepage_hidepage: homepage_hidepage)
     end
-    self.class.helpers.link_to '<span style="font-size: 10px">'.html_safe + code + '</span>'.html_safe , order_jobs_tasks_path(task_job: task_job , field: field, homepage_hidepage: homepage_hidepage)
-
   end
+
+  def progress_select_options
+    options = []
+      (0..10).each do |a|
+        options << (a * 10).to_s + "%"
+      end
+      options
+    end
 
   helper_method :duration_stg, :add_new_user_options
 
@@ -109,7 +121,7 @@ class ApplicationController < ActionController::Base
   helper_method :email_summons_text_job, :email_summons_text_availability_job
   helper_method :email_confirmation_url, :telephone_link
   helper_method :alert_helper, :root_url_helper
-  helper_method :order_jobs_tasks_helper
+  helper_method :order_jobs_tasks_helper, :progress_select_options
 
 private
 

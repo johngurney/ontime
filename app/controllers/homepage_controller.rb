@@ -1,7 +1,6 @@
 class HomepageController < ApplicationController
 
   def homepage
-    puts "**************** HOMEPAGE ****************"
     @tasks=[]
     @myuser = logged_in_user_helper
 
@@ -60,7 +59,6 @@ class HomepageController < ApplicationController
   end
 
   def hide_selected_jobs
-    puts "**** HIDE ****"
     logged_in_user_helper.jobs_for_myuser.each do |job|
       if params["hide" + job.id.to_s]=="1"
         Hide.create(:myuser_id => logged_in_user_helper.id , :element => "job" + job.id.to_s)
@@ -70,7 +68,6 @@ class HomepageController < ApplicationController
   end
 
   def unhide_selected_jobs
-    puts "**** UNHIDE ****"
     Hide.where(:myuser_id => logged_in_user_helper.id).each do |hide|
       if hide.element[0,3] == "job"
         if params["unhide" + hide.element.sub("job","")]=="1"
@@ -97,7 +94,6 @@ class HomepageController < ApplicationController
 
     Hide.where(:myuser_id => logged_in_user_helper.id).each do |hide|
       if hide.element[0,4] == "task"
-        puts "&&&" + hide.element
         if params["unhide" + hide.element.sub("task","")] == "1"
           hide.delete
         end
@@ -123,8 +119,6 @@ class HomepageController < ApplicationController
       else
         myuser.order_jobs_field = params[:field]
       end
-      puts "&&&" + params[:field]
-      puts "&&&" + myuser.order_jobs_field.to_s
       myuser.save
     end
 

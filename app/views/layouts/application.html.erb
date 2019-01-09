@@ -69,6 +69,17 @@
       <% end %>
       [Number of users:
       <%= Myuser.count.to_s %>]
+      Change<br/>
+      <div class="dropdown" style="text-decoration: underline; ">
+        Cheat login
+        <div class="dropdown-content" style="right: 0px;">
+          <%= form_tag  cheat_log_in_path, id: "cheat_login" do %>
+            <%= select_tag :myuser, options_for_select(options_for_select(Myuser.all.map{|myuser| [myuser.name, myuser.id]}), "") , {:class=> "input", :onchange => "cheat_login.submit();", :include_blank => 'Please choose',  :style => "width:150px;"} %>
+          <% end %>
+        </div>
+      </div>
+    </td>
+
     </td>
 
   </tr>

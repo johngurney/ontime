@@ -59,6 +59,8 @@ class MyusersController < ApplicationController
 
   def edit
 
+    redirect_to cannot_access_path if !@myuser.myuser_can_edit(logged_in_user_helper)
+
   end
 
   def new
@@ -469,6 +471,11 @@ class MyusersController < ApplicationController
     end
     @myuser.save
     redirect_to myusers_path
+  end
+
+  def cheat_log_in
+    session[:logged_in_user] = params[:myuser].to_i
+    redirect_to root_path
   end
 
   private

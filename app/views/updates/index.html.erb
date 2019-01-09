@@ -1,65 +1,85 @@
-<table>
-  <col width="33%">
-  <col width="67%">
-  <tr>
-    <td>
-      <span class="page_heading">
-        Updates for<br/>
-      </span>
-        <br/>
-        <div class="select_box_wrapper" style="height: 30px; margin-top: 10px; background-color: lightpink">
-          <table>
-            <col width="20%"/>
-            <col width="40%"/>
-            <col width="40%"/>
-            <tr>
-              <td>
-                <span style="font-weight:bold">Client: </span><%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
-              </td>
-              <td>
-                <span style="font-weight:bold">Job: </span><%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
-              </td>
-              <td>
-                <span style="font-weight:bold">Task: </span><%= link_to @task.name , edit_task_path(@task) %><br/>
-              <td>
-            </tr>
-          </table>
-        </div>
+<span class="page_heading">
+  Updates for
+</span>
+  <br/>
+  <div class="select_box_wrapper" style="height: 30px; margin-top: 10px; background-color: lightpink">
+    <table>
+      <col width="20%"/>
+      <col width="40%"/>
+      <col width="40%"/>
+      <tr>
+        <td>
+          <span style="font-weight:bold">Client: </span><%= link_to @task.job.client.name, client_path(@task.job.client) %><br/>
+        </td>
+        <td>
+          <span style="font-weight:bold">Job: </span><%= link_to @task.job.name , edit_job_path(@task.job) %><br/>
+        </td>
+        <td>
+          <span style="font-weight:bold">Task: </span><%= link_to @task.name , edit_task_path(@task) %><br/>
+        <td>
+      </tr>
+    </table>
+  </div>
 
-    </td>
-  </tr>
-</table>
+<div class="select_box_wrapper" style="height: 350px; margin-top: 10px; background-color: yellow">
+  <div class="select_box_list" style="height: 350px">
+  <table>
+    <col width="15%"/>
+    <col width="20%"/>
+    <col width="10%"/>
+    <col width="10%"/>
+    <col width="38%"/>
+    <col width="7%"/>
+    <tr style="font-weight: bold">
+      <td>Date/time</td>
+      <td>Fee-earner</td>
+      <td>Time passed</td>
+      <td>Work done</td>
+      <td>Comments</td>
 
-<table>
-  <col width="10%"/>
-  <col width="14%"/>
-  <col width="8%"/>
-  <col width="8%"/>
-  <col width="60%"/>
-  <tr>
-    <td>Date/time</td>
-    <td>Fee-earner</td>
-    <td>Progress</td>
-    <td>Time passed</td>
-    <td>Comments</td>
-
-  </tr>
-
-  <% @task.updates.order('created_at').each do |update| %>
-    <tr>
-      <td><%= update.created_at_date_stg %> </td>
-      <td><%= update.myuser.first_name %> <%= update.myuser.last_name %></td>
-      <td> <%= update.percentage_completed.to_i %>%</td>
-      <td>
-        <% if update.percentage_completed < update.percentage_time_passed %>
-          <scan style="color: red"><%= update.percentage_time_passed.to_i %>%</scan>
-        <% else %>
-          <%= update.percentage_time_passed.to_i%>%
-        <% end %>
-      </td>
-      <td> <%= update.comments %> </td>
     </tr>
-  <% end %>
+
+      <% @task.updates.order('created_at DESC').each do |update| %>
+        <tr>
+          <td><%= update.created_at_date_stg %> </td>
+          <td>
+            <%= update.myuser.name %></td>
+          <td>
+            <% if update.percentage_completed < update.percentage_time_passed %>
+              <scan style="color: red"><%= update.percentage_time_passed.to_i %>%</scan>
+            <% else %>
+              <%= update.percentage_time_passed.to_i%>%
+            <% end %>
+          </td>
+          <td>
+            <% if logged_in_user_helper == update.myuser && update.created_at == @task.updates.maximum('created_at') %>
+              <%= form_tag amend_progress_for_update_path(update),  :id => 'form_progress' do %>
+                <%= select_tag "progress", options_for_select(progress_select_options, update.percentage_completed.to_i.to_s + "%"), {:class=>"input" , :style => "width: 60px; margin-top: 0px;  text-align-last: left;", :onchange  => "form_progress.submit()"} %>
+              <% end %>
+            <% else %>
+              <%= update.percentage_completed.to_i %>%
+            <% end %>
+          </td>
+            <% if logged_in_user_helper == update.myuser %>
+              <%= form_tag amend_comments_for_update_path(update) do %>
+                <td>
+                  <%= text_area_tag :comments, update.comments, style: "width:97%; height: 40px" %>
+                </td>
+                <td>
+                  <%= submit_tag "Update" , class: "messages_button"  %>
+                </td>
+              <% end %>
+            <% else %>
+              <td>
+                <%= update.comments %>
+              </td>
+              <td>
+              </td>
+          <% end %>
+        </tr>
+      <% end %>
 
 
-</table>
+  </table>
+  </div>
+</div>

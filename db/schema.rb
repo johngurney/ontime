@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_30_073927) do
+ActiveRecord::Schema.define(version: 2019_01_08_071943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,6 +158,25 @@ ActiveRecord::Schema.define(version: 2018_12_30_073927) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "task_logs", force: :cascade do |t|
+    t.integer "task_id"
+    t.string "comments"
+    t.string "name"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string "linked_to_task"
+    t.boolean "linked_flag"
+    t.boolean "link_to_start"
+    t.float "offset"
+    t.float "duration"
+    t.boolean "fixed_end_date"
+    t.boolean "duration_in_days"
+    t.boolean "offset_in_days"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "myuser_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.string "name"
     t.datetime "start_date"
@@ -213,18 +232,15 @@ ActiveRecord::Schema.define(version: 2018_12_30_073927) do
     t.integer "task_id"
     t.boolean "before_after"
     t.string "offset_hours"
-    t.boolean "repeat_weekday"
-    t.string "repeat_time"
+    t.integer "repeat_weekday"
     t.boolean "allow_email_flag"
     t.boolean "update_window_percentage_flag"
-    t.integer "update_window_days"
-    t.string "update_window_hours"
     t.float "update_window_percentage"
     t.integer "reminder_schedule_id"
     t.boolean "is_for_task"
-    t.boolean "updated_flag"
-    t.datetime "window_start_date"
-    t.datetime "window_end_date"
+    t.datetime "repeat_time"
+    t.datetime "email_sent_time_date"
+    t.integer "update_window_length_in_seconds"
   end
 
   create_table "updates", force: :cascade do |t|

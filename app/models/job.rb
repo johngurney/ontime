@@ -28,9 +28,6 @@ class Job < ApplicationRecord
     self.tasks.each do |task|
       @circular_flags={}
       get_start_date_of_task(task)
-      puts "***" + task.start_date.to_s
-      puts "***" + task.duration.to_s
-      puts "***" + task.end_date.to_s
     end
 
     self.end = self.start
@@ -154,6 +151,7 @@ class Job < ApplicationRecord
     end
   end
 
+
   private
 
   def move_to_prev_working_day(start_date, working_day_end_time_hour=nil)
@@ -171,7 +169,7 @@ class Job < ApplicationRecord
 
 
   def move_to_next_working_day(start_date, working_day_start_time_hour=nil)
-    date_in_zone=start_date.in_time_zone(self.time_zone)
+    date_in_zone = start_date.in_time_zone(self.time_zone)
     if (!self.include_weekends) && is_weekend(date_in_zone)
       if !working_day_start_time_hour.blank?
         set_hour_of_date(date_in_zone.next_occurring(:monday), working_day_start_time_hour)
@@ -188,37 +186,34 @@ class Job < ApplicationRecord
       task.start_date
     else
       if !@circular_flags[task.id]
-        @circular_flags[task.id]=true
+        @circular_flags[task.id] = true
 
         if !task.linked_flag
-          puts "*** 1 ***"
           if !task.fixed_end_date
-            puts "*** 2 ***"
-            puts "start date " + task.start_date.to_s
-            puts "duration " + task.duration.to_s
-            task.end_date = add_duration_to_date(task.start_date , task.duration)
+            task.end_date = add_duration_to_date(task.start_date , task.duration, task.duration_in_days)
             puts task.end_date.to_s
             task.save(validate: false)
           end
           @done_flags[task.id]=true
           task.start_date
         else
-          if task.linked_to_task_id.blank? or task.linked_to_task_id.blank? or task.linked_to_task_id==0
-            task.start_date = add_subtract_duration_to_date(self.start ,  task.offset)
+          if task.linked_to_task_id.blank? || task.linked_to_task_id==0
+            task.start_date = add_subtract_duration_to_date(self.start,  task.offset, task.duration_in_days)
           else
 
-            linked_to_task=Task.find(task.linked_to_task_id)
-            start_of_linked_to_task=get_start_date_of_task(linked_to_task)
+            linked_to_task = Task.find(task.linked_to_task_id)
+            start_of_linked_to_task = get_start_date_of_task(linked_to_task)
 
             if !start_of_linked_to_task.blank?
               if task.link_to_start
-                task.start_date = add_subtract_duration_to_date(start_of_linked_to_task ,  task.offset)
+                task.start_date = add_subtract_duration_to_date(start_of_linked_to_task,  task.offset, task.duration_in_days)
               else
-                task.start_date = add_subtract_duration_to_date(linked_to_task.end_date ,  task.offset)
+                task.start_date = add_subtract_duration_to_date(linked_to_task.end_date,  task.offset, task.duration_in_days)
               end
             else
               task.date_error = true
               task.save(validate: false)
+              nil
             end
 
 
@@ -226,46 +221,49 @@ class Job < ApplicationRecord
 
           if !task.date_error
             if !task.fixed_end_date
-              task.end_date= add_duration_to_date( task.start_date , task.duration)
+              task.end_date = add_duration_to_date( task.start_date, task.duration, task.duration_in_days)
             end
 
             task.save(validate: false)
             @done_flags[task.id]=true
 
             task.start_date
+
           end
         end
       else
         task.date_error = true
-        task.save
+        task.save(validate: false)
+        nil
       end
     end
 
 
   end
 
-  def add_subtract_duration_to_date(start_date, duration)
+  def add_subtract_duration_to_date(start_date, duration, duration_in_days)
     if duration > 0
-      add_duration_to_date(start_date, duration)
+      add_duration_to_date(start_date, duration, duration_in_days)
     elsif duration < 0
-      subtract_duration_from_date(start_date, -duration)
+      subtract_duration_from_date(start_date, -duration, duration_in_days)
     else
       start_date
     end
   end
 
 
-  def add_duration_to_date(start_date, duration)
+  def add_duration_to_date(start_date, duration, duration_in_days)
 
     if self.include_weekends
       working_days_per_week=7
     else
       working_days_per_week=5
     end
-    if self.daily_flag
+    if self.daily_flag || duration_in_days
       if self.include_weekends
         #RETURN
-        start_date + duration
+        puts "abc: " + (start_date + duration.days).to_s
+        start_date + duration.days
       else
         #RETURN
         start_date + ((duration.div working_days_per_week) * 7 + (duration.modulo working_days_per_week)).days
